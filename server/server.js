@@ -13,10 +13,11 @@ const app = express();
 
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Allow only requests from this origin
-    methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE'], // Adjust allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Adjust allowed headers
+    origin: ['http://localhost:5173', 'https://peak-academy-client.vercel.app'], // array of allowed origins
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   }));
+  
 // Handle uncaught exceptions (e.g., undefined variables, bugs)
 process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
