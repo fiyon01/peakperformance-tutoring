@@ -6,12 +6,13 @@ import {
   MessageSquare, ClipboardList, Search, Settings, Plus, Video, Book,
   FlaskConical, Calculator, Languages, Music, Activity, Feather
 } from 'lucide-react';
-
+import { useNavigate } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 const DashboardHome = ({ isEnrolled = true, justLoggedIn = false }) => {
   const [showWelcome, setShowWelcome] = useState(false);
   const [activeTab, setActiveTab] = useState('all'); // For session filtering
   const [expandedProgramId, setExpandedProgramId] = useState(null);
-
+  const navigate = useNavigate()
   const activePrograms = [
     { 
       id: 1, 
@@ -91,14 +92,31 @@ const DashboardHome = ({ isEnrolled = true, justLoggedIn = false }) => {
   ];
 
   useEffect(() => {
-    if (justLoggedIn) {
-      setShowWelcome(true);
-      const timer = setTimeout(() => {
-        setShowWelcome(false);
-      }, 4000);
-      return () => clearTimeout(timer);
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/auth/students-login");
+      return;
     }
-  }, [justLoggedIn]);
+
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // in seconds
+
+      if (decoded.exp < currentTime) {
+        // Token expired
+        localStorage.removeItem("token");
+        navigate("/auth/students-login");
+      } else {
+        // Token is valid
+        navigate("/"); // Redirect to dashboard if token is valid
+      }
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+      navigate("/auth/students-login");
+    }
+  }, [navigate])
 
   const toggleProgramExpand = (id) => {
     setExpandedProgramId(expandedProgramId === id ? null : id);
