@@ -8,8 +8,11 @@ const router = express.Router();
 
 // Configure OpenAI to use OpenRouter
 const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY, // Use your OpenRouter key here
-  baseURL: 'https://openrouter.ai/api/v1', // Point to OpenRouter's API
+  apiKey: 'sk-fake-key-for-openrouter', // dummy key to satisfy OpenAI's constructor
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`
+  }
 });
 
 router.post('/openai/generate-strategy', async (req, res) => {
@@ -28,10 +31,23 @@ router.post('/openai/generate-strategy', async (req, res) => {
     });
 
     res.json({ response: completion.choices[0].message.content });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message || 'Failed to generate strategy' });
   }
 });
+// Example usage
+// (async () => {
+//   const response = await openai.chat.completions.create({
+//     model: 'mistralai/mistral-7b-instruct',
+//     messages: [{ role: 'user', content: 'Say hello!' }]
+//   });
+
+//   console.log(response.choices[0].message.content);
+// })();
+
+
+
 
 module.exports = router;

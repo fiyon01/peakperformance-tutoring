@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Clock, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import isEqual from 'lodash.isequal';
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 // Types
 const ViewMode = {
   WEEKLY: "weekly",
@@ -23,8 +24,8 @@ const formatTime = (timeString) => {
 const SubjectCard = ({ subject }) => {
   return (
     <div className="bg-violet-50 rounded-md p-3 border border-violet-100">
-      <h3 className="font-medium text-violet-800">{subject.name}</h3>
-      {subject.teacher && (
+      <h3 className="font-medium text-violet-800">{subject?.name || 'No Subject'}</h3>
+      {subject?.teacher && (
         <p className="text-sm text-gray-600 mt-1">Teacher: {subject.teacher}</p>
       )}
     </div>
@@ -36,19 +37,19 @@ const ProgramDetails = ({ program }) => {
     <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-100">
       <div className="flex flex-col md:flex-row justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-800">{program.name}</h2>
+          <h2 className="text-xl font-bold text-gray-800">{program?.name || 'Program Name'}</h2>
           <p className="text-gray-600">
-            {program.term} {program.year} • {program.duration}
+            {program?.term || 'Term'} {program?.year || 'Year'} • {program?.duration || 'Duration'}
           </p>
         </div>
         <div className="flex gap-4">
           <div className="text-center">
             <p className="text-sm text-gray-500">Start Date</p>
-            <p className="font-medium">{program.startDate}</p>
+            <p className="font-medium">{program?.startDate || 'N/A'}</p>
           </div>
           <div className="text-center">
             <p className="text-sm text-gray-500">End Date</p>
-            <p className="font-medium">{program.endDate}</p>
+            <p className="font-medium">{program?.endDate || 'N/A'}</p>
           </div>
         </div>
       </div>
@@ -69,13 +70,14 @@ const TimeTable = ({ program, loading }) => {
   }, [isMobile]);
 
   const getTimeSlotsForDay = (day) => {
-    if (!program?.timeSlots) return [];
+    // Safely handle missing or invalid timeSlots
+    if (!program?.timeSlots || !Array.isArray(program.timeSlots)) return [];
     
     return program.timeSlots
-      .filter(slot => slot.day === day)
+      .filter(slot => slot?.day === day)
       .sort((a, b) => {
-        const aHour = parseInt(a.startTime.split(':')[0]);
-        const bHour = parseInt(b.startTime.split(':')[0]);
+        const aHour = parseInt(a?.startTime?.split(':')[0] || 0);
+        const bHour = parseInt(b?.startTime?.split(':')[0] || 0);
         return aHour - bHour;
       });
   };
@@ -110,14 +112,14 @@ const TimeTable = ({ program, loading }) => {
         ) : daySlots.length > 0 ? (
           <div className="space-y-3">
             {daySlots.map((slot) => (
-              <div key={slot.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-2">
+              <div key={slot?.id || Math.random()} className="bg-white rounded-lg shadow-sm border border-gray-100 p-2">
                 <div className="flex items-center gap-3 mb-2">
                   <Clock size={18} className="text-violet-500" />
                   <span className="text-gray-700 font-medium">
-                    {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                    {slot?.startTime ? formatTime(slot.startTime) : '--:--'} - {slot?.endTime ? formatTime(slot.endTime) : '--:--'}
                   </span>
                 </div>
-                <SubjectCard subject={slot.subject} />
+                <SubjectCard subject={slot?.subject || {}} />
               </div>
             ))}
           </div>
@@ -135,13 +137,13 @@ const TimeTable = ({ program, loading }) => {
       <div className="relative">
         <div className="hidden md:flex items-center justify-between absolute top-1/2 -translate-y-1/2 left-0 right-0 z-10 pointer-events-none">
           <button 
-            onClick={() => document.querySelector('.timetable-container').scrollBy({ left: -300, behavior: 'smooth' })}
+            onClick={() => document.querySelector('.timetable-container')?.scrollBy({ left: -300, behavior: 'smooth' })}
             className="pointer-events-auto p-2 bg-white rounded-full shadow-md hover:bg-gray-50 ml-2"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button 
-            onClick={() => document.querySelector('.timetable-container').scrollBy({ left: 300, behavior: 'smooth' })}
+            onClick={() => document.querySelector('.timetable-container')?.scrollBy({ left: 300, behavior: 'smooth' })}
             className="pointer-events-auto p-2 bg-white rounded-full shadow-md hover:bg-gray-50 mr-2"
           >
             <ChevronRight className="w-5 h-5 text-gray-700" />
@@ -178,11 +180,11 @@ const TimeTable = ({ program, loading }) => {
                       ) : daySlots.length > 0 ? (
                         <div className="p-2 space-y-2">
                           {daySlots.map((slot) => (
-                            <div key={slot.id} className="mb-2">
+                            <div key={slot?.id || Math.random()} className="mb-2">
                               <div className="text-xs text-gray-500 mb-1">
-                                {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                                {slot?.startTime ? formatTime(slot.startTime) : '--:--'} - {slot?.endTime ? formatTime(slot.endTime) : '--:--'}
                               </div>
-                              <SubjectCard subject={slot.subject} />
+                              <SubjectCard subject={slot?.subject || {}} />
                             </div>
                           ))}
                         </div>
@@ -260,9 +262,9 @@ const TimetablePage = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   // Fetch programs on component mount
   useEffect(() => {
     const fetchPrograms = async () => {
@@ -272,10 +274,9 @@ const TimetablePage = () => {
         return;
       }
   
-      // Decode the token and check if it's expired
       try {
         const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000; // in seconds
+        const currentTime = Date.now() / 1000;
         if (decoded.exp < currentTime) {
           localStorage.removeItem("token");
           navigate("/auth/students-login");
@@ -290,17 +291,17 @@ const TimetablePage = () => {
   
       try {
         setLoading(true);
-        const response = await axios('http://localhost:3500/api/programs', {
+        const response = await axios.get('http://localhost:3500/api/programs', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
   
         if (response.status === 200) {
-          const newData = response.data.programs;
+          const newData = response.data?.programs || [];
           if (!isEqual(newData, programs)) {
             setPrograms(newData);
-            if (newData.length > 0) {
+            if (newData.length > 0 && !selectedProgramId) {
               setSelectedProgramId(newData[0].id);
             }
           }
@@ -316,7 +317,7 @@ const TimetablePage = () => {
   
     const interval = setInterval(fetchPrograms, 120000);
     return () => clearInterval(interval);
-  }, [programs]);
+  }, [programs, selectedProgramId, navigate]);
 
   // Fetch time slots when selected program changes
   useEffect(() => {
@@ -324,40 +325,26 @@ const TimetablePage = () => {
       const fetchTimeSlots = async () => {
         try {
           setLoading(true);
-          
-          // Retrieve token from localStorage
           const token = localStorage.getItem('token');
           
-          // If token is not available, redirect to login page
           if (!token) {
             navigate("/auth/students-login");
             return;
           }
-  
-          // Decode the token to check its expiration
-          const decodedToken = jwtDecode(token);
-          
-          // Get current time and expiration time from the decoded token
-          const currentTime = Date.now() / 1000; // Current time in seconds
-          const tokenExpirationTime = decodedToken.exp; // Expiration time from the decoded token (in seconds)
-  
-          // Check if the token has expired
-          if (currentTime > tokenExpirationTime) {
-            localStorage.removeItem('token'); // Optionally clear the expired token
-            navigate("/auth/students-login"); // Redirect to login if token is expired
-            return;
-          }
-  
-          // Make the request with the token in headers if it's valid
-          const response = await axios.get(`/api/programs/${selectedProgramId}/timetable`, {
-            headers: {
-              Authorization: `Bearer ${token}`,  // Pass the token in the Authorization header
+
+          const response = await axios.get(
+            `http://localhost:3500/api/programs/${selectedProgramId}/timetable`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
             }
-          });
-  
-          setTimeSlots(response.data); // Assuming the timetable is in the response body
+          );
+
+          setTimeSlots(Array.isArray(response.data) ? response.data : []);
         } catch (err) {
           setError(err.message);
+          setTimeSlots([]);
         } finally {
           setLoading(false);
         }
@@ -365,9 +352,9 @@ const TimetablePage = () => {
   
       fetchTimeSlots();
     }
-  }, [selectedProgramId]);
+  }, [selectedProgramId, navigate]);
 
-  const selectedProgram = programs.find(p => p.id === selectedProgramId);
+  const selectedProgram = programs.find(p => p.id === selectedProgramId) || {};
 
   if (loading && programs.length === 0) {
     return (
@@ -394,7 +381,7 @@ const TimetablePage = () => {
     );
   }
 
-  if (!selectedProgram) {
+  if (programs.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center p-6 bg-gray-50 rounded-lg max-w-md">
@@ -429,7 +416,7 @@ const TimetablePage = () => {
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="bg-white text-gray-700 font-medium py-2 px-4 rounded-lg shadow-sm border border-gray-200 flex items-center w-64 justify-between hover:bg-gray-50 transition-colors"
             >
-              <span>{selectedProgram.name}</span>
+              <span>{selectedProgram?.name || 'Select Program'}</span>
               {dropdownOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
 
