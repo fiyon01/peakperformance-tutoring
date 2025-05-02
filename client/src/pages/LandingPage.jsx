@@ -8,7 +8,7 @@ import {
   Award, Rocket, Target, BarChart2, Bookmark, Zap, Shield, FileText,
   PieChart, TrendingUp, HelpCircle, Clock as ClockIcon,MessageSquare, UserCheck, Image as ImageIcon
 } from 'lucide-react';
-
+import { Link } from "react-router-dom";
 const PeakPerformanceTutoring = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -204,9 +204,11 @@ const PeakPerformanceTutoring = () => {
               <a href="#gallery" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
                 <Grid className="w-4 h-4" /> Gallery
               </a>
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2">
-                Enroll Now <ArrowRight className="w-4 h-4" />
-              </button>
+              <Link to="/auth/students-signup">
+                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2">
+                  Students Signup <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
             </div>
 
             <button
@@ -244,9 +246,11 @@ const PeakPerformanceTutoring = () => {
               <a href="#gallery" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
                 <Grid className="w-5 h-5" /> Gallery
               </a>
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2">
-                Enroll Now <ArrowRight className="w-5 h-5" />
-              </button>
+              <Link to="/auth/students-signup">
+                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2">
+                  Students Signup <ArrowRight className="w-5 h-5" />
+                </button>
+              </Link>
             </div>
           </motion.div>
         )}

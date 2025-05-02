@@ -218,7 +218,7 @@ const RegistrationPage = () => {
             <div className="flex items-center gap-2">
               <Rocket className="w-6 h-6 text-indigo-600" />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                EduConnect
+                Peak Performance
               </span>
             </div>
             <a href="#" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition flex items-center">
@@ -245,7 +245,7 @@ const RegistrationPage = () => {
                 <div>
                   <h3 className="text-lg font-bold mb-1">Registration Successful!</h3>
                   <p>
-                    Welcome to EduConnect! Your account has been created successfully.
+                    Welcome to Peak Performance! Your account has been created successfully.
                   </p>
                 </div>
               </div>
