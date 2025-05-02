@@ -40,7 +40,7 @@ function App() {
         </Route>
 
         {/* Public routes */}
-        <Route path="/auth/students-sigup" element={<RegistrationPage />} />
+        <Route path="/auth/students-signup" element={<RegistrationPage />} />
         <Route path="/auth/students-login" element={<LoginPage />} />
         <Route path="/landingpage" element={<PeakPerformanceTutoring />} /> {/* fallback to login or landing */}
       </Routes>

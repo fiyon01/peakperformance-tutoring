@@ -23,10 +23,11 @@ const loginStudents = async (req, res) => {
       }
 
       const token = jwt.sign(
-        { id: user.id, username: user.username, isUser: true },
+        { id: user.student_id, username: user.username, isUser: true },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
+      
 
       // --- Capture IP and Device Info ---
       const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
@@ -50,8 +51,9 @@ const loginStudents = async (req, res) => {
       // --- Optional: Log to a login_logs table ---
       await db.query(
         `INSERT INTO login_logs (student_id, ip_address, user_agent) VALUES (?, ?, ?)`,
-        [user.id, ipAddress, userAgent]
+        [user.student_id, ipAddress, userAgent]
       );
+      
 
       return res.status(200).json({
         message: "Login successful",

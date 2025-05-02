@@ -91,32 +91,32 @@ const DashboardHome = ({ isEnrolled = true, justLoggedIn = false }) => {
     { day: "Fri", attended: true, sessions: 1 }
   ];
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/auth/students-login");
-      return;
-    }
+  //   if (!token) {
+  //     navigate("/landingpage");
+  //     return;
+  //   }
 
-    try {
-      const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // in seconds
+  //   try {
+  //     const decoded = jwtDecode(token);
+  //     const currentTime = Date.now() / 1000; // in seconds
 
-      if (decoded.exp < currentTime) {
-        // Token expired
-        localStorage.removeItem("token");
-        navigate("/auth/students-login");
-      } else {
-        // Token is valid
-        navigate("/"); // Redirect to dashboard if token is valid
-      }
-    } catch (err) {
-      console.error("Invalid token:", err);
-      localStorage.removeItem("token");
-      navigate("/auth/students-login");
-    }
-  }, [navigate])
+  //     if (decoded.exp < currentTime) {
+  //       // Token expired
+  //       localStorage.removeItem("token");
+  //       navigate("/auth/students-login");
+  //     } else {
+  //       // Token is valid
+  //       navigate("/"); // Redirect to dashboard if token is valid
+  //     }
+  //   } catch (err) {
+  //     console.error("Invalid token:", err);
+  //     localStorage.removeItem("token");
+  //     navigate("/landingpage");
+  //   }
+  // }, [navigate])
 
   const toggleProgramExpand = (id) => {
     setExpandedProgramId(expandedProgramId === id ? null : id);

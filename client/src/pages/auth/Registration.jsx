@@ -22,7 +22,7 @@ const RegistrationPage = () => {
       { type: 'father', name: '', phone: '', email: '', relationship: 'Father' }
     ]
   });
-  const navigate = useNavigate()
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +30,7 @@ const RegistrationPage = () => {
   const [errors, setErrors] = useState({});
   const [activeField, setActiveField] = useState(null);
   const formRef = useRef(null);
-
+  const navigate = useNavigate()
   const gradeLevels = [
     "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6",
     "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12",
@@ -137,7 +137,9 @@ const RegistrationPage = () => {
     
     setIsSubmitting(true);
     try{
-      const response = await axios("http://localhost:3500/api/signup")
+      const response = await axios.post("http://localhost:3500/api/signup", formData);
+      console.log("Signup response:", response);
+
       if(response.status === 201){
         setIsSubmitting(false);
         setFormSubmitted(true);

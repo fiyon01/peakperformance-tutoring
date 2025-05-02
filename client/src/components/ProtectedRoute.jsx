@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      navigate("/"); // Landing page
+      navigate("/landingpage"); // Landing page
       return;
     }
 
@@ -19,10 +19,12 @@ const ProtectedRoute = ({ children }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navigate("/auth/students-login");
+      }else{
+        navigate("/")
       }
     } catch (err) {
       console.error("Token decode error:", err);
-      navigate("/");
+      navigate("/landingpage");
     }
   }, [navigate]);
 
