@@ -6,14 +6,15 @@ const strategyRoute = require('./routes/strategyRoute');
 const dotenv = require("dotenv");
 const signupRoute = require("./routes/signupRoute")
 const loginRoute = require("./routes/loginRoute")
-
+const programsRoute = require("./routes/programsRoute")
+const notificationsRoute = require("./routes/notificationsRoute")
 dotenv.config();
 const app = express();
 
 
 app.use(cors({
     origin: 'http://localhost:5173', // Allow only requests from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Adjust allowed methods
+    methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE'], // Adjust allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Adjust allowed headers
   }));
 // Handle uncaught exceptions (e.g., undefined variables, bugs)
@@ -34,6 +35,8 @@ app.use("/", homeRoute);
 app.use("/api", strategyRoute);
 app.use("/api", signupRoute);
 app.use("/api", loginRoute);
+app.use("/api", programsRoute);
+app.use("/api", notificationsRoute);
 
 // Error-handling middleware (must be after routes)
 app.use((err, req, res, next) => {

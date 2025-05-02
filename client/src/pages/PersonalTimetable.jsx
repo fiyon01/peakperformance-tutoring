@@ -26,7 +26,6 @@ const PersonalTimetable = () => {
       color: '#FEE2E2',
       textColor: '#B91C1C',
       icon: 'heart',
-      notes: '15 min meditation after',
       repeat: 'weekly'
     },
     {
@@ -38,7 +37,6 @@ const PersonalTimetable = () => {
       color: '#DBEAFE',
       textColor: '#1D4ED8',
       icon: 'book',
-      notes: 'Math chapter 5',
       repeat: 'none'
     }
   ]);
@@ -62,124 +60,11 @@ const PersonalTimetable = () => {
     color: '#EFF6FF',
     textColor: '#1E40AF',
     icon: 'book',
-    notes: '',
     repeat: 'none'
   });
-  
-  // Available icons
-  const icons = [
-    { name: 'book', component: <Book size={18} /> },
-    { name: 'study', component: <BookOpen size={18} /> },
-    { name: 'school', component: <GraduationCap size={18} /> },
-    { name: 'exercise', component: <Dumbbell size={18} /> },
-    { name: 'music', component: <Music size={18} /> },
-    { name: 'meal', component: <Utensils size={18} /> },
-    { name: 'heart', component: <Heart size={18} /> },
-    { name: 'coffee', component: <Coffee size={18} /> },
-    { name: 'computer', component: <Laptop size={18} /> },
-    { name: 'phone', component: <Phone size={18} /> },
-    { name: 'tv', component: <Tv size={18} /> },
-    { name: 'shopping', component: <ShoppingCart size={18} /> },
-    { name: 'transport', component: <Bus size={18} /> },
-    { name: 'bike', component: <Bike size={18} /> },
-    { name: 'shower', component: <FaShower size={18} /> },
-    { name: 'sleep', component: <Bed size={18} /> },
-    { name: 'beauty', component: <Brush size={18} /> },
-    { name: 'alarm', component: <AlarmClock size={18} /> },
-    { name: 'reminder', component: <Bell size={18} /> },
-    { name: 'work', component: <Briefcase size={18} /> }
-  ];
-  
-  // Color palettes
-  const palettes = {
-    soft: ['#FEE2E2', '#FEF3C7', '#D1FAE5', '#DBEAFE', '#E0E7FF', '#EDE9FE', '#FCE7F3'],
-    vibrant: ['#FECACA', '#FDE68A', '#A7F3D0', '#BFDBFE', '#C7D2FE', '#DDD6FE', '#FBCFE8'],
-    pastel: ['#FFDFDF', '#FFF4C9', '#C8F5DC', '#D4E6FF', '#D9D9FF', '#E8D9FF', '#FFD9EC'],
-    jewel: ['#FCA5A5', '#FCD34D', '#6EE7B7', '#93C5FD', '#A5B4FC', '#C4B5FD', '#F9A8D4'],
-    earth: ['#FED7AA', '#FDE68A', '#A7F3D0', '#BAE6FD', '#C7D2FE', '#DDD6FE', '#F5D0FE'],
-    ocean: ['#BFDBFE', '#A5F3FC', '#99F6E4', '#A7F3D0', '#D9F99D', '#FDE68A', '#FECACA'],
-    sunset: ['#FECACA', '#FDE68A', '#FEF08A', '#FED7AA', '#FDBA74', '#FCA5A5', '#F9A8D4']
-  };
-  
-  // Themes
-  const themes = [
-    { 
-      name: 'default', 
-      bg: 'bg-white', 
-      text: 'text-gray-800', 
-      border: 'border-gray-200',
-      modalBg: 'bg-white',
-      modalText: 'text-gray-800'
-    },
-    { 
-      name: 'light', 
-      bg: 'bg-gray-50', 
-      text: 'text-gray-800', 
-      border: 'border-gray-300',
-      modalBg: 'bg-white',
-      modalText: 'text-gray-800'
-    },
-    { 
-      name: 'dark', 
-      bg: 'bg-gray-900', 
-      text: 'text-gray-100', 
-      border: 'border-gray-700',
-      modalBg: 'bg-gray-800',
-      modalText: 'text-gray-100'
-    },
-    { 
-      name: 'feminine', 
-      bg: 'bg-rose-50', 
-      text: 'text-rose-900', 
-      border: 'border-rose-200',
-      modalBg: 'bg-rose-50',
-      modalText: 'text-rose-900'
-    },
-    { 
-      name: 'professional', 
-      bg: 'bg-slate-50', 
-      text: 'text-slate-800', 
-      border: 'border-slate-300',
-      modalBg: 'bg-slate-50',
-      modalText: 'text-slate-800'
-    },
-    { 
-      name: 'cozy', 
-      bg: 'bg-amber-50', 
-      text: 'text-amber-900', 
-      border: 'border-amber-200',
-      modalBg: 'bg-amber-50',
-      modalText: 'text-amber-900'
-    },
-    { 
-      name: 'nature', 
-      bg: 'bg-emerald-50', 
-      text: 'text-emerald-900', 
-      border: 'border-emerald-200',
-      modalBg: 'bg-emerald-50',
-      modalText: 'text-emerald-900'
-    }
-  ];
-  
-  // Background options
-  const backgrounds = [
-    { name: 'plain', label: 'Plain', icon: <Droplet size={18} /> },
-    { name: 'gradient', label: 'Gradient', icon: <Droplet size={18} /> },
-    { name: 'texture', label: 'Texture', icon: <Image size={18} /> },
-    { name: 'pattern', label: 'Pattern', icon: <LayoutGrid size={18} /> }
-  ];
-  
+
   // Days of week
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  
-  // Time slots - now from 6am to 11pm
-  const timeSlots = [];
-  for (let i = 6; i < 24; i++) {
-    timeSlots.push(`${i}:00`);
-    if (i < 23) {
-      timeSlots.push(`${i}:30`);
-    }
-  }
   
   // Calculate duration in hours and minutes
   const calculateDuration = (startTime, endTime) => {
@@ -210,39 +95,9 @@ const PersonalTimetable = () => {
   // Handle adding/editing blocks
   const handleSaveBlock = () => {
     if (editingBlock) {
-      // If editing and repeat is weekly, update all blocks with the same title in the week
-      if (newBlock.repeat === 'weekly') {
-        const updatedBlocks = blocks.map(block => {
-          if (block.title === editingBlock.title && block.day >= 0 && block.day <= 6) {
-            return {
-              ...newBlock,
-              id: block.id,
-              day: block.day // Keep the original day
-            };
-          }
-          return block;
-        });
-        setBlocks(updatedBlocks);
-      } else {
-        // Just update the single block
-        setBlocks(blocks.map(block => block.id === editingBlock.id ? newBlock : block));
-      }
+      setBlocks(blocks.map(block => block.id === editingBlock.id ? newBlock : block));
     } else {
-      // If new block and repeat is weekly, create blocks for each day
-      if (newBlock.repeat === 'weekly') {
-        const weeklyBlocks = [];
-        for (let i = 0; i < 7; i++) {
-          weeklyBlocks.push({
-            ...newBlock,
-            id: Date.now() + i,
-            day: i
-          });
-        }
-        setBlocks([...blocks, ...weeklyBlocks]);
-      } else {
-        // Just add the single block
-        setBlocks([...blocks, { ...newBlock, id: Date.now() }]);
-      }
+      setBlocks([...blocks, { ...newBlock, id: Date.now() }]);
     }
     setShowBlockModal(false);
     setEditingBlock(null);
@@ -280,13 +135,7 @@ const PersonalTimetable = () => {
   const getBlocksForDay = (dayIndex) => {
     return blocks.filter(block => block.day === dayIndex);
   };
-  
-  // Get icon component by name
-  const getIconComponent = (name) => {
-    const icon = icons.find(i => i.name === name);
-    return icon ? icon.component : <Book size={18} />;
-  };
-  
+
   // Calculate block position and height
   const calculateBlockStyle = (block) => {
     const [startHour, startMinute] = block.startTime.split(':').map(Number);
@@ -302,30 +151,42 @@ const PersonalTimetable = () => {
   };
 
   // Get current theme styles
-  const currentTheme = themes.find(t => t.name === theme) || themes[0];
+  const currentTheme = {
+    bg: 'bg-white',
+    text: 'text-gray-800',
+    border: 'border-gray-200',
+    modalBg: 'bg-white',
+    modalText: 'text-gray-800',
+    inputBorder: 'border-gray-300',
+    inputFocus: 'ring-blue-500 border-blue-500'
+  };
 
   return (
-    <div className={`min-h-screen ${currentTheme.bg} ${currentTheme.text} transition-colors duration-300`}>
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="p-4 md:p-6 border-b border-opacity-20">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-          <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+      <header className="p-4 md:p-6 border-b border-gray-200">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
             <h1 className="text-xl md:text-2xl font-bold flex items-center">
               <Clock className="mr-2" size={24} />
               My Personal Timetable
             </h1>
             
-            <div className="flex space-x-2">
+            <div className="flex gap-2">
               <button 
                 onClick={() => setViewMode('day')} 
-                className={`px-3 py-1 rounded-lg flex items-center ${viewMode === 'day' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}
+                className={`px-3 py-1 rounded-lg flex items-center transition-colors ${
+                  viewMode === 'day' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
                 <Calendar className="mr-1" size={16} />
                 Day
               </button>
               <button 
                 onClick={() => setViewMode('week')} 
-                className={`px-3 py-1 rounded-lg flex items-center ${viewMode === 'week' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}
+                className={`px-3 py-1 rounded-lg flex items-center transition-colors ${
+                  viewMode === 'week' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
                 <LayoutGrid className="mr-1" size={16} />
                 Week
@@ -333,7 +194,7 @@ const PersonalTimetable = () => {
             </div>
           </div>
           
-          <div className="flex space-x-3 w-full md:w-auto justify-between md:justify-normal">
+          <div className="flex gap-3 w-full md:w-auto justify-between md:justify-normal">
             <button 
               onClick={() => setShowCustomizeModal(true)}
               className="p-2 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors"
@@ -345,14 +206,18 @@ const PersonalTimetable = () => {
             <button 
               onClick={() => {
                 setNewBlock({
-                  ...newBlock,
-                  day: viewMode === 'week' ? 0 : selectedDay,
+                  title: '',
                   startTime: '09:00',
-                  endTime: '10:00'
+                  endTime: '10:00',
+                  day: viewMode === 'week' ? 0 : selectedDay,
+                  color: '#EFF6FF',
+                  textColor: '#1E40AF',
+                  icon: 'book',
+                  repeat: 'none'
                 });
                 setShowBlockModal(true);
               }}
-              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
             >
               <Plus size={18} className="mr-1" />
               <span className="hidden md:inline">Add Block</span>
@@ -360,11 +225,11 @@ const PersonalTimetable = () => {
           </div>
         </div>
         
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 space-y-3 md:space-y-0">
-          <div className="flex items-center space-x-2 md:space-x-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 gap-3">
+          <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-2">
             <button 
               onClick={() => navigateDays('prev')}
-              className="p-2 rounded-full hover:bg-gray-200 hover:bg-opacity-50 transition-colors flex-shrink-0"
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
             >
               <ChevronLeft size={20} />
             </button>
@@ -378,7 +243,7 @@ const PersonalTimetable = () => {
             
             <button 
               onClick={() => navigateDays('next')}
-              className="p-2 rounded-full hover:bg-gray-200 hover:bg-opacity-50 transition-colors flex-shrink-0"
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
             >
               <ChevronRight size={20} />
             </button>
@@ -388,17 +253,17 @@ const PersonalTimetable = () => {
                 setCurrentDate(new Date());
                 setSelectedDay(new Date().getDay());
               }}
-              className="px-3 py-1 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex-shrink-0"
+              className="px-3 py-1 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex-shrink-0 text-sm"
             >
               Today
             </button>
           </div>
           
-          <div className="flex space-x-2">
-            <button className="p-2 rounded-full hover:bg-gray-200 hover:bg-opacity-50 transition-colors" title="Print">
+          <div className="flex gap-2">
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-colors" title="Print">
               <Printer size={18} />
             </button>
-            <button className="p-2 rounded-full hover:bg-gray-200 hover:bg-opacity-50 transition-colors" title="Settings">
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-colors" title="Settings">
               <Settings size={18} />
             </button>
           </div>
@@ -413,9 +278,9 @@ const PersonalTimetable = () => {
               {/* Time column */}
               <div className="col-span-1">
                 <div className="h-12"></div>
-                {timeSlots.map((time, i) => (
+                {Array.from({ length: 36 }).map((_, i) => (
                   <div key={i} className="h-10 flex items-end justify-end pr-2 text-sm text-gray-500">
-                    {time.includes(':30') ? '' : formatTime(time)}
+                    {i % 2 === 0 ? `${6 + Math.floor(i/2)}:00` : ''}
                   </div>
                 ))}
               </div>
@@ -424,11 +289,17 @@ const PersonalTimetable = () => {
               {getWeekDays().map((day, dayIndex) => (
                 <div 
                   key={dayIndex} 
-                  className={`relative col-span-1 border rounded-lg ${dayIndex === new Date().getDay() && currentDate.getDay() === new Date().getDay() ? 'border-blue-400 bg-blue-50 bg-opacity-30' : 'border-gray-200'}`}
+                  className={`relative col-span-1 border rounded-lg ${
+                    dayIndex === new Date().getDay() && currentDate.getDay() === new Date().getDay() ? 
+                    'border-blue-400 bg-blue-50 bg-opacity-30' : 'border-gray-200'
+                  }`}
                 >
                   <div className="h-12 flex flex-col items-center justify-center font-medium border-b p-1">
                     <div className="text-sm md:text-base">{days[dayIndex].substring(0, 3)}</div>
-                    <div className={`text-xs md:text-sm ${day.getDate() === new Date().getDate() && day.getMonth() === new Date().getMonth() ? 'bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center' : ''}`}>
+                    <div className={`text-xs md:text-sm ${
+                      day.getDate() === new Date().getDate() && day.getMonth() === new Date().getMonth() ? 
+                      'bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center' : ''
+                    }`}>
                       {day.getDate()}
                     </div>
                   </div>
@@ -438,15 +309,19 @@ const PersonalTimetable = () => {
                     onClick={() => {
                       setSelectedDay(dayIndex);
                       setNewBlock({
-                        ...newBlock,
-                        day: dayIndex,
+                        title: '',
                         startTime: '09:00',
-                        endTime: '10:00'
+                        endTime: '10:00',
+                        day: dayIndex,
+                        color: '#EFF6FF',
+                        textColor: '#1E40AF',
+                        icon: 'book',
+                        repeat: 'none'
                       });
                     }}
                   >
                     {/* Time slot indicators */}
-                    {timeSlots.map((_, i) => (
+                    {Array.from({ length: 36 }).map((_, i) => (
                       <div key={i} className="h-10 border-b border-gray-100 border-dashed"></div>
                     ))}
                     
@@ -474,8 +349,12 @@ const PersonalTimetable = () => {
                         <div className="flex items-start">
                           <div className="mr-2">
                             {iconStyle === 'filled' ? 
-                              React.cloneElement(getIconComponent(block.icon), { fill: block.textColor }) : 
-                              getIconComponent(block.icon)}
+                              React.cloneElement(
+                                <Book size={18} />, 
+                                { fill: block.textColor }
+                              ) : 
+                              <Book size={18} />
+                            }
                           </div>
                           <div className="flex-1">
                             <div className="font-medium text-sm md:text-base">{block.title}</div>
@@ -483,9 +362,6 @@ const PersonalTimetable = () => {
                               {formatTime(block.startTime)} - {formatTime(block.endTime)}
                               <span className="ml-2">({calculateDuration(block.startTime, block.endTime)})</span>
                             </div>
-                            {block.notes && (
-                              <div className="text-xs mt-1 opacity-80">{block.notes}</div>
-                            )}
                           </div>
                         </div>
                       </motion.div>
@@ -500,16 +376,16 @@ const PersonalTimetable = () => {
             {/* Time column */}
             <div className="col-span-1">
               <div className="h-12"></div>
-              {timeSlots.map((time, i) => (
+              {Array.from({ length: 36 }).map((_, i) => (
                 <div key={i} className="h-10 flex items-end justify-end pr-2 text-sm text-gray-500">
-                  {time.includes(':30') ? '' : formatTime(time)}
+                  {i % 2 === 0 ? `${6 + Math.floor(i/2)}:00` : ''}
                 </div>
               ))}
             </div>
             
             {/* Day column */}
-            <div className="relative col-span-5 border rounded-lg">
-              <div className="h-12 flex items-center justify-center font-medium border-b">
+            <div className="relative col-span-5 border rounded-lg border-gray-200">
+              <div className="h-12 flex items-center justify-center font-medium border-b border-gray-200">
                 {days[selectedDay]}, {currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
               </div>
               
@@ -517,16 +393,20 @@ const PersonalTimetable = () => {
                 className="relative min-h-[720px] cursor-pointer"
                 onClick={() => {
                   setNewBlock({
-                    ...newBlock,
-                    day: selectedDay,
+                    title: '',
                     startTime: '09:00',
-                    endTime: '10:00'
+                    endTime: '10:00',
+                    day: selectedDay,
+                    color: '#EFF6FF',
+                    textColor: '#1E40AF',
+                    icon: 'book',
+                    repeat: 'none'
                   });
                   setShowBlockModal(true);
                 }}
               >
                 {/* Time slot indicators */}
-                {timeSlots.map((_, i) => (
+                {Array.from({ length: 36 }).map((_, i) => (
                   <div key={i} className="h-10 border-b border-gray-100 border-dashed"></div>
                 ))}
                 
@@ -554,8 +434,12 @@ const PersonalTimetable = () => {
                     <div className="flex items-start">
                       <div className="mr-2">
                         {iconStyle === 'filled' ? 
-                          React.cloneElement(getIconComponent(block.icon), { fill: block.textColor }) : 
-                          getIconComponent(block.icon)}
+                          React.cloneElement(
+                            <Book size={18} />, 
+                            { fill: block.textColor }
+                          ) : 
+                          <Book size={18} />
+                        }
                       </div>
                       <div className="flex-1">
                         <div className="font-medium">{block.title}</div>
@@ -563,9 +447,6 @@ const PersonalTimetable = () => {
                           {formatTime(block.startTime)} - {formatTime(block.endTime)}
                           <span className="ml-2">({calculateDuration(block.startTime, block.endTime)})</span>
                         </div>
-                        {block.notes && (
-                          <div className="text-xs mt-1 opacity-80">{block.notes}</div>
-                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -582,7 +463,7 @@ const PersonalTimetable = () => {
             <p className="text-gray-400 mb-6">Start by adding your first time block</p>
             <button 
               onClick={() => setShowBlockModal(true)}
-              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
+              className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
             >
               <Plus size={20} className="mr-2" />
               Add Your First Block
@@ -608,53 +489,53 @@ const PersonalTimetable = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
-              className={`${currentTheme.modalBg} rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto`}
+              className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
-                <h2 className={`text-xl font-bold mb-4 flex items-center ${currentTheme.modalText}`}>
+                <h2 className="text-xl font-bold mb-4 flex items-center text-gray-800">
                   {editingBlock ? 'Edit Time Block' : 'Add New Time Block'}
                 </h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Title</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">Title</label>
                     <input
                       type="text"
                       value={newBlock.title}
                       onChange={(e) => setNewBlock({...newBlock, title: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${currentTheme.modalText} ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300' : 'border-gray-600'}`}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       placeholder="e.g., Morning Routine, Study Session"
                     />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Start Time</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700">Start Time</label>
                       <input
                         type="time"
                         value={newBlock.startTime}
                         onChange={(e) => setNewBlock({...newBlock, startTime: e.target.value})}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${currentTheme.modalText} ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300' : 'border-gray-600'}`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
                     </div>
                     <div>
-                      <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>End Time</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700">End Time</label>
                       <input
                         type="time"
                         value={newBlock.endTime}
                         onChange={(e) => setNewBlock({...newBlock, endTime: e.target.value})}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${currentTheme.modalText} ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300' : 'border-gray-600'}`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
                     </div>
                   </div>
                   
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Day</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">Day</label>
                     <select
                       value={newBlock.day}
                       onChange={(e) => setNewBlock({...newBlock, day: parseInt(e.target.value)})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${currentTheme.modalText} ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300' : 'border-gray-600'}`}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     >
                       {days.map((day, i) => (
                         <option key={i} value={i}>{day}</option>
@@ -663,32 +544,17 @@ const PersonalTimetable = () => {
                   </div>
                   
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Icon</label>
-                    <div className="grid grid-cols-6 gap-2">
-                      {icons.map((icon, i) => (
-                        <button
-                          key={i}
-                          className={`p-2 rounded-lg border ${newBlock.icon === icon.name ? 'bg-blue-100 border-blue-400' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-100 border-gray-200' : 'bg-gray-700 border-gray-600'}`}
-                          onClick={() => setNewBlock({...newBlock, icon: icon.name})}
-                        >
-                          {icon.component}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Color</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">Color</label>
                     <div className="grid grid-cols-7 gap-2">
-                      {palettes[colorPalette].map((color, i) => (
+                      {['#FEE2E2', '#FEF3C7', '#D1FAE5', '#DBEAFE', '#E0E7FF', '#EDE9FE', '#FCE7F3'].map((color, i) => (
                         <button
                           key={i}
-                          className="w-8 h-8 rounded-full border border-gray-200"
+                          className="w-8 h-8 rounded-full border border-gray-200 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500"
                           style={{ backgroundColor: color }}
                           onClick={() => setNewBlock({...newBlock, color})}
                         >
                           {newBlock.color === color && (
-                            <div className="w-full h-full flex items-center justify-center text-white">
+                            <div className="w-full h-full flex items-center justify-center text-gray-700">
                               <FaCheck size={14} />
                             </div>
                           )}
@@ -698,18 +564,7 @@ const PersonalTimetable = () => {
                   </div>
                   
                   <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Notes</label>
-                    <textarea
-                      value={newBlock.notes}
-                      onChange={(e) => setNewBlock({...newBlock, notes: e.target.value})}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${currentTheme.modalText} ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300' : 'border-gray-600'}`}
-                      rows="2"
-                      placeholder="Optional notes or details..."
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className={`block text-sm font-medium mb-1 ${currentTheme.modalText}`}>Repeat</label>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">Repeat</label>
                     <div className="flex flex-wrap gap-4">
                       <label className="inline-flex items-center">
                         <input
@@ -718,20 +573,9 @@ const PersonalTimetable = () => {
                           value="none"
                           checked={newBlock.repeat === 'none'}
                           onChange={() => setNewBlock({...newBlock, repeat: 'none'})}
-                          className="text-blue-500 focus:ring-blue-500"
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                         />
-                        <span className={`ml-2 ${currentTheme.modalText}`}>None</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="repeat"
-                          value="daily"
-                          checked={newBlock.repeat === 'daily'}
-                          onChange={() => setNewBlock({...newBlock, repeat: 'daily'})}
-                          className="text-blue-500 focus:ring-blue-500"
-                        />
-                        <span className={`ml-2 ${currentTheme.modalText}`}>Daily</span>
+                        <span className="ml-2 text-gray-700">None</span>
                       </label>
                       <label className="inline-flex items-center">
                         <input
@@ -740,9 +584,9 @@ const PersonalTimetable = () => {
                           value="weekly"
                           checked={newBlock.repeat === 'weekly'}
                           onChange={() => setNewBlock({...newBlock, repeat: 'weekly'})}
-                          className="text-blue-500 focus:ring-blue-500"
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                         />
-                        <span className={`ml-2 ${currentTheme.modalText}`}>Weekly</span>
+                        <span className="ml-2 text-gray-700">Weekly</span>
                       </label>
                     </div>
                   </div>
@@ -752,16 +596,11 @@ const PersonalTimetable = () => {
                   {editingBlock && (
                     <button
                       onClick={() => {
-                        if (newBlock.repeat === 'weekly') {
-                          // Delete all blocks with this title in the week
-                          setBlocks(blocks.filter(block => !(block.title === editingBlock.title && block.day >= 0 && block.day <= 6)));
-                        } else {
-                          handleDeleteBlock(editingBlock.id);
-                        }
+                        handleDeleteBlock(editingBlock.id);
                         setShowBlockModal(false);
                         setEditingBlock(null);
                       }}
-                      className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                      className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                     >
                       Delete
                     </button>
@@ -771,184 +610,15 @@ const PersonalTimetable = () => {
                       setShowBlockModal(false);
                       setEditingBlock(null);
                     }}
-                    className={`px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-300 text-gray-700' : 'border-gray-600 text-gray-200'}`}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveBlock}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   >
                     {editingBlock ? 'Update' : 'Add'} Block
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Customize Modal */}
-      <AnimatePresence>
-        {showCustomizeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-            onClick={() => setShowCustomizeModal(false)}
-          >
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 20, opacity: 0 }}
-              className={`${currentTheme.modalBg} rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6">
-                <h2 className={`text-xl font-bold mb-6 flex items-center ${currentTheme.modalText}`}>
-                  <Palette className="mr-2" size={20} />
-                  Customize Your Timetable
-                </h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Theme Selection */}
-                  <div>
-                    <h3 className={`text-lg font-medium mb-4 ${currentTheme.modalText}`}>Theme</h3>
-                    <div className="grid grid-cols-3 gap-3">
-                      {themes.map((t, i) => (
-                        <button
-                          key={i}
-                          className={`p-4 rounded-lg border-2 ${t.border} ${theme === t.name ? 'ring-2 ring-blue-500' : ''}`}
-                          onClick={() => setTheme(t.name)}
-                        >
-                          <div className={`w-full h-20 rounded ${t.bg} flex items-center justify-center`}>
-                            <span className={`${t.text} font-medium`}>Aa</span>
-                          </div>
-                          <div className={`mt-2 text-sm capitalize ${currentTheme.modalText}`}>{t.name}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Color Palette */}
-                  <div>
-                    <h3 className={`text-lg font-medium mb-4 ${currentTheme.modalText}`}>Color Palette</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {Object.keys(palettes).map((palette, i) => (
-                        <button
-                          key={i}
-                          className={`p-3 rounded-lg border ${colorPalette === palette ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                          onClick={() => setColorPalette(palette)}
-                        >
-                          <div className="flex">
-                            {palettes[palette].slice(0, 5).map((color, j) => (
-                              <div 
-                                key={j} 
-                                className="h-8 flex-1" 
-                                style={{ backgroundColor: color }}
-                              ></div>
-                            ))}
-                          </div>
-                          <div className={`mt-2 text-sm capitalize ${currentTheme.modalText}`}>{palette}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Background */}
-                  <div>
-                    <h3 className={`text-lg font-medium mb-4 ${currentTheme.modalText}`}>Background</h3>
-                    <div className="grid grid-cols-4 gap-3">
-                      {backgrounds.map((bg, i) => (
-                        <button
-                          key={i}
-                          className={`p-3 rounded-lg border flex flex-col items-center ${background === bg.name ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                          onClick={() => setBackground(bg.name)}
-                        >
-                          <div className={`p-2 rounded-full mb-2 ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-100' : 'bg-gray-700'}`}>
-                            {bg.icon}
-                          </div>
-                          <div className={`text-sm ${currentTheme.modalText}`}>{bg.label}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Icon Style */}
-                  <div>
-                    <h3 className={`text-lg font-medium mb-4 ${currentTheme.modalText}`}>Icon Style</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        className={`p-4 rounded-lg border flex flex-col items-center ${iconStyle === 'filled' ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                        onClick={() => setIconStyle('filled')}
-                      >
-                        <div className="flex space-x-2 mb-2">
-                          <FaCircle size={16} className="text-blue-500" />
-                          <FaHeart size={16} className="text-rose-500" />
-                          <FaStar size={16} className="text-amber-400" />
-                        </div>
-                        <div className={`text-sm ${currentTheme.modalText}`}>Filled</div>
-                      </button>
-                      <button
-                        className={`p-4 rounded-lg border flex flex-col items-center ${iconStyle === 'outline' ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                        onClick={() => setIconStyle('outline')}
-                      >
-                        <div className="flex space-x-2 mb-2">
-                          <FaRegCircle size={16} className="text-blue-500" />
-                          <FaRegHeart size={16} className="text-rose-500" />
-                          <FaRegStar size={16} className="text-amber-400" />
-                        </div>
-                        <div className={`text-sm ${currentTheme.modalText}`}>Outline</div>
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Density */}
-                  <div className="md:col-span-2">
-                    <h3 className={`text-lg font-medium mb-4 ${currentTheme.modalText}`}>Layout Density</h3>
-                    <div className="grid grid-cols-3 gap-3">
-                      <button
-                        className={`p-3 rounded-lg border flex flex-col items-center ${density === 'compact' ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                        onClick={() => setDensity('compact')}
-                      >
-                        <div className="w-full h-12 mb-2 flex flex-col justify-between">
-                          <div className={`h-3 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                          <div className={`h-3 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                          <div className={`h-3 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                        </div>
-                        <div className={`text-sm ${currentTheme.modalText}`}>Compact</div>
-                      </button>
-                      <button
-                        className={`p-3 rounded-lg border flex flex-col items-center ${density === 'normal' ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                        onClick={() => setDensity('normal')}
-                      >
-                        <div className="w-full h-12 mb-2 flex flex-col justify-between">
-                          <div className={`h-4 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                          <div className={`h-4 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                        </div>
-                        <div className={`text-sm ${currentTheme.modalText}`}>Normal</div>
-                      </button>
-                      <button
-                        className={`p-3 rounded-lg border flex flex-col items-center ${density === 'spacious' ? 'ring-2 ring-blue-500 border-blue-500' : currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'border-gray-200' : 'border-gray-600'}`}
-                        onClick={() => setDensity('spacious')}
-                      >
-                        <div className="w-full h-12 mb-2 flex flex-col justify-between">
-                          <div className={`h-5 rounded w-full ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                          <div className={`h-5 rounded w-3/4 ${currentTheme.modalBg === 'bg-white' || currentTheme.modalBg === 'bg-gray-50' ? 'bg-gray-200' : 'bg-gray-600'}`}></div>
-                        </div>
-                        <div className={`text-sm ${currentTheme.modalText}`}>Spacious</div>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-end mt-8">
-                  <button
-                    onClick={() => setShowCustomizeModal(false)}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Apply Customization
                   </button>
                 </div>
               </div>

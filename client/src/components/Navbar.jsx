@@ -1,100 +1,151 @@
-import { useState } from 'react';
-import {
-  Bell,
-  LogOut,
-  HelpCircle,
-  Settings,
-  User,
-  Search
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Bell, LogOut, HelpCircle, Settings, User, Menu, Search, X } from 'lucide-react';
 
-const Navbar = ({ studentName = '', profilePic, notificationCount = 0 }) => {
+const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburgerClick }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const getInitial = () => {
-    return studentName && studentName.length > 0
-      ? studentName.charAt(0).toUpperCase()
-      : '?';
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth >= 768) {
+        setShowMobileSearch(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+  const getInitial = () => studentName?.charAt(0)?.toUpperCase() || '?';
 
   return (
-    <header className="sticky top-0 z-20 bg-white shadow-sm">
-      <div className="flex items-center justify-between px-4 md:px-6 py-3">
-        {/* Logo */}
-        <div className="flex items-center">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">
-            <span className="text-white font-bold text-xl">PP</span>
-          </div>
-        </div>
-
-        {/* Search Bar */}
-        <div className="hidden md:flex items-center w-full max-w-md mx-6">
+    <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+      {/* Mobile Search Overlay */}
+      {isMobile && showMobileSearch && (
+        <div className="absolute inset-0 bg-white z-20 flex items-center px-4 py-3">
           <div className="relative w-full">
             <input
               type="text"
               placeholder="Search..."
-              className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm shadow-sm"
+              className="w-full px-4 py-2 pl-10 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm"
+              autoFocus
             />
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+            <button 
+              onClick={() => setShowMobileSearch(false)}
+              className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         </div>
+      )}
 
-        {/* Right Side */}
-        <div className="flex items-center space-x-4">
-          {/* Notifications */}
-          <button className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
+      {/* Regular Navbar Content */}
+      <div className={`flex items-center justify-between px-4 py-3 md:px-6 ${showMobileSearch && isMobile ? 'opacity-0' : ''}`}>
+        {/* Left Section */}
+        <div className="flex items-center space-x-2 md:space-x-4">
+          <button 
+            className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            onClick={onHamburgerClick}
+            aria-label="Toggle menu"
+          >
+            <Menu className="w-5 h-5 text-gray-700" />
+          </button>
+          
+        </div>
+
+        {/* Middle Section - Search (Desktop) */}
+        {!isMobile && (
+          <div className="flex-1 mx-4">
+            <div className="relative max-w-md mx-auto">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm text-sm transition-all duration-200"
+              />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+            </div>
+          </div>
+        )}
+
+        {/* Right Section - Icons */}
+        <div className="flex items-center space-x-2 md:space-x-4">
+          {/* Mobile Search Toggle */}
+          {isMobile && !showMobileSearch && (
+            <button
+              onClick={() => setShowMobileSearch(true)}
+              className="p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5 text-gray-600" />
+            </button>
+          )}
+
+          {/* Notification Icon */}
+          <button 
+            className="relative p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            aria-label="Notifications"
+          >
             <Bell className="w-5 h-5 text-gray-600" />
             {notificationCount > 0 && (
-              <span className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full transform translate-x-1 -translate-y-1">
-                {notificationCount}
+              <span className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-xs font-bold text-white bg-red-500 rounded-full transform translate-x-1 -translate-y-1">
+                {Math.min(notificationCount, 9)}
               </span>
             )}
           </button>
 
-          {/* Profile dropdown */}
+          {/* Profile */}
           <div className="relative">
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center space-x-2 focus:outline-none"
+              className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-full"
+              aria-label="User profile"
             >
               {profilePic ? (
                 <img
                   src={profilePic}
                   alt="Profile"
-                  className="w-8 h-8 rounded-full object-cover border-2 border-indigo-100 hover:border-indigo-300 transition-all"
+                  className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-300"
                 />
               ) : (
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 font-medium">
+                <div className="w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-full border-2 border-gray-200 hover:border-indigo-300">
                   {getInitial()}
                 </div>
               )}
-              {studentName && (
-                <span className="hidden md:inline text-sm font-medium text-gray-700">
-                  {studentName}
-                </span>
+              {!isMobile && (
+                <span className="text-sm font-medium text-gray-700">{studentName}</span>
               )}
             </button>
 
-            {/* Dropdown menu */}
+            {/* Dropdown Menu */}
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 border border-gray-100">
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center">
-                  <User className="w-4 h-4 mr-2" />
-                  My Profile
-                </a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center">
-                  <HelpCircle className="w-4 h-4 mr-2" />
-                  Help & Support
-                </a>
-                <div className="border-t border-gray-100 my-1"></div>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
-                </a>
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1 divide-y divide-gray-100">
+                <div className="py-1">
+                  <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    <User className="w-4 h-4 mr-3 text-gray-400" /> 
+                    Profile
+                  </a>
+                  <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    <Settings className="w-4 h-4 mr-3 text-gray-400" /> 
+                    Settings
+                  </a>
+                </div>
+                <div className="py-1">
+                  <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    <HelpCircle className="w-4 h-4 mr-3 text-gray-400" /> 
+                    Support
+                  </a>
+                </div>
+                <div className="py-1">
+                  <a href="#" className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                    <LogOut className="w-4 h-4 mr-3 text-red-400" /> 
+                    Logout
+                  </a>
+                </div>
               </div>
             )}
           </div>

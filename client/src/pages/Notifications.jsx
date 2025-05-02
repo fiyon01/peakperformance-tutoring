@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { 
-  Bell,ChevronRight, BellOff, Check, X, Clock, Calendar, Shield, Megaphone, 
+  Bell, ChevronRight, Check, X, Clock, Calendar, Shield, Megaphone, 
   FileText, ListChecks, Wallet, ChevronDown, ChevronUp, 
   Filter, Archive, Loader2, Inbox, MailOpen
 } from 'lucide-react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -12,107 +16,170 @@ const NotificationsPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [markingAllRead, setMarkingAllRead] = useState(false);
 
+  // Fetch notifications from database
   useEffect(() => {
-    // Simulate API fetch
-    setTimeout(() => {
-      setNotifications([
-        {
-          id: 1,
-          type: 'program',
-          title: 'Summer Intensive 2024 Registration Confirmed',
-          preview: 'Your registration for the Summer Intensive 2024 programme has been successfully processed.',
-          body: 'We are excited to have you join us for the Summer Intensive 2024 programme starting on June 15. Your class schedule and materials will be available one week before the start date. Please check your dashboard for updates.',
-          timestamp: '2024-05-20T09:30:00',
-          read: false,
-          action: {
-            type: 'link',
-            label: 'View Programme Details',
-            url: '/programs/summer-intensive-2024'
-          }
-        },
-        {
-          id: 2,
-          type: 'security',
-          title: 'New Login Detected',
-          preview: 'A login was detected from a new device in Boston, MA.',
-          body: 'A successful login occurred on May 19 at 14:30 from an iPhone 13 in Boston, MA. If this was not you, please secure your account immediately.',
-          timestamp: '2024-05-19T14:30:00',
-          read: false,
-          action: {
-            type: 'button',
-            label: 'Review Account Activity',
-            onClick: () => console.log('Review activity')
-          }
-        },
-        {
-          id: 3,
-          type: 'academic',
-          title: 'Winter Accelerator Report Available',
-          preview: 'Your academic performance report is now available for review.',
-          body: 'Your detailed academic performance report for the Winter Accelerator 2024 programme is now available. This includes your assessment scores, tutor feedback, and recommendations for future programmes.',
-          timestamp: '2024-05-18T11:15:00',
-          read: true,
-          action: {
-            type: 'link',
-            label: 'View Full Report',
-            url: '/reports/winter-accelerator-2024'
-          }
-        },
-        {
-          id: 4,
-          type: 'announcement',
-          title: 'System Maintenance Scheduled',
-          preview: 'Planned maintenance this weekend may cause temporary service interruptions.',
-          body: 'To improve performance, we will be performing system maintenance from Saturday, May 25 at 10:00 PM to Sunday, May 26 at 2:00 AM EST. During this time, you may experience temporary interruptions in service. We apologize for any inconvenience.',
-          timestamp: '2024-05-17T16:45:00',
-          read: true,
-          action: null
-        },
-        {
-          id: 5,
-          type: 'attendance',
-          title: 'Attendance Recorded for Today',
-          preview: 'Your attendance has been recorded for the May 16 session.',
-          body: 'Your attendance for the May 16 session of the Year-Round Excellence programme has been recorded. You can view your attendance history at any time in your dashboard.',
-          timestamp: '2024-05-16T18:20:00',
-          read: true,
-          action: {
-            type: 'link',
-            label: 'View Attendance History',
-            url: '/attendance'
-          }
-        },
-        {
-          id: 6,
-          type: 'payment',
-          title: 'Payment Due Reminder',
-          preview: 'Payment for Summer Intensive 2024 is due in 3 days.',
-          body: 'A payment of $1,250 for the Summer Intensive 2024 programme is due by May 23. Please ensure your payment method is up to date to avoid any registration issues.',
-          timestamp: '2024-05-15T08:00:00',
-          read: false,
-          action: {
-            type: 'link',
-            label: 'Make Payment',
-            url: '/payments'
-          }
+    const fetchNotifications = async () => {
+      try {
+        setLoading(true);
+  
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('No authentication token found');
+          return;
         }
-      ]);
-      setLoading(false);
-    }, 1500);
+  
+        // Check if token is expired
+        const decoded = jwtDecode(token);
+        const isExpired = decoded.exp * 1000 < Date.now();
+        if (isExpired) {
+          toast.error('Session expired. Please log in again.');
+          return;
+        }
+  
+        const response = await axios.get('http://localhost:3500/api/notifications', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        // Log the notifications fetched from the API
+        console.log('Fetched Notifications:', response.data.notifications);
+    
+        // Ensure all notifications have unique IDs and transform them
+        const transformedData = response.data.notifications.map(notification => {
+          if (!notification.id) {
+            console.warn('Notification missing ID, generating fallback ID');
+            notification.id = `fallback-id-${Math.random()}`;
+          }
+    
+          return {
+            id: notification.id,
+            type: notification.type,
+            title: notification.title,
+            preview: notification.preview,
+            body: notification.body,
+            timestamp: notification.timestamp,
+            read: notification.read,
+            action: notification.action_type ? {
+              type: notification.action_type,
+              label: notification.action_label,
+              url: notification.action_url,
+              onClick: notification.action_onClick ? 
+                () => eval(notification.action_onClick) : null
+            } : null
+          };
+        });
+    
+        // Log the transformed notifications
+        console.log('Transformed Notifications:', transformedData);
+    
+        // Update the state with the transformed data
+        setNotifications(transformedData);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+        toast.error(
+          error.response?.data?.error || 'Failed to load notifications'
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchNotifications();
   }, []);
 
-  const markAsRead = (id) => {
-    setNotifications(prev => prev.map(n => 
-      n.id === id ? {...n, read: true} : n
-    ));
+  const markAsRead = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
+      const decoded = jwtDecode(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        throw new Error('Token expired');
+      }
+  
+      const response = await axios.patch(
+        `http://localhost:3500/api/notifications/${id}/read`, 
+        { read: true }, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      if (response.status !== 200) {
+        throw new Error('Failed to mark as read');
+      }
+  
+      setNotifications(prev => prev.map(n => 
+        n.id === id ? { ...n, read: true } : n
+      ));
+      
+      toast.success('Notification marked as read');
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      toast.error(error.message || 'Failed to mark notification as read');
+    }
   };
 
-  const markAllAsRead = () => {
-    setMarkingAllRead(true);
-    setTimeout(() => {
-      setNotifications(prev => prev.map(n => ({...n, read: true})));
+  const markAllAsRead = async () => {
+    try {
+      setMarkingAllRead(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
+      const decoded = jwtDecode(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        throw new Error('Token expired');
+      }
+  
+      const response = await axios.patch(
+        'http://localhost:3500/api/notifications/mark-all-read', 
+        {}, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      if (response.status !== 200) {
+        throw new Error('Failed to mark all as read');
+      }
+  
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      toast.success('All notifications marked as read');
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      toast.error(error.message || 'Failed to mark all notifications as read');
+    } finally {
       setMarkingAllRead(false);
-    }, 800);
+    }
+  };
+
+  const archiveNotification = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
+      const decoded = jwtDecode(token);
+      if (decoded.exp * 1000 < Date.now()) {
+        throw new Error('Token expired');
+      }
+  
+      const response = await axios.delete(
+        `http://localhost:3500/api/notifications/${id}`, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      if (response.status !== 200) {
+        throw new Error('Failed to archive notification');
+      }
+  
+      setNotifications(prev => prev.filter(n => n.id !== id));
+      toast.success('Notification archived');
+    } catch (error) {
+      console.error('Error archiving notification:', error);
+      toast.error(error.message || 'Failed to archive notification');
+    }
   };
 
   const toggleExpand = (id) => {
@@ -120,12 +187,10 @@ const NotificationsPage = () => {
       setExpandedId(null);
     } else {
       setExpandedId(id);
-      markAsRead(id);
+      if (!notifications.find(n => n.id === id)?.read) {
+        markAsRead(id);
+      }
     }
-  };
-
-  const archiveNotification = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
   const getNotificationIcon = (type) => {
@@ -223,96 +288,117 @@ const NotificationsPage = () => {
             </div>
           ) : (
             <ul className="divide-y divide-gray-200">
-              {filteredNotifications.map(notification => (
-                <li 
-                  key={notification.id}
-                  className={`relative ${!notification.read ? 'bg-indigo-50' : 'bg-white'}`}
-                >
-                  <div 
-                    className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${expandedId === notification.id ? 'bg-gray-50' : ''}`}
-                    onClick={() => toggleExpand(notification.id)}
+              {filteredNotifications.map(notification => {
+                if (!notification.id) {
+                  console.error('Notification missing ID:', notification);
+                  return null;
+                }
+                
+                return (
+                  <li 
+                    key={notification.id}
+                    className={`relative ${!notification.read ? 'bg-indigo-50' : 'bg-white'}`}
                   >
-                    <div className="flex items-start">
-                      <div className="flex-shrink-0 pt-0.5 mr-3">
-                        {getNotificationIcon(notification.type)}
-                        {!notification.read && (
-                          <div className="absolute top-4 left-4 w-2 h-2 bg-indigo-600 rounded-full"></div>
-                        )}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between">
-                          <p className={`text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
-                            {notification.title}
-                          </p>
-                          <div className="flex items-center text-xs text-gray-500 ml-2">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {formatTimeAgo(notification.timestamp)}
-                          </div>
+                    <div 
+                      className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${expandedId === notification.id ? 'bg-gray-50' : ''}`}
+                      onClick={() => toggleExpand(notification.id)}
+                    >
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0 pt-0.5 mr-3">
+                          {getNotificationIcon(notification.type)}
+                          {!notification.read && (
+                            <div className="absolute top-4 left-4 w-2 h-2 bg-indigo-600 rounded-full"></div>
+                          )}
                         </div>
                         
-                        <p className="text-sm text-gray-500 mt-1">
-                          {notification.preview}
-                        </p>
-                        
-                        {expandedId === notification.id && (
-                          <div className="mt-3 text-sm text-gray-700">
-                            <p>{notification.body}</p>
-                            
-                            {notification.action && (
-                              <div className="mt-3">
-                                {notification.action.type === 'link' ? (
-                                  <a
-                                    href={notification.action.url}
-                                    className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-                                  >
-                                    {notification.action.label}
-                                    <ChevronRight className="w-4 h-4 ml-1" />
-                                  </a>
-                                ) : (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      notification.action.onClick();
-                                    }}
-                                    className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-                                  >
-                                    {notification.action.label}
-                                    <ChevronRight className="w-4 h-4 ml-1" />
-                                  </button>
-                                )}
-                              </div>
-                            )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between">
+                            <p className={`text-sm font-medium ${!notification.read ? 'text-gray-900' : 'text-gray-700'}`}>
+                              {notification.title}
+                            </p>
+                            <div className="flex items-center text-xs text-gray-500 ml-2">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {formatTimeAgo(notification.timestamp)}
+                            </div>
                           </div>
-                        )}
-                      </div>
-                      
-                      <div className="ml-4 flex-shrink-0 flex">
-                        {expandedId === notification.id ? (
-                          <ChevronUp className="w-5 h-5 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-400" />
-                        )}
+                          
+                          <p className="text-sm text-gray-500 mt-1">
+                            {notification.preview}
+                          </p>
+                          
+                          {expandedId === notification.id && (
+                            <div className="mt-3 text-sm text-gray-700">
+                              <p>{notification.body}</p>
+                              
+                              {notification.action && (
+                                <div className="mt-3">
+                                  {notification.action.type === 'link' ? (
+                                    <a
+                                      href={notification.action.url}
+                                      className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
+                                      onClick={(e) => e.stopPropagation()}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      {notification.action.label}
+                                      <ChevronRight className="w-4 h-4 ml-1" />
+                                    </a>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        notification.action.onClick?.();
+                                      }}
+                                      className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
+                                    >
+                                      {notification.action.label}
+                                      <ChevronRight className="w-4 h-4 ml-1" />
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="ml-4 flex-shrink-0 flex">
+                          {expandedId === notification.id ? (
+                            <ChevronUp className="w-5 h-5 text-gray-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-gray-400" />
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {expandedId === notification.id && (
-                    <div className="px-4 pb-3 flex justify-end">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          archiveNotification(notification.id);
-                        }}
-                        className="flex items-center text-sm text-gray-500 hover:text-gray-700"
-                      >
-                        <Archive className="w-4 h-4 mr-1" />
-                        Archive
-                      </button>
-                    </div>
-                  )}
-                </li>
-              ))}
+                    
+                    {expandedId === notification.id && (
+                      <div className="px-4 pb-3 flex justify-end space-x-4">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            markAsRead(notification.id);
+                          }}
+                          className="flex items-center text-sm text-gray-500 hover:text-gray-700"
+                          disabled={notification.read}
+                        >
+                          <Check className="w-4 h-4 mr-1" />
+                          Mark as Read
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            archiveNotification(notification.id);
+                          }}
+                          className="flex items-center text-sm text-gray-500 hover:text-gray-700"
+                        >
+                          <Archive className="w-4 h-4 mr-1" />
+                          Archive
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

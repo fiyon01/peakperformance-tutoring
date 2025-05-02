@@ -668,8 +668,8 @@ const GoalsVisionBoard = () => {
 
       {/* Goal Modal */}
       {showGoalModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md animate-fade-in">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div className="bg-white rounded-xl p-6 w-full max-w-md animate-fade-in">
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <Target className="w-6 h-6 text-blue-500" />
               {editingId ? 'Edit Goal' : 'Add New Goal'}
@@ -759,8 +759,8 @@ const GoalsVisionBoard = () => {
 
       {/* Weakness Modal */}
       {showWeaknessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md animate-fade-in">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div className="bg-white rounded-xl p-6 w-full max-w-md animate-fade-in">
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <AlertCircle className="w-6 h-6 text-purple-500" />
               {editingId ? 'Edit Weakness' : 'Identify Weakness'}
