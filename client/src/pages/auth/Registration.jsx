@@ -5,7 +5,8 @@ import {
   Check, X, Loader2, Rocket, Shield, HelpCircle, BookOpen,
   Home, Phone, Users, Plus, Minus
 } from 'lucide-react';
-
+import axios from "axios"
+import {useNavigate} from "react-router-dom"
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -21,7 +22,7 @@ const RegistrationPage = () => {
       { type: 'father', name: '', phone: '', email: '', relationship: 'Father' }
     ]
   });
-
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -135,12 +136,23 @@ const RegistrationPage = () => {
     }
     
     setIsSubmitting(true);
+    try{
+      const response = await axios("http://localhost:3500/api/signup")
+      if(response.status === 201){
+        setIsSubmitting(false);
+        setFormSubmitted(true);
+        navigate("/auth/students-login")
+      }else{
+        console.log(response.error)
+      }
+    }catch(err){
+       throw new Error(err)
+    }finally{
+      setIsSubmitting(false)
+    }
+   
     
-    // Simulate API call with loader
-    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    setIsSubmitting(false);
-    setFormSubmitted(true);
     
     // Reset form after 5 seconds
     setTimeout(() => {
