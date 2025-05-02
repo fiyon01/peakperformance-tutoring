@@ -1,0 +1,168 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import {
+  Home,
+  Calendar,
+  Target,Clock,
+  BookOpen,
+  BarChart2,
+  Mail,
+  MapPin,
+  HelpCircle,
+  User,
+  ChevronLeft,
+  ChevronRight,
+  X,Bell,
+  Menu,
+  Rocket,
+  ClipboardCheck
+} from 'lucide-react';
+
+const Sidebar = ({ isEnrolled, hasVenue, mobileOpen, setMobileOpen, isOpen, toggleSidebar,currentPage,setCurrentPage }) => {
+  const [expanded, setExpanded] = useState(isOpen);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  const [activeItem, setActiveItem] = useState('Dashboard Home');
+  const navigate = useNavigate(); 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth < 768) {
+        setExpanded(false);
+      } else {
+        setExpanded(isOpen);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+
+  const isMobile = windowWidth < 768;
+
+  const navItems = [
+    { name: 'Dashboard Home', icon: <Home className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'My Current Programme', icon: <ClipboardCheck className="w-5 h-5" />, alwaysVisible: false, visibleWhen: isEnrolled },
+    { name: 'My Timetable', icon: <Calendar className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'Vision Board / My Goals', icon: <Target className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'Learning Resources', icon: <BookOpen className="w-5 h-5" />, alwaysVisible: false, visibleWhen: isEnrolled },
+    { name: 'Attendance', icon: <BarChart2 className="w-5 h-5" />, alwaysVisible: false, visibleWhen: isEnrolled },
+    { name: 'Notifications', icon: <Bell className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'Programme Communication', icon: <Mail className="w-5 h-5" />, alwaysVisible: true, highlightWhen: !isEnrolled },
+    { name: 'Explore Upcoming Programmes', icon: <Rocket className="w-5 h-5" />, alwaysVisible: true, highlightWhen: !isEnrolled },
+    { name: 'Personal Timetable', icon: <Clock className="w-5 h-5" />, alwaysVisible: true }, // New item added
+    { name: 'Venue & Logistics', icon: <MapPin className="w-5 h-5" />, alwaysVisible: false, visibleWhen: hasVenue },
+    { name: 'Support', icon: <HelpCircle className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'My Account', icon: <User className="w-5 h-5" />, alwaysVisible: true },
+];
+
+
+  const handleItemClick = (itemName) => {
+    setActiveItem(itemName);
+    setCurrentPage(itemName.toLowerCase().replace(/\s+/g, '-')); // converts to slug-like string
+    if (isMobile) setMobileOpen(false);
+    // Use navigate to change the URL
+    const path = `/${itemName.toLowerCase().replace(/\s+/g, '-')}`;
+    navigate(path);
+  };
+  
+
+  const renderSidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto">
+        <nav className="flex-1 space-y-1 px-2 py-4">
+          {navItems.map((item) => {
+            if (!item.alwaysVisible && !item.visibleWhen) return null;
+            return (
+              <button
+                key={item.name}
+                onClick={() => handleItemClick(item.name)}
+                className={`group flex items-center w-full px-3 py-3 rounded-lg transition-all duration-200
+                  ${activeItem === item.name ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-500' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}
+                  ${item.highlightWhen ? 'bg-yellow-50 text-yellow-600 hover:bg-yellow-100' : ''}
+                  ${expanded ? 'justify-start' : 'justify-center'}`}
+              >
+                <span className={`${activeItem === item.name ? 'text-blue-600' : 'text-gray-500'} ${item.highlightWhen ? 'text-yellow-600' : ''}`}>
+                  {item.icon}
+                </span>
+                {expanded && (
+                  <span className={`ml-3 text-sm font-medium ${item.highlightWhen ? 'font-semibold' : ''}`}>
+                    {item.name}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+      <div className="px-2 py-4 border-t border-gray-200">
+        <button
+          onClick={toggleSidebar}
+          className="flex items-center justify-center w-full p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none"
+        >
+          {expanded ? (
+            <>
+              <ChevronLeft className="w-5 h-5" />
+              <span className="ml-2 text-sm font-medium">Collapse</span>
+            </>
+          ) : (
+            <ChevronRight className="w-5 h-5" />
+          )}
+        </button>
+      </div>
+    </div>
+  );
+
+  if (isMobile) {
+    return (
+      <>
+        {mobileOpen && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity" onClick={toggleSidebar}></div>
+            <div className="fixed inset-y-0 left-0 flex max-w-xs w-full">
+              <div className="relative flex-1 flex flex-col w-64 bg-white shadow-xl">
+                <div className="absolute top-0 right-0 -mr-12 pt-2">
+                  <button
+                    onClick={toggleSidebar}
+                    className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                  >
+                    <X className="h-6 w-6 text-white" />
+                  </button>
+                </div>
+                <div className="flex-1 h-0 overflow-y-auto">
+                  <div className="flex-shrink-0 flex items-center px-4 py-6">
+                    <img
+                      className="h-8 w-auto"
+                      src="/peak-performance-logo.svg"
+                      alt="Peak Performance"
+                    />
+                  </div>
+                  {renderSidebarContent()}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <div className={`hidden md:flex md:flex-shrink-0 transition-all duration-300 ease-in-out fixed inset-y-0 z-30 bg-white ${expanded ? 'w-64' : 'w-20'}`}>
+      <div className="flex flex-col w-full border-r border-gray-200 h-full">
+        <div className="flex-shrink-0 flex items-center justify-center px-4 py-6">
+          <img
+            className={`${expanded ? 'h-8' : 'h-6'} w-auto transition-all duration-300`}
+            src="/peak-performance-logo.svg"
+            alt="Peak Performance"
+          />
+        </div>
+        {renderSidebarContent()}
+      </div>
+    </div>
+  );
+  
+};
+
+export default Sidebar;
