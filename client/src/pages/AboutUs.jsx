@@ -7,7 +7,7 @@ import {
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
-
+import Logo from "../assets/icons8-graduation-cap-30.png"
 // Lazy load components for better performance
 const TutorCard = lazy(() => import('./TutorCard'));
 const MissionCard = lazy(() => import('./MissionCard'));
@@ -229,7 +229,7 @@ const AboutUs = () => {
         className="mb-12 text-center"
       >
         <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-full mb-4">
-          <Rocket className="w-8 h-8 text-indigo-600" />
+          <img src={Logo} alt="logo" className="w-8 h-8 text-indigo-600" />
         </div>
         <div className="flex items-center justify-center mb-2">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">

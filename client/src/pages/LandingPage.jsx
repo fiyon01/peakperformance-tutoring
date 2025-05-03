@@ -253,7 +253,7 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-10 max-w-lg"
             >
-              92% of our students achieve top 10% exam results. Ivy League-educated tutors with proven methodologies.
+              82% of our students achieve top 10% exam results. Ivy League-educated tutors with proven methodologies.
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -299,7 +299,7 @@ const PeakPerformanceTutoring = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Success Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">92%</p>
+                  <p className="text-2xl font-bold text-gray-900">90%</p>
                 </div>
               </div>
             </div>
@@ -312,10 +312,10 @@ const PeakPerformanceTutoring = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { name: "Ivy League Tutors", value: "50+", icon: <GraduationCap className="w-8 h-8 text-blue-600" /> },
-              { name: "Years Experience", value: "12+", icon: <Clock className="w-8 h-8 text-blue-600" /> },
-              { name: "Student Satisfaction", value: "98%", icon: <Zap className="w-8 h-8 text-blue-600" /> },
-              { name: "Success Rate", value: "92%", icon: <Award className="w-8 h-8 text-blue-600" /> }
+              { name: "Ivy League Tutors", value: "10+", icon: <GraduationCap className="w-8 h-8 text-blue-600" /> },
+              { name: "Years Experience", value: "2+", icon: <Clock className="w-8 h-8 text-blue-600" /> },
+              { name: "Student Satisfaction", value: "90%", icon: <Zap className="w-8 h-8 text-blue-600" /> },
+              { name: "Success Rate", value: "90%", icon: <Award className="w-8 h-8 text-blue-600" /> }
             ].map((item, index) => (
               <motion.div 
                 key={index}
@@ -709,7 +709,7 @@ const PeakPerformanceTutoring = () => {
           <div className="grid md:grid-cols-5 gap-12">
             <div className="md:col-span-2">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                <Rocket className="w-6 h-6 text-indigo-400" />
+                <img src={Logo} alt="logo" className="w-6 h-6 text-indigo-400" />
                 <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                   Peak Performance
                 </span>
@@ -770,10 +770,10 @@ const PeakPerformanceTutoring = () => {
                   <Mail className="w-4 h-4" /> info@peakperformance.com
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> (555) 123-4567
+                  <Phone className="w-4 h-4" /> +254798971625
                 </li>
                 <li className="flex items-center gap-2">
-                  <Home className="w-4 h-4" /> 123 Academy Ave
+                  <Home className="w-4 h-4" /> 338-00902 Kikuyu
                 </li>
               </ul>
             </div>
