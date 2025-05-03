@@ -5,7 +5,9 @@ import {
   Rocket, Shield, BookOpen, ChevronRight, Sparkles
 } from 'lucide-react';
 import axios from "axios"
-import {useNavigate} from "react-router-dom"
+import {useNavigate,Link} from "react-router-dom"
+import Logo from "../../assets/icons8-graduation-cap-30.png";
+
 const LoginPage = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -94,14 +96,17 @@ const LoginPage = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Rocket className="w-6 h-6 text-indigo-600" />
+              <img src={Logo} alt="logo" className="w-6 h-6" />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Peak Performance
               </span>
             </div>
-            <a href="#" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition flex items-center">
-              Back to Home <ChevronRight className="w-4 h-4 ml-1" />
-            </a>
+            <Link
+              to="/landingpage"
+              className="text-sm font-medium text-gray-600 hover:text-blue-600 transition flex items-center">
+              Back to Home
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
           </div>
         </div>
       </header>
@@ -268,9 +273,9 @@ const LoginPage = () => {
             <div className="bg-gray-50/70 px-8 py-6 border-t border-gray-200/50 text-center">
               <p className="text-gray-600 text-sm">
                 Don't have an account?{' '}
-                <a href="#" className="text-blue-600 hover:underline font-medium">
+                <Link to="/auth/students-signup" className="text-blue-600 hover:underline font-medium">
                   Register now
-                </a>
+                </Link>
               </p>
               <div className="flex justify-center gap-4 mt-4">
                 <a href="#" className="text-gray-600 hover:text-gray-900 text-sm flex items-center">

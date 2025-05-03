@@ -3,10 +3,12 @@ import { motion } from 'framer-motion';
 import { 
   User, Mail, Lock, Eye, EyeOff, School, ChevronDown, 
   Check, X, Loader2, Rocket, Shield, HelpCircle, BookOpen,
-  Home, Phone, Users, Plus, Minus
+  Home, Phone, Users, Plus, Minus,ChevronRight
 } from 'lucide-react';
 import axios from "axios"
-import {useNavigate} from "react-router-dom"
+import Logo from "../../assets/icons8-graduation-cap-30.png";
+
+import {useNavigate,Link} from "react-router-dom"
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -216,14 +218,18 @@ const RegistrationPage = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Rocket className="w-6 h-6 text-indigo-600" />
+              <img src={Logo} alt="logo" className="w-6 h-6 " />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Peak Performance
               </span>
             </div>
-            <a href="#" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition flex items-center">
-              Back to Home <ChevronDown className="w-4 h-4 ml-1 transform -rotate-90" />
-            </a>
+            <Link
+              to="/landingpage"
+              className="text-sm font-medium text-gray-600 hover:text-blue-600 transition flex items-center"
+            >
+              Back to Home
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Link>
           </div>
         </div>
       </header>
@@ -267,7 +273,7 @@ const RegistrationPage = () => {
                   transition={{ duration: 0.5 }}
                   className="bg-gradient-to-r from-blue-100 to-indigo-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner"
                 >
-                  <School className="w-8 h-8 text-indigo-600" />
+                  <img src={Logo} alt="logo" className="w-8 h-8 " />
                 </motion.div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-3">
                   Student Registration
@@ -654,9 +660,12 @@ const RegistrationPage = () => {
               {/* Footer Links */}
               <div className="mt-8 pt-6 border-t border-gray-200/50">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <p className="text-gray-600 text-sm">
-                    Already have an account? <a href="#" className="text-blue-600 hover:underline font-medium">Sign in</a>
-                  </p>
+                <p className="text-gray-600 text-sm">
+                  Already have an account?{' '}
+                  <Link to="/auth/students-login" className="text-blue-600 hover:underline font-medium">
+                    Sign in
+                  </Link>
+                </p>
                   <div className="flex items-center gap-4">
                     <a href="#" className="text-gray-600 hover:text-gray-900 text-sm flex items-center">
                       <Shield className="w-4 h-4 mr-1.5" /> Privacy

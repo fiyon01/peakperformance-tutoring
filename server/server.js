@@ -8,6 +8,8 @@ const signupRoute = require("./routes/signupRoute")
 const loginRoute = require("./routes/loginRoute")
 const programsRoute = require("./routes/programsRoute")
 const notificationsRoute = require("./routes/notificationsRoute")
+const ratingsRoute = require("./routes/ratingsRoute")
+
 dotenv.config();
 const app = express();
 
@@ -38,6 +40,7 @@ app.use("/api", signupRoute);
 app.use("/api", loginRoute);
 app.use("/api", programsRoute);
 app.use("/api", notificationsRoute);
+app.use("/", ratingsRoute);
 
 // Error-handling middleware (must be after routes)
 app.use((err, req, res, next) => {

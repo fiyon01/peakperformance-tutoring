@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, Calendar, MapPin, DollarSign, Star, ChevronLeft, ChevronRight,
@@ -6,29 +6,24 @@ import {
   AlertCircle, BookOpen, GraduationCap, ClipboardCheck, Instagram, 
   Twitter, Facebook, Youtube, ArrowUpRight, Grid, Clock, Users as UsersIcon,
   Award, Rocket, Target, BarChart2, Bookmark, Zap, Shield, FileText,
-  PieChart, TrendingUp, HelpCircle, Clock as ClockIcon,MessageSquare, UserCheck, Image as ImageIcon
+  PieChart, TrendingUp, HelpCircle, Clock as ClockIcon, MessageSquare, UserCheck, Image as ImageIcon
 } from 'lucide-react';
 import { Link } from "react-router-dom";
+import Logo from "../assets/icons8-graduation-cap-30.png";
+
+// Lazy-loaded components
+const TestimonialForm = lazy(() => import('./TestimonialForm'));
+const ConsultationForm = lazy(() => import('./ConsultationForm'));
+const HomeTuitionForm = lazy(() => import('./HomeTuitionForm'));
+
 const PeakPerformanceTutoring = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [testimonialText, setTestimonialText] = useState('');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [activeField, setActiveField] = useState(null);
-  const [ratingError, setRatingError] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    gradeLevel: ''
-  });
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
+  const [showHomeTuitionModal, setShowHomeTuitionModal] = useState(false);
   const galleryRef = useRef(null);
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -103,37 +98,18 @@ const PeakPerformanceTutoring = () => {
   ];
 
   const galleryImages = [
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475879454_1184209423370917_7326451790253706885_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Ue3hYsF5Q1gQ7kNvwEfUn0r&_nc_oc=AdmYHFvAF6UYQGEJDH1DJSJKhgz2xchAeL4XNI8IN7Igyp_5d0OZJx7NDSMLT28o4H0&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=RItWCXsm_LPin5xswPXg6A&oh=00_AfHwhdv0z7akEJn9dB6FAzLIMTpFY--jw1Xs4-D_IKAg_A&oe=681B9B1E",
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490582004_1235073248284534_6947471108058900747_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Nru45LgHYqkQ7kNvwFUtsSP&_nc_oc=AdmKFECrw-sIBY7qTGDSGAp9LSLTm4pAQcAkIKiVGQTC2tTlr67YZV7RIaa9LHA4904&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=vbE23qMXgBXxtkV7AiiwLQ&oh=00_AfHVxej-83_olkToC0UvczjN-4Tmx6xLCcB4Ip6QJB9Sbg&oe=681BAD8B",
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22",
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490537957_1235932054865320_4959166800137820039_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=TF0h4bZ5dloQ7kNvwFpsG8u&_nc_oc=AdlulPD3NkA1LZ8ebo1L6LzPxqoLmFH3a01ta7pyLaTEaVm35FVD51Y34Cs_f2K1VDw&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=D-w_BX8llBbetgb_LSVUyw&oh=00_AfGEJb3d879xkel1x0X4sOk02FhJZkP6QI7BOg6l96QbUA&oe=681BA56F",
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/488657934_1231151315343394_8485203425039210576_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=DWC2mD5QWpYQ7kNvwFlxOB3&_nc_oc=Adnb67GeCeLSWjnrQdzuKwthkQryfLRtLgBwIVKSfIyK97ahO7q_nSE2c58e6eou7Ww&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=O0OSDxxHoV5YrdM0b2vbYg&oh=00_AfHmrExIU3ujEX_zfMRdnXN60bVnIsPNLiSKIqhW2SKwEw&oe=681B94D8",
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475775115_1184209463370913_3857042342268191103_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=l-Dfzq9UjUEQ7kNvwEQo_bP&_nc_oc=Adl4L6yQM0Lv3o49Dt7JyiQM7wXwiug-7q9HOPAvKOwirDQbUuHzPEbtHyMuROFjIUU&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=T_-CrtOXAMmKNDA5XLJ1-Q&oh=00_AfH6_nqfqpgoClWrMWEXqyyKi0WYYTZAuKQQpBCNijJaKQ&oe=681BAC86"
   ];
 
   const filteredPrograms = programs.filter(program =>
     program.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     program.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const handleSubmitTestimonial = (e) => {
-    e.preventDefault();
-    
-    if (rating === 0) {
-      setRatingError(true);
-      return;
-    }
-    
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setName('');
-      setEmail('');
-      setTestimonialText('');
-      setRating(0);
-      setFormSubmitted(false);
-      setRatingError(false);
-    }, 3000);
-  };
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
@@ -151,28 +127,25 @@ const PeakPerformanceTutoring = () => {
 
   const closeModal = () => {
     setShowModal(false);
+    setShowConsultationModal(false);
+    setShowHomeTuitionModal(false);
     document.body.style.overflow = 'auto';
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const openConsultationModal = () => {
+    setShowConsultationModal(true);
+    document.body.style.overflow = 'hidden';
   };
 
-  const handleRegisterSubmit = (e) => {
-    e.preventDefault();
-    // In a real app, you would send this data to your backend
-    alert(`Registration submitted for ${selectedProgram.name}! We'll contact you shortly.`);
-    setFormData({
-      fullName: '',
-      email: '',
-      phone: '',
-      gradeLevel: ''
-    });
-    closeModal();
+  const openHomeTuitionModal = () => {
+    setShowHomeTuitionModal(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Image loading state for skeleton loading
+  const [loadedImages, setLoadedImages] = useState({});
+  const handleImageLoad = (id) => {
+    setLoadedImages(prev => ({ ...prev, [id]: true }));
   };
 
   return (
@@ -182,7 +155,12 @@ const PeakPerformanceTutoring = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Rocket className="w-6 h-6 text-indigo-600" />
+              <img 
+                src={Logo} 
+                alt="logo" 
+                className="w-6 h-6" 
+                loading="lazy"
+              />
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Peak Performance
               </span>
@@ -192,6 +170,9 @@ const PeakPerformanceTutoring = () => {
               <a href="#" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
                 <Home className="w-4 h-4" /> Home
               </a>
+              <Link to="/about-us" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
+                <User className="w-4 h-4" /> About Us
+              </Link>
               <a href="#programs" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
                 <BookOpen className="w-4 h-4" /> Programs
               </a>
@@ -200,9 +181,6 @@ const PeakPerformanceTutoring = () => {
               </a>
               <a href="#testimonials" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
                 <BarChart2 className="w-4 h-4" /> Results
-              </a>
-              <a href="#gallery" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <Grid className="w-4 h-4" /> Gallery
               </a>
               <Link to="/auth/students-signup">
                 <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2">
@@ -214,6 +192,7 @@ const PeakPerformanceTutoring = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden text-gray-700 focus:outline-none"
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -234,6 +213,9 @@ const PeakPerformanceTutoring = () => {
               <a href="#" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
                 <Home className="w-5 h-5" /> Home
               </a>
+              <Link to="/about-us" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
+                <User className="w-5 h-5" /> About Us
+              </Link>
               <a href="#programs" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5" /> Programs
               </a>
@@ -242,9 +224,6 @@ const PeakPerformanceTutoring = () => {
               </a>
               <a href="#testimonials" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
                 <BarChart2 className="w-5 h-5" /> Results
-              </a>
-              <a href="#gallery" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <Grid className="w-5 h-5" /> Gallery
               </a>
               <Link to="/auth/students-signup">
                 <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2">
@@ -282,11 +261,17 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100 font-medium flex items-center justify-center gap-2">
+              <button 
+                onClick={openConsultationModal}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100 font-medium flex items-center justify-center gap-2"
+              >
                 Book Consultation <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="bg-white text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 transition border-2 border-gray-200 font-medium flex items-center justify-center gap-2">
-                Our Methodology <BookOpen className="w-5 h-5" />
+              <button 
+                onClick={openHomeTuitionModal}
+                className="bg-white text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 transition border-2 border-gray-200 font-medium flex items-center justify-center gap-2"
+              >
+                Home Tuition <Home className="w-5 h-5" />
               </button>
             </motion.div>
           </div>
@@ -297,11 +282,12 @@ const PeakPerformanceTutoring = () => {
             transition={{ duration: 0.8 }}
             className="order-1 lg:order-2 relative"
           >
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video">
               <img 
-                src="https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                src="https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475776239_1184209490037577_6189773692748365533_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=u_QIscXupp0Q7kNvwFdUD6K&_nc_oc=Adm4nTnlINZdBagRS8fHMUfyHU8fY5hB-_Z5viZyKnUITCyzdAH8uwNuDueHlPhJ01s&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=G96zAa1gMKzKIyQkhVluMw&oh=00_AfF_-E46XI72xCip2h8_HWGFDnZtkiCprdkaIgZ0Cv6fpw&oe=681B95DB" 
                 alt="Tutoring session" 
-                className="w-full h-auto object-cover aspect-video"
+                className="w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
@@ -394,11 +380,16 @@ const PeakPerformanceTutoring = () => {
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100"
                 >
-                  <div className="h-48 overflow-hidden">
+                  <div className="h-48 overflow-hidden relative">
+                    {!loadedImages[program.id] && (
+                      <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+                    )}
                     <img 
                       src={program.image} 
                       alt={program.name} 
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
+                      onLoad={() => handleImageLoad(program.id)}
+                      loading="lazy"
                     />
                   </div>
                   <div className="p-6">
@@ -521,11 +512,12 @@ const PeakPerformanceTutoring = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-square">
                 <img 
-                  src="https://images.unsplash.com/photo-1524179091875-bf99a9a6af57?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" 
+                  src="https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=XdZ5QbYG-tAQ7kNvwGGrVWL&_nc_oc=AdlquswI7hL0UNhZGPQWkHrjAW8YQgI5lFHYgvPRgp8hJ1G7e7Ex9FVki9lsfbYz1jk&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=INpWg3u8zZjpSY_KDooMRQ&oh=00_AfEhuKQnB_27wMfa-tWXilXqDdoiY23s67ImczvbroRmmw&oe=681BB21B" 
                   alt="Tutoring method" 
-                  className="w-full h-auto object-cover aspect-square"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block">
@@ -605,12 +597,14 @@ const PeakPerformanceTutoring = () => {
               <button 
                 onClick={prevTestimonial}
                 className="bg-white p-3 rounded-full shadow-md hover:bg-gray-50 transition"
+                aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
               </button>
               <button 
                 onClick={nextTestimonial}
                 className="bg-white p-3 rounded-full shadow-md hover:bg-gray-50 transition"
+                aria-label="Next testimonial"
               >
                 <ChevronRight className="w-5 h-5 text-gray-700" />
               </button>
@@ -648,11 +642,14 @@ const PeakPerformanceTutoring = () => {
                 viewport={{ once: true, margin: "0px 0px -100px 0px" }}
                 className="group relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition"
               >
-                <img 
-                  src={image} 
-                  alt={`Gallery ${index + 1}`} 
-                  className="w-full h-80 object-cover transition duration-500 group-hover:scale-105"
-                />
+                <div className="aspect-square">
+                  <img 
+                    src={image} 
+                    alt={`Gallery ${index + 1}`} 
+                    className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
                   <div className="translate-y-4 group-hover:translate-y-0 transition">
                     <div className="bg-white rounded-full w-10 h-10 flex items-center justify-center mb-3">
@@ -669,113 +666,9 @@ const PeakPerformanceTutoring = () => {
       {/* Testimonial Form */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 md:p-12 shadow-xl"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 flex items-center gap-3">
-              <MessageSquare className="w-6 h-6" /> Share Your Experience
-            </h2>
-            <p className="text-blue-100 mb-8">We value your feedback to help us improve</p>
-            
-            {formSubmitted ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white/20 p-6 rounded-lg text-center"
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <Check className="w-6 h-6 text-white" />
-                  <span className="text-white font-medium">Thank you for your testimonial! We appreciate your feedback.</span>
-                </div>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmitTestimonial} className="space-y-6">
-                <div>
-                  <label className="block text-blue-100 font-medium mb-3">Your Rating</label>
-                  <div className="flex justify-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        type="button"
-                        key={star}
-                        onClick={() => {
-                          setRating(star);
-                          setRatingError(false);
-                        }}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onMouseLeave={() => setHoverRating(0)}
-                        className="focus:outline-none"
-                      >
-                        <Star
-                          className={`w-8 h-8 ${star <= (hoverRating || rating) ? 'text-yellow-300 fill-yellow-300' : 'text-blue-300'}`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                  {ratingError && (
-                    <p className="text-red-300 text-sm mt-2 flex items-center justify-center gap-1">
-                      <AlertCircle className="w-4 h-4" /> Please provide a rating
-                    </p>
-                  )}
-                </div>
-                
-                <div>
-                  <label htmlFor="name" className="block text-blue-100 font-medium mb-3">Your Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onFocus={() => setActiveField('name')}
-                    onBlur={() => setActiveField(null)}
-                    className={`w-full px-5 py-3 rounded-lg bg-white/10 border ${activeField === 'name' ? 'border-white/50 ring-2 ring-white/20' : 'border-white/20'} text-white placeholder-blue-200 focus:outline-none transition`}
-                    placeholder="John Doe"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="email" className="block text-blue-100 font-medium mb-3">Your Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onFocus={() => setActiveField('email')}
-                    onBlur={() => setActiveField(null)}
-                    className={`w-full px-5 py-3 rounded-lg bg-white/10 border ${activeField === 'email' ? 'border-white/50 ring-2 ring-white/20' : 'border-white/20'} text-white placeholder-blue-200 focus:outline-none transition`}
-                    placeholder="john@example.com"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="testimonial" className="block text-blue-100 font-medium mb-3">Your Testimonial</label>
-                  <textarea
-                    id="testimonial"
-                    rows="4"
-                    value={testimonialText}
-                    onChange={(e) => setTestimonialText(e.target.value)}
-                    onFocus={() => setActiveField('testimonial')}
-                    onBlur={() => setActiveField(null)}
-                    className={`w-full px-5 py-3 rounded-lg bg-white/10 border ${activeField === 'testimonial' ? 'border-white/50 ring-2 ring-white/20' : 'border-white/20'} text-white placeholder-blue-200 focus:outline-none transition`}
-                    placeholder="Share your experience..."
-                    required
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  className="w-full bg-white text-blue-600 py-4 rounded-lg hover:bg-gray-100 transition font-medium text-lg mt-6 flex items-center justify-center gap-2 shadow-lg"
-                >
-                  Submit Testimonial <Send className="w-5 h-5" />
-                </button>
-              </form>
-            )}
-          </motion.div>
+          <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl animate-pulse"></div>}>
+            <TestimonialForm />
+          </Suspense>
         </div>
       </section>
 
@@ -793,11 +686,17 @@ const PeakPerformanceTutoring = () => {
               Schedule a consultation with our enrollment team to discuss your goals and create a customized learning plan.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2">
+              <button 
+                onClick={openConsultationModal}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2"
+              >
                 Book Consultation <ArrowRight className="w-5 h-5" />
               </button>
-              <button className="bg-white/10 text-white px-8 py-4 rounded-full hover:bg-white/20 transition border border-white/20 font-medium flex items-center justify-center gap-2">
-                Call Us <Phone className="w-5 h-5" />
+              <button 
+                onClick={openHomeTuitionModal}
+                className="bg-white/10 text-white px-8 py-4 rounded-full hover:bg-white/20 transition border border-white/20 font-medium flex items-center justify-center gap-2"
+              >
+                Home Tuition <Home className="w-5 h-5" />
               </button>
             </div>
           </motion.div>
@@ -819,16 +718,16 @@ const PeakPerformanceTutoring = () => {
                 Elite academic tutoring for discerning families seeking transformative educational results.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Instagram">
                   <Instagram className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Twitter">
                   <Twitter className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Facebook">
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition">
+                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="YouTube">
                   <Youtube className="w-5 h-5" />
                 </a>
               </div>
@@ -913,6 +812,7 @@ const PeakPerformanceTutoring = () => {
                   <button 
                     onClick={closeModal}
                     className="text-gray-400 hover:text-gray-600"
+                    aria-label="Close modal"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -924,6 +824,7 @@ const PeakPerformanceTutoring = () => {
                       src={selectedProgram.image} 
                       alt={selectedProgram.name} 
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   </div>
                   
@@ -949,14 +850,15 @@ const PeakPerformanceTutoring = () => {
                   </div>
                 </div>
                 
-                <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  alert(`Registration submitted for ${selectedProgram.name}! We'll contact you shortly.`);
+                  closeModal();
+                }} className="space-y-4">
                   <div>
                     <label className="block text-gray-700 mb-2">Full Name</label>
                     <input 
                       type="text" 
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="John Doe"
                       required
@@ -966,9 +868,6 @@ const PeakPerformanceTutoring = () => {
                     <label className="block text-gray-700 mb-2">Email</label>
                     <input 
                       type="email" 
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="john@example.com"
                       required
@@ -978,9 +877,6 @@ const PeakPerformanceTutoring = () => {
                     <label className="block text-gray-700 mb-2">Phone Number</label>
                     <input 
                       type="tel" 
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="(123) 456-7890"
                       required
@@ -989,9 +885,6 @@ const PeakPerformanceTutoring = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">Student's Grade Level</label>
                     <select 
-                      name="gradeLevel"
-                      value={formData.gradeLevel}
-                      onChange={handleInputChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       required
                     >
@@ -1011,6 +904,56 @@ const PeakPerformanceTutoring = () => {
                   </button>
                 </form>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Consultation Modal */}
+      <AnimatePresence>
+        {showConsultationModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={closeModal}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl"></div>}>
+                <ConsultationForm onClose={closeModal} />
+              </Suspense>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Home Tuition Modal */}
+      <AnimatePresence>
+        {showHomeTuitionModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={closeModal}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl"></div>}>
+                <HomeTuitionForm onClose={closeModal} />
+              </Suspense>
             </motion.div>
           </motion.div>
         )}

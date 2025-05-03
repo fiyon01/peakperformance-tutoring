@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 .qodo
-
+.env
 
 # Editor directories and files
 .vscode/*

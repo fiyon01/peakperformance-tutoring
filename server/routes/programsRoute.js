@@ -21,7 +21,7 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-router.get("/programs",verifyToken,programsController.getPrograms)
+router.get("/programs",programsController.getPrograms)
 router.get("/programs/:programId/timetable",verifyToken,programsController.getTimeSlots)
 
 module.exports = router
