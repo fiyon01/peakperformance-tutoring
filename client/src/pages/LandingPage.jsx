@@ -1,4 +1,4 @@
-import { useState, useRef, lazy, Suspense } from 'react';
+import { useState, useRef, lazy, Suspense, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, Calendar, MapPin, DollarSign, Star, ChevronLeft, ChevronRight,
@@ -15,6 +15,27 @@ import Logo from "../assets/icons8-graduation-cap-30.png";
 const TestimonialForm = lazy(() => import('./TestimonialForm'));
 const ConsultationForm = lazy(() => import('./ConsultationForm'));
 const HomeTuitionForm = lazy(() => import('./HomeTuitionForm'));
+
+const AnimatedCounter = ({ value, duration = 1.5 }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = parseInt(value);
+    if (start === end) return;
+
+    const incrementTime = (duration * 1000) / end;
+    const timer = setInterval(() => {
+      start += 1;
+      setCount(start);
+      if (start >= end) clearInterval(timer);
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [value, duration]);
+
+  return <span>{count}{value.includes('%') ? '%' : '+'}</span>;
+};
 
 const PeakPerformanceTutoring = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -155,37 +176,58 @@ const PeakPerformanceTutoring = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <img 
+              <motion.img 
                 src={Logo} 
                 alt="logo" 
                 className="w-6 h-6" 
                 loading="lazy"
+                whileHover={{ rotate: 15 }}
+                transition={{ type: 'spring', stiffness: 300 }}
               />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <motion.span 
+                className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
                 Peak Performance
-              </span>
+              </motion.span>
             </div>
 
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <Home className="w-4 h-4" /> Home
-              </a>
-              <Link to="/about-us" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <User className="w-4 h-4" /> About Us
-              </Link>
-              <a href="#programs" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <BookOpen className="w-4 h-4" /> Programs
-              </a>
-              <a href="#method" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <ClipboardCheck className="w-4 h-4" /> Method
-              </a>
-              <a href="#testimonials" className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1">
-                <BarChart2 className="w-4 h-4" /> Results
-              </a>
+              {[
+                { name: "Home", icon: <Home className="w-4 h-4" />, href: "#" },
+                { name: "About Us", icon: <User className="w-4 h-4" />, href: "/about-us" },
+                { name: "Programs", icon: <BookOpen className="w-4 h-4" />, href: "#programs" },
+                { name: "Method", icon: <ClipboardCheck className="w-4 h-4" />, href: "#method" },
+                { name: "Results", icon: <BarChart2 className="w-4 h-4" />, href: "#testimonials" }
+              ].map((item, index) => (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1 group"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
+                >
+                  <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 group-hover:after:w-full">
+                    {item.name}
+                  </span>
+                </motion.a>
+              ))}
               <Link to="/auth/students-signup">
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2">
-                  Students Signup <ArrowRight className="w-4 h-4" />
-                </button>
+                <motion.button 
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2 group"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span>Students Signup</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
               </Link>
             </div>
 
@@ -210,25 +252,37 @@ const PeakPerformanceTutoring = () => {
             className="md:hidden fixed inset-0 bg-white z-40 pt-20 px-6"
           >
             <div className="flex flex-col space-y-6 py-8">
-              <a href="#" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <Home className="w-5 h-5" /> Home
-              </a>
-              <Link to="/about-us" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <User className="w-5 h-5" /> About Us
-              </Link>
-              <a href="#programs" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <BookOpen className="w-5 h-5" /> Programs
-              </a>
-              <a href="#method" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <ClipboardCheck className="w-5 h-5" /> Method
-              </a>
-              <a href="#testimonials" onClick={closeMenu} className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2">
-                <BarChart2 className="w-5 h-5" /> Results
-              </a>
+              {[
+                { name: "Home", icon: <Home className="w-5 h-5" />, href: "#", onClick: closeMenu },
+                { name: "About Us", icon: <User className="w-5 h-5" />, href: "/about-us", onClick: closeMenu },
+                { name: "Programs", icon: <BookOpen className="w-5 h-5" />, href: "#programs", onClick: closeMenu },
+                { name: "Method", icon: <ClipboardCheck className="w-5 h-5" />, href: "#method", onClick: closeMenu },
+                { name: "Results", icon: <BarChart2 className="w-5 h-5" />, href: "#testimonials", onClick: closeMenu }
+              ].map((item, index) => (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  onClick={item.onClick}
+                  className="text-lg text-gray-700 border-b border-gray-100 pb-4 flex items-center gap-2 group"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + index * 0.05 }}
+                >
+                  <span className="group-hover:text-blue-600 transition-colors">{item.icon}</span>
+                  <span className="group-hover:text-blue-600 transition-colors">{item.name}</span>
+                </motion.a>
+              ))}
               <Link to="/auth/students-signup">
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2">
-                  Students Signup <ArrowRight className="w-5 h-5" />
-                </button>
+                <motion.button 
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2 group"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span>Students Signup</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
               </Link>
             </div>
           </motion.div>
@@ -261,18 +315,24 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <button 
+              <motion.button 
                 onClick={openConsultationModal}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100 font-medium flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100 font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Book Consultation <ArrowRight className="w-5 h-5" />
-              </button>
-              <button 
+                <span>Book Consultation</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+              <motion.button 
                 onClick={openHomeTuitionModal}
-                className="bg-white text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 transition border-2 border-gray-200 font-medium flex items-center justify-center gap-2"
+                className="bg-white text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 transition border-2 border-gray-200 font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Home Tuition <Home className="w-5 h-5" />
-              </button>
+                <span>Home Tuition</span>
+                <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              </motion.button>
             </motion.div>
           </div>
 
@@ -292,17 +352,24 @@ const PeakPerformanceTutoring = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
             </div>
             
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block">
+            <motion.div 
+              className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
               <div className="flex items-center gap-3">
                 <div className="bg-blue-100 p-3 rounded-full">
                   <Award className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Success Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">90%</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    <AnimatedCounter value="90" />%
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -326,9 +393,16 @@ const PeakPerformanceTutoring = () => {
                 className="text-center"
               >
                 <div className="flex justify-center mb-3">
-                  {item.icon}
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: 'spring', stiffness: 400 }}
+                  >
+                    {item.icon}
+                  </motion.div>
                 </div>
-                <p className="text-3xl font-bold text-gray-900 mb-2">{item.value}</p>
+                <p className="text-3xl font-bold text-gray-900 mb-2">
+                  <AnimatedCounter value={item.value} />
+                </p>
                 <p className="text-gray-600">{item.name}</p>
               </motion.div>
             ))}
@@ -347,7 +421,12 @@ const PeakPerformanceTutoring = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-3">
-              <Bookmark className="w-8 h-8 text-blue-600" />
+              <motion.div
+                whileHover={{ rotate: 15 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <Bookmark className="w-8 h-8 text-blue-600" />
+              </motion.div>
               Tailored Academic Programs
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -355,18 +434,24 @@ const PeakPerformanceTutoring = () => {
             </p>
           </motion.div>
 
-          <div className="max-w-2xl mx-auto mb-16 relative">
+          <motion.div 
+            className="max-w-2xl mx-auto mb-16 relative"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search programs or categories..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition pl-14 text-lg shadow-sm"
+                className="w-full px-6 py-4 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition pl-14 text-lg shadow-sm hover:shadow-md"
               />
               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
-          </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
             {filteredPrograms.length > 0 ? (
@@ -378,16 +463,16 @@ const PeakPerformanceTutoring = () => {
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true }}
                   whileHover={{ y: -5 }}
-                  className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100"
+                  className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100 group"
                 >
                   <div className="h-48 overflow-hidden relative">
                     {!loadedImages[program.id] && (
-                      <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse"></div>
                     )}
                     <img 
                       src={program.image} 
                       alt={program.name} 
-                      className={`w-full h-full object-cover ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
+                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
                       onLoad={() => handleImageLoad(program.id)}
                       loading="lazy"
                     />
@@ -423,12 +508,15 @@ const PeakPerformanceTutoring = () => {
                     
                     <div className="flex justify-between items-center mt-6">
                       <div className="text-xl font-bold text-gray-900">{program.price}</div>
-                      <button 
+                      <motion.button 
                         onClick={() => openModal(program)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm group"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        Register Now <ArrowRight className="w-4 h-4" />
-                      </button>
+                        <span>Register Now</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </motion.button>
                     </div>
                   </div>
                 </motion.div>
@@ -491,11 +579,14 @@ const PeakPerformanceTutoring = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex gap-4"
+                    className="flex gap-4 group"
                   >
-                    <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <motion.div 
+                      className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-blue-200 transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       {item.icon}
-                    </div>
+                    </motion.div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
                       <p className="text-gray-600">{item.description}</p>
@@ -520,7 +611,12 @@ const PeakPerformanceTutoring = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block">
+              <motion.div 
+                className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
                 <div className="flex items-center gap-3">
                   <div className="bg-indigo-100 p-3 rounded-full">
                     <Award className="w-6 h-6 text-indigo-600" />
@@ -530,7 +626,7 @@ const PeakPerformanceTutoring = () => {
                     <p className="text-2xl font-bold text-gray-900">4.9/5</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -594,20 +690,24 @@ const PeakPerformanceTutoring = () => {
             </AnimatePresence>
 
             <div className="flex justify-center mt-8 gap-4">
-              <button 
+              <motion.button 
                 onClick={prevTestimonial}
                 className="bg-white p-3 rounded-full shadow-md hover:bg-gray-50 transition"
                 aria-label="Previous testimonial"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
-              </button>
-              <button 
+              </motion.button>
+              <motion.button 
                 onClick={nextTestimonial}
                 className="bg-white p-3 rounded-full shadow-md hover:bg-gray-50 transition"
                 aria-label="Next testimonial"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <ChevronRight className="w-5 h-5 text-gray-700" />
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
@@ -673,7 +773,7 @@ const PeakPerformanceTutoring = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-gradient-to-br from-blue-900 to-indigo-900 text-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -682,22 +782,28 @@ const PeakPerformanceTutoring = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Academic Journey?</h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
               Schedule a consultation with our enrollment team to discuss your goals and create a customized learning plan.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button 
+              <motion.button 
                 onClick={openConsultationModal}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Book Consultation <ArrowRight className="w-5 h-5" />
-              </button>
-              <button 
+                <span>Book Consultation</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+              <motion.button 
                 onClick={openHomeTuitionModal}
-                className="bg-white/10 text-white px-8 py-4 rounded-full hover:bg-white/20 transition border border-white/20 font-medium flex items-center justify-center gap-2"
+                className="bg-white/10 text-white px-8 py-4 rounded-full hover:bg-white/20 transition border border-white/20 font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Home Tuition <Home className="w-5 h-5" />
-              </button>
+                <span>Home Tuition</span>
+                <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
+              </motion.button>
             </div>
           </motion.div>
         </div>
@@ -709,7 +815,13 @@ const PeakPerformanceTutoring = () => {
           <div className="grid md:grid-cols-5 gap-12">
             <div className="md:col-span-2">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                <img src={Logo} alt="logo" className="w-6 h-6 text-indigo-400" />
+                <motion.img 
+                  src={Logo} 
+                  alt="logo" 
+                  className="w-6 h-6 text-indigo-400" 
+                  whileHover={{ rotate: 15 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                />
                 <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
                   Peak Performance
                 </span>
@@ -718,62 +830,84 @@ const PeakPerformanceTutoring = () => {
                 Elite academic tutoring for discerning families seeking transformative educational results.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Instagram">
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Twitter">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Facebook">
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition" aria-label="YouTube">
-                  <Youtube className="w-5 h-5" />
-                </a>
+                {[
+                  { icon: <Instagram className="w-5 h-5" />, label: "Instagram" },
+                  { icon: <Twitter className="w-5 h-5" />, label: "Twitter" },
+                  { icon: <Facebook className="w-5 h-5" />, label: "Facebook" },
+                  { icon: <Youtube className="w-5 h-5" />, label: "YouTube" }
+                ].map((social, index) => (
+                  <motion.a
+                    key={index}
+                    href="#"
+                    className="text-gray-400 hover:text-white transition"
+                    aria-label={social.label}
+                    whileHover={{ y: -3 }}
+                  >
+                    {social.icon}
+                  </motion.a>
+                ))}
               </div>
             </div>
             
-            <div>
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Company</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> About Us</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Our Tutors</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Results</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Careers</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Resources</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Blog</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Research</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Webinars</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> FAQs</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Support</h4>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Terms</a></li>
-                <li><a href="#" className="hover:text-white transition flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Contact</a></li>
-              </ul>
-            </div>
+            {[
+              {
+                title: "Company",
+                links: [
+                  { name: "About Us", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Our Tutors", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Results", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Careers", icon: <ArrowRight className="w-3 h-3" /> }
+                ]
+              },
+              {
+                title: "Resources",
+                links: [
+                  { name: "Blog", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Research", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Webinars", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "FAQs", icon: <ArrowRight className="w-3 h-3" /> }
+                ]
+              },
+              {
+                title: "Support",
+                links: [
+                  { name: "Help Center", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Privacy Policy", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Terms", icon: <ArrowRight className="w-3 h-3" /> },
+                  { name: "Contact", icon: <ArrowRight className="w-3 h-3" /> }
+                ]
+              }
+            ].map((section, index) => (
+              <div key={index}>
+                <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">{section.title}</h4>
+                <ul className="space-y-3">
+                  {section.links.map((link, linkIndex) => (
+                    <motion.li 
+                      key={linkIndex}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                      <a href="#" className="hover:text-white transition flex items-center gap-2">
+                        <span className="text-blue-400">{link.icon}</span>
+                        {link.name}
+                      </a>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
             <div>
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h4>
               <ul className="space-y-3">
-                <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> info@peakperformance.com
+                <li className="flex items-center gap-2 hover:text-white transition">
+                  <Mail className="w-4 h-4 text-blue-400" /> info@peakperformance.com
                 </li>
-                <li className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> +254798971625
+                <li className="flex items-center gap-2 hover:text-white transition">
+                  <Phone className="w-4 h-4 text-blue-400" /> +254798971625
                 </li>
-                <li className="flex items-center gap-2">
-                  <Home className="w-4 h-4" /> 338-00902 Kikuyu
+                <li className="flex items-center gap-2 hover:text-white transition">
+                  <Home className="w-4 h-4 text-blue-400" /> 338-00902 Kikuyu
                 </li>
               </ul>
             </div>
@@ -811,7 +945,7 @@ const PeakPerformanceTutoring = () => {
                   <h3 className="text-2xl font-bold text-gray-900">{selectedProgram.name}</h3>
                   <button 
                     onClick={closeModal}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-gray-400 hover:text-gray-600 transition"
                     aria-label="Close modal"
                   >
                     <X className="w-6 h-6" />
@@ -896,12 +1030,15 @@ const PeakPerformanceTutoring = () => {
                     </select>
                   </div>
                   
-                  <button 
+                  <motion.button 
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium mt-6 flex items-center justify-center gap-2"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium mt-6 flex items-center justify-center gap-2 group"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    Complete Registration <ArrowRight className="w-5 h-5" />
-                  </button>
+                    <span>Complete Registration</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
                 </form>
               </div>
             </motion.div>
