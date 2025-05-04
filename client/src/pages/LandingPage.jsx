@@ -60,7 +60,7 @@ const PeakPerformanceTutoring = () => {
       duration: "8 weeks",
       level: "Advanced",
       spots: "4 spots left",
-      price: "$399",
+      price: "Ksh350",
       description: "Master calculus, linear algebra, and advanced problem-solving techniques with our expert math tutors."
     },
     { 
@@ -72,7 +72,7 @@ const PeakPerformanceTutoring = () => {
       duration: "10 weeks",
       level: "Intermediate",
       spots: "2 spots left",
-      price: "$449",
+      price: "Ksh500",
       description: "Comprehensive preparation for all Science Olympiad events with competition-winning strategies."
     },
     { 
@@ -84,7 +84,7 @@ const PeakPerformanceTutoring = () => {
       duration: "6 weeks",
       level: "All Levels",
       spots: "6 spots left",
-      price: "$349",
+      price: "Ksh300",
       description: "Craft compelling personal statements and supplemental essays for college applications."
     },
     { 
@@ -96,7 +96,7 @@ const PeakPerformanceTutoring = () => {
       duration: "12 weeks",
       level: "Advanced",
       spots: "3 spots left",
-      price: "$499",
+      price: "Ksh400",
       description: "Develop critical reading and analytical writing skills for advanced literature courses."
     }
   ];
