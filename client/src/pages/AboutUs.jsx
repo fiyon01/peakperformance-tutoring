@@ -311,7 +311,7 @@ const AboutUs = () => {
                 </div>
                 <h2 className="text-xl font-bold text-gray-900 mb-3">Our Goal</h2>
                 <p className="text-gray-600">
-                  To help 10,000 Kenyan students achieve academic breakthroughs by 2025 through our innovative tutoring approach and dedicated educator team.
+                  To help 2,000 Kenyan students achieve academic breakthroughs by 2027 through our innovative tutoring approach and dedicated educator team.
                 </p>
               </div>
               <div className="flex justify-center">
