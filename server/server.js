@@ -42,6 +42,10 @@ app.use("/api", programsRoute);
 app.use("/api", notificationsRoute);
 app.use("/", ratingsRoute);
 
+app.get("/", (req, res) => {
+    res.send("Welcome to the Peak Performance Tutoring API!")
+})
+
 // Error-handling middleware (must be after routes)
 app.use((err, req, res, next) => {
     console.error(err.stack);
