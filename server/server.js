@@ -42,7 +42,7 @@ app.use("/api", programsRoute);
 app.use("/api", notificationsRoute);
 app.use("/", ratingsRoute);
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
     res.send("Welcome to the Peak Performance Tutoring API!")
 })
 
