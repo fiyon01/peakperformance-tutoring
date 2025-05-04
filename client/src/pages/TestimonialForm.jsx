@@ -41,7 +41,7 @@ const TestimonialForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post("http://localhost:3500/api/ratings", {
+      const response = await axios.post("http://192.168.100.2:3500/api/ratings", {
         name,
         email,
         phone,

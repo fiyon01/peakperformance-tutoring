@@ -34,7 +34,7 @@ const LoginPage = () => {
     setIsLoading(true);
   
     try {
-      const response = await axios.post("http://localhost:3500/api/login", formData);
+      const response = await axios.post("http://192.168.100.2:3500/api/login", formData);
   
       if (response.status === 200) {
         const token = response.data.token;

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Home, Calendar, Target, Clock, BookOpen, BarChart2, Mail, MapPin,
   HelpCircle, User, ChevronLeft, ChevronRight, X, Bell, Rocket, 
-  ClipboardCheck, TrendingUp
+  ClipboardCheck, TrendingUp, CreditCard
 } from 'lucide-react';
 
 const Sidebar = ({ isEnrolled, hasVenue, mobileOpen, setMobileOpen, isOpen, toggleSidebar, currentPage, setCurrentPage }) => {
@@ -39,6 +39,7 @@ const Sidebar = ({ isEnrolled, hasVenue, mobileOpen, setMobileOpen, isOpen, togg
     { name: 'Notifications', icon: <Bell className="w-5 h-5" />, alwaysVisible: true },
     { name: 'Programme Communication', icon: <Mail className="w-5 h-5" />, highlightWhen: !isEnrolled },
     { name: 'Upcoming Programmes', icon: <Rocket className="w-5 h-5" />, alwaysVisible: true },
+    { name: 'Payments', icon: <CreditCard className="w-5 h-5" />, alwaysVisible: true },
     { name: 'Personal Timetable', icon: <Clock className="w-5 h-5" />, alwaysVisible: true },
     { name: 'Venue & Logistics', icon: <MapPin className="w-5 h-5" />, visibleWhen: hasVenue },
     { name: 'Support', icon: <HelpCircle className="w-5 h-5" />, alwaysVisible: true },

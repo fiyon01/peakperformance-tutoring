@@ -15,6 +15,8 @@ import ProtectedRoute from './components/ProtectedRoute'; // ✅ Use correct fil
 import PeakPerformanceTutoring from "./pages/LandingPage"; // Placeholder for Programme Communication
 import LearningResources from "./pages/Resources";
 import AboutUs from "./pages/AboutUs"
+import PaymentsDashboard from "./pages/Payments"
+
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
           <Route path="support" element={<HelpCenterPage />} />
           <Route path="attendance" element={<AttendancePage />} />
           <Route path="my-account" element={<ProfilePage />} />
+          <Route path="payments" element={<PaymentsDashboard />} />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="learning-resources" element={<LearningResources />} />
         </Route>

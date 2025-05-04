@@ -11,7 +11,7 @@ import NotificationsPage from "../pages/Notifications";
 import HelpCenterPage from "../pages/HelpCenterPage";
 import PersonalTimetable from "../pages/PersonalTimetable";
 import LearningResources from "../pages/Resources";
-
+import PaymentsDashboard from "../pages/Payments"
 const DashboardLayout = () => {
   const [isEnrolled, setIsEnrolled] = useState(true); 
   const [currentPage, setCurrentPage] = useState('dashboard-home');
@@ -55,8 +55,9 @@ const DashboardLayout = () => {
           {currentPage === 'support' && <HelpCenterPage />}
           {currentPage === 'attendance' && <AttendancePage />}
           {currentPage === 'my-account' && <ProfilePage />}
-          {currentPage === 'notifications' && <NotificationsPage />}
           {currentPage === 'learning-resources' && <LearningResources />}
+          {currentPage === 'payments' && <PaymentsDashboard />}
+          {currentPage === 'notifications' && <NotificationsPage />}
         </main>
       </div>
     </div>
