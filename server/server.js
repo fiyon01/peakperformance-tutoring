@@ -53,4 +53,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-module.exports = app
+app.listen(process.env.PORT||3500, () => {
+    console.log("Server running on port 3500");
+});
