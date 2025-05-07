@@ -7,6 +7,7 @@ import {
 import axios from "axios"
 import {useNavigate,Link} from "react-router-dom"
 import Logo from "../../assets/icons8-graduation-cap-30.png";
+import ForgotPasswordFlow from './ForgotPasswordModal';
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -15,6 +16,7 @@ const LoginPage = () => {
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeField, setActiveField] = useState(null);
@@ -203,9 +205,12 @@ const LoginPage = () => {
                     </button>
                   </div>
                   <div className="flex justify-end mt-2">
-                    <a href="#" className="text-sm text-blue-600 hover:underline">
-                      Forgot password?
-                    </a>
+                  <button
+              onClick={() => setShowForgotPassword(true)}
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center justify-center gap-1 transition-colors duration-200 mx-auto cursor-pointer"
+            >
+              <HelpCircle className="h-4 w-4" /> Forgot Password?
+            </button>
                   </div>
                 </div>
 
@@ -306,6 +311,10 @@ const LoginPage = () => {
           <span className="sr-only">Help</span>
         </motion.button>
       </motion.div>
+
+      {showForgotPassword && (
+        <ForgotPasswordFlow onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
   );
 };

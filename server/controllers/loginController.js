@@ -28,25 +28,11 @@ const loginStudents = async (req, res) => {
         { expiresIn: "1h" }
       );
       
-
+     const userId = user.student_id; // Assuming you have a student_id field in your students table
       // --- Capture IP and Device Info ---
       const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
       const userAgent = req.headers["user-agent"];
 
-      // --- Optional: Insert login notification ---
-      await db.query(
-        `INSERT INTO notifications (type, title, preview, body, timestamp, action_type, action_label, action_url) 
-         VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)`,
-        [
-          "security",
-          `Login Detected`,
-          `Login from IP: ${ipAddress}`,
-          `A new login to your account was detected.\nDevice: ${userAgent}`,
-          "link",
-          "View Activity",
-          "/student/activity" // Or wherever your activity log is
-        ]
-      );
 
       // --- Optional: Log to a login_logs table ---
       await db.query(

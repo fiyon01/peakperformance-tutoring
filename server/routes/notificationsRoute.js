@@ -28,7 +28,7 @@ router.get('/notifications', async (req, res) => {
     try {
       const notifications = await db.query(`
         SELECT id, type, title, preview, body, timestamp, 
-               \`read\`, action_type, action_label, action_url, action_onClick
+               is_read, action_type, action_label, action_url, action_onClick
         FROM notifications
         ORDER BY timestamp DESC
       `);
@@ -43,7 +43,7 @@ router.patch('/notifications/:id/read',verifyToken, async (req, res) => {
     try {
       await db.query(`
         UPDATE notifications
-        SET \`read\` = TRUE
+        SET is_read = TRUE
         WHERE id = ?
       `, [req.params.id]);
   
@@ -59,8 +59,8 @@ router.patch('/notifications/:id/read',verifyToken, async (req, res) => {
     try {
       await db.query(`
         UPDATE notifications
-        SET \`read\` = TRUE
-        WHERE \`read\` = FALSE
+        SET is_read = TRUE
+        WHERE is_read = FALSE
       `);
   
       res.status(200).json({ message: 'All notifications marked as read' });

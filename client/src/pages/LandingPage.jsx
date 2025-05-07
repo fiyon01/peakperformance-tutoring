@@ -46,61 +46,76 @@ const PeakPerformanceTutoring = () => {
   const [showConsultationModal, setShowConsultationModal] = useState(false);
   const [showHomeTuitionModal, setShowHomeTuitionModal] = useState(false);
   const galleryRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [programs, setPrograms] = useState([]);
+  const [loadedImages, setLoadedImages] = useState({});
+
+  // Fetch programs from backend
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/programs');
+        if (!response.ok) {
+          throw new Error('Failed to fetch programs');
+        }
+        const data = await response.json();
+        setPrograms(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching programs:', error);
+        setIsLoading(false);
+        // Fallback data if API fails
+        setPrograms([
+          { 
+            id: 1, 
+            name: "Advanced Mathematics", 
+            year: 2023,
+            term: "Term 2",
+            duration: "8 weeks",
+            start_date: "2023-05-15",
+            end_date: "2023-07-10",
+            status: "upcoming",
+            is_active: true,
+            image_url: "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            price: 350.00,
+            description: "Master calculus, linear algebra, and advanced problem-solving techniques with our expert math tutors.",
+            slots: 15,
+            level: "Advanced",
+            time: "Mon & Wed, 4-6PM",
+            venue: "Online"
+          },
+          { 
+            id: 2, 
+            name: "Science Olympiad Prep", 
+            year: 2023,
+            term: "Term 2",
+            duration: "10 weeks",
+            start_date: "2023-05-20",
+            end_date: "2023-07-29",
+            status: "upcoming",
+            is_active: true,
+            image_url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            price: 500.00,
+            description: "Comprehensive preparation for all Science Olympiad events with competition-winning strategies.",
+            slots: 10,
+            level: "Intermediate",
+            time: "Tue & Thu, 5-7PM",
+            venue: "Online"
+          }
+        ]);
+      }
+    };
+
+    fetchPrograms();
+  }, []);
+
+  const handleImageLoad = (id) => {
+    setLoadedImages(prev => ({ ...prev, [id]: true }));
+  };
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  // Sample data
-  const programs = [
-    { 
-      id: 1, 
-      name: "Advanced Mathematics", 
-      category: "STEM",
-      image: "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-      schedule: "Mon & Wed, 4-6PM",
-      duration: "8 weeks",
-      level: "Advanced",
-      spots: "4 spots left",
-      price: "Ksh350",
-      description: "Master calculus, linear algebra, and advanced problem-solving techniques with our expert math tutors."
-    },
-    { 
-      id: 2, 
-      name: "Science Olympiad Prep", 
-      category: "STEM",
-      image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-      schedule: "Tue & Thu, 5-7PM",
-      duration: "10 weeks",
-      level: "Intermediate",
-      spots: "2 spots left",
-      price: "Ksh500",
-      description: "Comprehensive preparation for all Science Olympiad events with competition-winning strategies."
-    },
-    { 
-      id: 3, 
-      name: "College Essay Mastery", 
-      category: "Language Arts",
-      image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-      schedule: "Flexible scheduling",
-      duration: "6 weeks",
-      level: "All Levels",
-      spots: "6 spots left",
-      price: "Ksh300",
-      description: "Craft compelling personal statements and supplemental essays for college applications."
-    },
-    { 
-      id: 4, 
-      name: "Literary Analysis", 
-      category: "Language Arts",
-      image: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-      schedule: "Sat, 10AM-12PM",
-      duration: "12 weeks",
-      level: "Advanced",
-      spots: "3 spots left",
-      price: "Ksh400",
-      description: "Develop critical reading and analytical writing skills for advanced literature courses."
-    }
-  ];
-
+  // Sample testimonials data
   const testimonials = [
     {
       id: 1,
@@ -121,15 +136,12 @@ const PeakPerformanceTutoring = () => {
   const galleryImages = [
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475879454_1184209423370917_7326451790253706885_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Ue3hYsF5Q1gQ7kNvwEfUn0r&_nc_oc=AdmYHFvAF6UYQGEJDH1DJSJKhgz2xchAeL4XNI8IN7Igyp_5d0OZJx7NDSMLT28o4H0&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=RItWCXsm_LPin5xswPXg6A&oh=00_AfHwhdv0z7akEJn9dB6FAzLIMTpFY--jw1Xs4-D_IKAg_A&oe=681B9B1E",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490582004_1235073248284534_6947471108058900747_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Nru45LgHYqkQ7kNvwFUtsSP&_nc_oc=AdmKFECrw-sIBY7qTGDSGAp9LSLTm4pAQcAkIKiVGQTC2tTlr67YZV7RIaa9LHA4904&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=vbE23qMXgBXxtkV7AiiwLQ&oh=00_AfHVxej-83_olkToC0UvczjN-4Tmx6xLCcB4Ip6QJB9Sbg&oe=681BAD8B",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490537957_1235932054865320_4959166800137820039_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=TF0h4bZ5dloQ7kNvwFpsG8u&_nc_oc=AdlulPD3NkA1LZ8ebo1L6LzPxqoLmFH3a01ta7pyLaTEaVm35FVD51Y34Cs_f2K1VDw&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=D-w_BX8llBbetgb_LSVUyw&oh=00_AfGEJb3d879xkel1x0X4sOk02FhJZkP6QI7BOg6l96QbUA&oe=681BA56F",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/488657934_1231151315343394_8485203425039210576_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=DWC2mD5QWpYQ7kNvwFlxOB3&_nc_oc=Adnb67GeCeLSWjnrQdzuKwthkQryfLRtLgBwIVKSfIyK97ahO7q_nSE2c58e6eou7Ww&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=O0OSDxxHoV5YrdM0b2vbYg&oh=00_AfHmrExIU3ujEX_zfMRdnXN60bVnIsPNLiSKIqhW2SKwEw&oe=681B94D8",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475775115_1184209463370913_3857042342268191103_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=l-Dfzq9UjUEQ7kNvwEQo_bP&_nc_oc=Adl4L6yQM0Lv3o49Dt7JyiQM7wXwiug-7q9HOPAvKOwirDQbUuHzPEbtHyMuROFjIUU&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=T_-CrtOXAMmKNDA5XLJ1-Q&oh=00_AfH6_nqfqpgoClWrMWEXqyyKi0WYYTZAuKQQpBCNijJaKQ&oe=681BAC86"
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22"
   ];
 
   const filteredPrograms = programs.filter(program =>
     program.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    program.category.toLowerCase().includes(searchQuery.toLowerCase())
+    (program.description && program.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const nextTestimonial = () => {
@@ -163,15 +175,15 @@ const PeakPerformanceTutoring = () => {
     document.body.style.overflow = 'hidden';
   };
 
-  // Image loading state for skeleton loading
-  const [loadedImages, setLoadedImages] = useState({});
-  const handleImageLoad = (id) => {
-    setLoadedImages(prev => ({ ...prev, [id]: true }));
+  // Format date for display
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
-      {/* Modern Navigation */}
+      {/* Navigation */}
       <nav className="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
@@ -453,80 +465,97 @@ const PeakPerformanceTutoring = () => {
             </div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {filteredPrograms.length > 0 ? (
-              filteredPrograms.map((program) => (
-                <motion.div
-                  key={program.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                  className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100 group"
-                >
-                  <div className="h-48 overflow-hidden relative">
-                    {!loadedImages[program.id] && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse"></div>
-                    )}
-                    <img 
-                      src={program.image} 
-                      alt={program.name} 
-                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
-                      onLoad={() => handleImageLoad(program.id)}
-                      loading="lazy"
-                    />
-                  </div>
+          {isLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+              {[1, 2, 3, 4].map((item) => (
+                <div key={item} className="bg-white rounded-xl overflow-hidden shadow-md border border-gray-100">
+                  <div className="h-48 bg-gray-200 animate-pulse"></div>
                   <div className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">{program.name}</h3>
-                      <span className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
-                        {program.category}
-                      </span>
-                    </div>
-                    
-                    <p className="text-gray-600 mb-4">{program.description}</p>
-                    
-                    <div className="grid grid-cols-2 gap-4 my-4">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <ClockIcon className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm">{program.schedule}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm">{program.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <UserCheck className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm">{program.level}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <UsersIcon className="w-4 h-4 text-blue-500" />
-                        <span className="text-sm">{program.spots}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center mt-6">
-                      <div className="text-xl font-bold text-gray-900">{program.price}</div>
-                      <motion.button 
-                        onClick={() => openModal(program)}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm group"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <span>Register Now</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </motion.button>
-                    </div>
+                    <div className="h-6 bg-gray-200 rounded animate-pulse mb-4 w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2 w-1/4"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-4 w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-4 w-5/6"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse mt-6"></div>
                   </div>
-                </motion.div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-600">No programs found matching your search.</p>
-              </div>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+              {filteredPrograms.length > 0 ? (
+                filteredPrograms.map((program) => (
+                  <motion.div
+                    key={program.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -5 }}
+                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100 group"
+                  >
+                    <div className="h-48 overflow-hidden relative">
+                      {!loadedImages[program.id] && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse"></div>
+                      )}
+                      <img 
+                        src={program.image_url || "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"} 
+                        alt={program.name} 
+                        className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
+                        onLoad={() => handleImageLoad(program.id)}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-gray-900">{program.name}</h3>
+                        <span className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
+                          {program.term || "Term 2"}
+                        </span>
+                      </div>
+                      
+                      <p className="text-gray-600 mb-4">{program.description || "Comprehensive program designed to enhance student performance."}</p>
+                      
+                      <div className="grid grid-cols-2 gap-4 my-4">
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <ClockIcon className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">{program.time || "Flexible scheduling"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Calendar className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">{program.duration}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <UserCheck className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">{program.level || "All Levels"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <UsersIcon className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm">{program.slots ? `${program.slots} spots left` : "Limited spots"}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center mt-6">
+                        <div className="text-xl font-bold text-gray-900">Ksh{program.price?.toFixed(2) || "350"}</div>
+                        <motion.button 
+                          onClick={() => openModal(program)}
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm group"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span>Register Now</span>
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-gray-600">No programs found matching your search.</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -955,31 +984,34 @@ const PeakPerformanceTutoring = () => {
                 <div className="mb-6">
                   <div className="h-48 rounded-lg overflow-hidden mb-4">
                     <img 
-                      src={selectedProgram.image} 
+                      src={selectedProgram.image_url || "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"} 
                       alt={selectedProgram.name} 
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
                   </div>
                   
+                  <div className="mb-4">
+                    <p className="text-gray-600 mb-2"><strong>Term:</strong> {selectedProgram.term}</p>
+                    <p className="text-gray-600 mb-2"><strong>Duration:</strong> {selectedProgram.duration}</p>
+                    <p className="text-gray-600 mb-2"><strong>Dates:</strong> {formatDate(selectedProgram.start_date)} to {formatDate(selectedProgram.end_date)}</p>
+                    <p className="text-gray-600 mb-2"><strong>Venue:</strong> {selectedProgram.venue || "Online"}</p>
+                  </div>
+                  
                   <p className="text-gray-600 mb-4">{selectedProgram.description}</p>
                   
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <Calendar className="w-5 h-5 text-blue-500" />
-                      <span>{selectedProgram.schedule}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
                       <Clock className="w-5 h-5 text-blue-500" />
-                      <span>{selectedProgram.duration}</span>
+                      <span>{selectedProgram.time || "Flexible scheduling"}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <DollarSign className="w-5 h-5 text-blue-500" />
-                      <span className="font-bold">{selectedProgram.price}</span>
+                      <span className="font-bold">Ksh{selectedProgram.price?.toFixed(2) || "350"}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <UsersIcon className="w-5 h-5 text-blue-500" />
-                      <span>{selectedProgram.spots}</span>
+                      <span>{selectedProgram.slots ? `${selectedProgram.slots} spots left` : "Limited spots"}</span>
                     </div>
                   </div>
                 </div>
@@ -1012,7 +1044,7 @@ const PeakPerformanceTutoring = () => {
                     <input 
                       type="tel" 
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="(123) 456-7890"
+                      placeholder="+254798971625"
                       required
                     />
                   </div>
@@ -1023,10 +1055,17 @@ const PeakPerformanceTutoring = () => {
                       required
                     >
                       <option value="">Select grade level</option>
-                      <option value="Elementary School">Elementary School</option>
-                      <option value="Middle School">Middle School</option>
-                      <option value="High School">High School</option>
-                      <option value="College">College</option>
+                      <optgroup label="Primary School">
+                        {[...Array(8)].map((_, i) => (
+                          <option key={`grade-${i+1}`} value={`Grade ${i+1}`}>Grade {i+1}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="High School">
+                        {[...Array(4)].map((_, i) => (
+                          <option key={`form-${i+1}`} value={`Form ${i+1}`}>Form {i+1}</option>
+                        ))}
+                      </optgroup>
+                      <option value="College">College/University</option>
                     </select>
                   </div>
                   

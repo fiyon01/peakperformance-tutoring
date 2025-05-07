@@ -50,7 +50,7 @@ const DashboardLayout = () => {
           {currentPage === 'dashboard-home' && <DashboardHome isEnrolled={isEnrolled} />}
           {currentPage === 'my-timetable' && <TimetablePage />}
           {currentPage === 'vision-board-/-my-goals' && <WeeklyReflection />}
-          {currentPage === 'explore-upcoming-programmes' && <ProgrammesPage />}
+          {currentPage === 'upcoming-programmes' && <ProgrammesPage />}
           {currentPage === 'personal-timetable' && <PersonalTimetable />}
           {currentPage === 'support' && <HelpCenterPage />}
           {currentPage === 'attendance' && <AttendancePage />}

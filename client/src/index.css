@@ -24,3 +24,50 @@
   .timetable-day-column {
     min-height: 150px;
   }
+  .gradient-sunrise {
+    background: linear-gradient(270deg, #fef3c7, #fbcfe8, #fecaca);
+    background-size: 300% 300%;
+    animation: gradientAnimation 15s ease infinite;
+  }
+  
+  .gradient-ocean {
+    background: linear-gradient(270deg, #93c5fd, #67e8f9, #a5f3fc);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+  }
+  
+  .gradient-nightSky {
+    background: linear-gradient(270deg, #1e3a8a, #3b82f6, #93c5fd);
+    background-size: 300% 300%;
+    animation: gradientAnimation 8s ease infinite;
+  }
+  
+  .gradient-forest {
+    background: linear-gradient(270deg, #065f46, #047857, #10b981);
+    background-size: 300% 300%;
+    animation: gradientAnimation 12s ease infinite;
+  }
+  
+  .gradient-sunset {
+    background: linear-gradient(270deg, #f59e0b, #ec4899, #f43f5e);
+    background-size: 300% 300%;
+    animation: gradientAnimation 15s ease infinite;
+  }
+  
+  .gradient-serene {
+    background: linear-gradient(270deg, #7c3aed, #4f46e5, #6366f1);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+  }
+  
+  .gradient-rainbow {
+    background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s ease infinite;
+  }
+  
+  @keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
