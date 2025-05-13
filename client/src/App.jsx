@@ -16,10 +16,14 @@ import LoginPage from './pages/auth/Login';
 import RegistrationPage from './pages/auth/Registration';
 import ProtectedRoute from './components/ProtectedRoute';
 import PeakPerformanceTutoring from "./pages/LandingPage";
+import SecurityQuestionDisplay from "./pages/test";
 import LearningResources from "./pages/Resources";
 import AboutUs from "./pages/AboutUs";
 import PaymentsDashboard from "./pages/Payments";
+import TutoringPolicies from "./pages/Policies"
 import SecurityDetailsPage from "./pages/accountRecovery/SecurityDetailsPage";
+import AccountRecoverySetup from "./pages/accountRecovery/AccountRecoverySetup";
+
 
 function App() {
   return (
@@ -54,7 +58,10 @@ function App() {
           <Route path="/auth/students-login" element={<LoginPage />} />
           <Route path="/landingpage" element={<PeakPerformanceTutoring />} />
           <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/account-recovery/security-details" element={<SecurityDetailsPage />} />
+          <Route path="/policies" element={<TutoringPolicies />} />
+          <Route path="/account-recovery" element={<SecurityDetailsPage />} />
+          <Route path="/account-recovery/set-up" element={<AccountRecoverySetup />} />
+
         </Routes>
 
         {/* Global Toast Messages */}

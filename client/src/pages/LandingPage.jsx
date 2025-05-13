@@ -6,7 +6,8 @@ import {
   AlertCircle, BookOpen, GraduationCap, ClipboardCheck, Instagram, 
   Twitter, Facebook, Youtube, ArrowUpRight, Grid, Clock, Users as UsersIcon,
   Award, Rocket, Target, BarChart2, Bookmark, Zap, Shield, FileText,
-  PieChart, TrendingUp, HelpCircle, Clock as ClockIcon, MessageSquare, UserCheck, Image as ImageIcon
+  PieChart, TrendingUp, HelpCircle, Clock as ClockIcon, MessageSquare, UserCheck, Image as ImageIcon,
+  Heart, Smile, School, Globe, ShieldCheck, Book, Lightbulb, Feather, Award as AwardIcon
 } from 'lucide-react';
 import { Link } from "react-router-dom";
 import Logo from "../assets/icons8-graduation-cap-30.png";
@@ -15,6 +16,46 @@ import Logo from "../assets/icons8-graduation-cap-30.png";
 const TestimonialForm = lazy(() => import('./TestimonialForm'));
 const ConsultationForm = lazy(() => import('./ConsultationForm'));
 const HomeTuitionForm = lazy(() => import('./HomeTuitionForm'));
+
+// Floating shapes component
+const FloatingShapes = () => {
+  const shapes = [
+    { icon: <Book className="w-6 h-6 text-purple-400" />, size: 40, delay: 0, duration: 15, x: 10, y: 20 },
+    { icon: <Lightbulb className="w-6 h-6 text-blue-400" />, size: 30, delay: 2, duration: 12, x: 80, y: 50 },
+    { icon: <Feather className="w-6 h-6 text-indigo-400" />, size: 50, delay: 4, duration: 18, x: 40, y: 70 },
+    { icon: <AwardIcon className="w-6 h-6 text-pink-400" />, size: 35, delay: 1, duration: 14, x: 70, y: 30 }
+  ];
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {shapes.map((shape, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: shape.y, x: shape.x }}
+          animate={{
+            opacity: [0, 0.8, 0],
+            y: [shape.y, shape.y - 100, shape.y - 200],
+            x: [shape.x, shape.x + 20, shape.x - 20]
+          }}
+          transition={{
+            duration: shape.duration,
+            delay: shape.delay,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear"
+          }}
+          className="absolute"
+          style={{
+            width: shape.size,
+            height: shape.size,
+          }}
+        >
+          {shape.icon}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
 
 const AnimatedCounter = ({ value, duration = 1.5 }) => {
   const [count, setCount] = useState(0);
@@ -49,6 +90,15 @@ const PeakPerformanceTutoring = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [programs, setPrograms] = useState([]);
   const [loadedImages, setLoadedImages] = useState({});
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Fetch programs from backend
   useEffect(() => {
@@ -68,7 +118,7 @@ const PeakPerformanceTutoring = () => {
         setPrograms([
           { 
             id: 1, 
-            name: "Advanced Mathematics", 
+            name: "Primary Math Magic", 
             year: 2023,
             term: "Term 2",
             duration: "8 weeks",
@@ -76,17 +126,17 @@ const PeakPerformanceTutoring = () => {
             end_date: "2023-07-10",
             status: "upcoming",
             is_active: true,
-            image_url: "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-            price: 350.00,
-            description: "Master calculus, linear algebra, and advanced problem-solving techniques with our expert math tutors.",
-            slots: 15,
-            level: "Advanced",
-            time: "Mon & Wed, 4-6PM",
-            venue: "Online"
+            image_url: "https://images.unsplash.com/photo-1596495577886-d920f1fb7238?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            price: 250.00,
+            description: "Fun and engaging math lessons for primary students. Games, puzzles, and interactive learning!",
+            slots: 12,
+            level: "Primary (Grades 1-8)",
+            time: "Mon & Wed, 3-4PM",
+            venue: "Online & In-Person"
           },
           { 
             id: 2, 
-            name: "Science Olympiad Prep", 
+            name: "Science Explorers Club", 
             year: 2023,
             term: "Term 2",
             duration: "10 weeks",
@@ -95,12 +145,48 @@ const PeakPerformanceTutoring = () => {
             status: "upcoming",
             is_active: true,
             image_url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-            price: 500.00,
-            description: "Comprehensive preparation for all Science Olympiad events with competition-winning strategies.",
+            price: 300.00,
+            description: "Exciting experiments and discovery-based learning for young scientists. Safety first!",
             slots: 10,
-            level: "Intermediate",
-            time: "Tue & Thu, 5-7PM",
+            level: "Primary (Grades 4-8)",
+            time: "Tue & Thu, 4-5PM",
+            venue: "Online & In-Person"
+          },
+          { 
+            id: 3, 
+            name: "Reading Adventure", 
+            year: 2023,
+            term: "Term 2",
+            duration: "6 weeks",
+            start_date: "2023-06-01",
+            end_date: "2023-07-10",
+            status: "upcoming",
+            is_active: true,
+            image_url: "https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            price: 200.00,
+            description: "Interactive reading program with storytime, comprehension games, and vocabulary building.",
+            slots: 15,
+            level: "Primary (Grades 1-4)",
+            time: "Fri, 3-4PM",
             venue: "Online"
+          },
+          { 
+            id: 4, 
+            name: "Creative Writing Workshop", 
+            year: 2023,
+            term: "Term 2",
+            duration: "8 weeks",
+            start_date: "2023-05-15",
+            end_date: "2023-07-10",
+            status: "upcoming",
+            is_active: true,
+            image_url: "https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+            price: 280.00,
+            description: "Spark imagination and develop writing skills through fun prompts and storytelling activities.",
+            slots: 12,
+            level: "Primary (Grades 3-8)",
+            time: "Sat, 10-11AM",
+            venue: "In-Person"
           }
         ]);
       }
@@ -120,29 +206,45 @@ const PeakPerformanceTutoring = () => {
     {
       id: 1,
       name: "Sarah Johnson",
-      role: "Parent",
-      text: "My daughter's grades improved from Cs to As after just two months. The tutors are exceptional at breaking down complex concepts.",
-      rating: 5
+      role: "Parent of Grade 3 Student",
+      text: "My daughter used to hate math, but now she can't wait for her tutoring sessions! Her grades improved from Cs to As after just two months.",
+      rating: 5,
+      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
     },
     {
       id: 2,
       name: "Michael Chen",
-      role: "Student",
-      text: "The personalized approach helped me score in the 98th percentile on my SATs. I couldn't have done it without Peak Performance.",
-      rating: 5
+      role: "Parent of Grade 5 Student",
+      text: "The personalized approach helped my son develop a love for reading. He's now reading books above his grade level!",
+      rating: 5,
+      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+    },
+    {
+      id: 3,
+      name: "Grace Mwangi",
+      role: "Grade 7 Student",
+      text: "Science is now my favorite subject! The experiments are so cool and I understand everything much better.",
+      rating: 5,
+      avatar: "https://randomuser.me/api/portraits/women/63.jpg"
     }
   ];
 
   const galleryImages = [
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475879454_1184209423370917_7326451790253706885_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Ue3hYsF5Q1gQ7kNvwEfUn0r&_nc_oc=AdmYHFvAF6UYQGEJDH1DJSJKhgz2xchAeL4XNI8IN7Igyp_5d0OZJx7NDSMLT28o4H0&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=RItWCXsm_LPin5xswPXg6A&oh=00_AfHwhdv0z7akEJn9dB6FAzLIMTpFY--jw1Xs4-D_IKAg_A&oe=681B9B1E",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490582004_1235073248284534_6947471108058900747_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Nru45LgHYqkQ7kNvwFUtsSP&_nc_oc=AdmKFECrw-sIBY7qTGDSGAp9LSLTm4pAQcAkIKiVGQTC2tTlr67YZV7RIaa9LHA4904&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=vbE23qMXgBXxtkV7AiiwLQ&oh=00_AfHVxej-83_olkToC0UvczjN-4Tmx6xLCcB4Ip6QJB9Sbg&oe=681BAD8B",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22"
+    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22",
+    "https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   ];
 
-  const filteredPrograms = programs.filter(program =>
+  const filteredPrograms = programs
+  .filter(program =>
     program.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (program.description && program.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  )
+  .sort((a, b) => a.level.localeCompare(b.level)); // Sort by grade level
+
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
@@ -182,22 +284,37 @@ const PeakPerformanceTutoring = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans antialiased">
+    <div className="min-h-screen bg-white font-sans antialiased overflow-x-hidden">
+      {/* Floating background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-40 h-40 rounded-full bg-purple-100/30 blur-3xl -z-10"></div>
+        <div className="absolute top-2/3 right-1/4 w-60 h-60 rounded-full bg-blue-100/30 blur-3xl -z-10"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 rounded-full bg-indigo-100/20 blur-3xl -z-10"></div>
+      </div>
+
       {/* Navigation */}
-      <nav className="fixed w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      <motion.nav 
+        className={`fixed w-full ${isScrolled ? 'bg-white/95 shadow-md' : 'bg-white/80'} backdrop-blur-md z-50 border-b border-gray-100 transition-all duration-300`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="max-w-7xl mx-auto px-6 py-3">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <motion.img 
-                src={Logo} 
-                alt="logo" 
-                className="w-6 h-6" 
-                loading="lazy"
+              <motion.div
                 whileHover={{ rotate: 15 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-              />
+              >
+                <img 
+                  src={Logo} 
+                  alt="logo" 
+                  className="w-8 h-8" 
+                  loading="lazy"
+                />
+              </motion.div>
               <motion.span 
-                className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+                className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
@@ -212,25 +329,27 @@ const PeakPerformanceTutoring = () => {
                 { name: "About Us", icon: <User className="w-4 h-4" />, href: "/about-us" },
                 { name: "Programs", icon: <BookOpen className="w-4 h-4" />, href: "#programs" },
                 { name: "Method", icon: <ClipboardCheck className="w-4 h-4" />, href: "#method" },
-                { name: "Results", icon: <BarChart2 className="w-4 h-4" />, href: "#testimonials" }
+                { name: "Results", icon: <BarChart2 className="w-4 h-4" />, href: "#testimonials" },
+                { name: "Policies", icon: <ShieldCheck className="w-4 h-4" />, href: "/policies" }
               ].map((item, index) => (
                 <motion.a
                   key={index}
                   href={item.href}
-                  className="text-gray-700 hover:text-blue-600 transition flex items-center gap-1 group"
+                  className="text-gray-700 hover:text-purple-600 transition flex items-center gap-1 group"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + index * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   <span className="group-hover:scale-110 transition-transform">{item.icon}</span>
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 after:transition-all after:duration-300 group-hover:after:w-full">
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gradient-to-r after:from-blue-600 after:to-purple-600 after:transition-all after:duration-300 group-hover:after:w-full">
                     {item.name}
                   </span>
                 </motion.a>
               ))}
               <Link to="/auth/students-signup">
                 <motion.button 
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100 flex items-center gap-2 group"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-5 py-2 rounded-full hover:opacity-90 transition shadow-lg shadow-blue-100/50 hover:shadow-purple-100/50 flex items-center gap-2 group"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35 }}
@@ -248,11 +367,15 @@ const PeakPerformanceTutoring = () => {
               className="md:hidden text-gray-700 focus:outline-none"
               aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-7 w-7 text-purple-600" />
+              ) : (
+                <Menu className="h-7 w-7 text-purple-600" />
+              )}
             </button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -269,7 +392,8 @@ const PeakPerformanceTutoring = () => {
                 { name: "About Us", icon: <User className="w-5 h-5" />, href: "/about-us", onClick: closeMenu },
                 { name: "Programs", icon: <BookOpen className="w-5 h-5" />, href: "#programs", onClick: closeMenu },
                 { name: "Method", icon: <ClipboardCheck className="w-5 h-5" />, href: "#method", onClick: closeMenu },
-                { name: "Results", icon: <BarChart2 className="w-5 h-5" />, href: "#testimonials", onClick: closeMenu }
+                { name: "Results", icon: <BarChart2 className="w-5 h-5" />, href: "#testimonials", onClick: closeMenu },
+                { name: "Policies", icon: <ShieldCheck className="w-5 h-5" />, href: "/policies", onClick: closeMenu }
               ].map((item, index) => (
                 <motion.a
                   key={index}
@@ -279,14 +403,15 @@ const PeakPerformanceTutoring = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + index * 0.05 }}
+                  whileHover={{ x: 5 }}
                 >
-                  <span className="group-hover:text-blue-600 transition-colors">{item.icon}</span>
-                  <span className="group-hover:text-blue-600 transition-colors">{item.name}</span>
+                  <span className="group-hover:text-purple-600 transition-colors">{item.icon}</span>
+                  <span className="group-hover:text-purple-600 transition-colors">{item.name}</span>
                 </motion.a>
               ))}
               <Link to="/auth/students-signup">
                 <motion.button 
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2 group"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-full text-lg mt-4 w-full flex items-center justify-center gap-2 group"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -302,8 +427,9 @@ const PeakPerformanceTutoring = () => {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <section className="pt-32 pb-20 px-6 relative">
+        <FloatingShapes />
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="order-2 lg:order-1">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
@@ -311,7 +437,10 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6"
             >
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Peak Performance Tutoring</span> For Academic Excellence
+ <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+    Learning Made Fun, Join Peak Performance Tutoring
+  </span>            
+            
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -319,7 +448,7 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-10 max-w-lg"
             >
-              82% of our students achieve top 10% exam results. Ivy League-educated tutors with proven methodologies.
+              95% of our students show improved grades and confidence. Engaging lessons designed for young learners.
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -329,8 +458,8 @@ const PeakPerformanceTutoring = () => {
             >
               <motion.button 
                 onClick={openConsultationModal}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100 font-medium flex items-center justify-center gap-2 group"
-                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl shadow-blue-100/50 hover:shadow-purple-100/50 font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span>Book Consultation</span>
@@ -345,6 +474,28 @@ const PeakPerformanceTutoring = () => {
                 <span>Home Tuition</span>
                 <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
               </motion.button>
+            </motion.div>
+
+            <motion.div 
+              className="mt-10 flex flex-wrap gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {[
+                { text: "Child-Safe", icon: <ShieldCheck className="w-5 h-5" /> },
+                { text: "Engaging", icon: <Smile className="w-5 h-5" /> },
+                { text: "Certified Tutors", icon: <GraduationCap className="w-5 h-5" /> }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full text-blue-700"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {item.icon}
+                  <span className="text-sm font-medium">{item.text}</span>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
 
@@ -371,13 +522,40 @@ const PeakPerformanceTutoring = () => {
               transition={{ delay: 0.6 }}
             >
               <div className="flex items-center gap-3">
-                <div className="bg-blue-100 p-3 rounded-full">
+                <motion.div 
+                  className="bg-blue-100 p-3 rounded-full"
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
                   <Award className="w-6 h-6 text-blue-600" />
-                </div>
+                </motion.div>
                 <div>
                   <p className="text-sm text-gray-500">Success Rate</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    <AnimatedCounter value="90" />%
+                    <AnimatedCounter value="95" />%
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="absolute -top-6 -right-6 bg-white p-6 rounded-xl shadow-lg border border-gray-100 hidden lg:block"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+            >
+              <div className="flex items-center gap-3">
+                <motion.div 
+                  className="bg-purple-100 p-3 rounded-full"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Heart className="w-6 h-6 text-purple-600" />
+                </motion.div>
+                <div>
+                  <p className="text-sm text-gray-500">Happy Students</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    <AnimatedCounter value="200" />+
                   </p>
                 </div>
               </div>
@@ -387,14 +565,20 @@ const PeakPerformanceTutoring = () => {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-12 bg-gray-50 border-y border-gray-100">
+      <section className="py-12 bg-gradient-to-r from-blue-50 to-purple-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
             {[
-              { name: "Ivy League Tutors", value: "10+", icon: <GraduationCap className="w-8 h-8 text-blue-600" /> },
-              { name: "Years Experience", value: "2+", icon: <Clock className="w-8 h-8 text-blue-600" /> },
-              { name: "Student Satisfaction", value: "90%", icon: <Zap className="w-8 h-8 text-blue-600" /> },
-              { name: "Success Rate", value: "90%", icon: <Award className="w-8 h-8 text-blue-600" /> }
+              { name: "Certified Tutors", value: "10+", icon: <GraduationCap className="w-8 h-8 text-blue-600" />, color: "bg-blue-100" },
+              { name: "Years Experience", value: "2+", icon: <Clock className="w-8 h-8 text-purple-600" />, color: "bg-purple-100" },
+              { name: "Student Satisfaction", value: "95%", icon: <Smile className="w-8 h-8 text-indigo-600" />, color: "bg-indigo-100" },
+              { name: "Success Rate", value: "95%", icon: <Award className="w-8 h-8 text-pink-600" />, color: "bg-pink-100" }
             ].map((item, index) => (
               <motion.div 
                 key={index}
@@ -402,10 +586,12 @@ const PeakPerformanceTutoring = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center"
+                className="text-center bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition"
+                whileHover={{ y: -5 }}
               >
                 <div className="flex justify-center mb-3">
                   <motion.div
+                    className={`${item.color} p-4 rounded-full`}
                     whileHover={{ scale: 1.1 }}
                     transition={{ type: 'spring', stiffness: 400 }}
                   >
@@ -418,13 +604,13 @@ const PeakPerformanceTutoring = () => {
                 <p className="text-gray-600">{item.name}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Programs */}
-      <section id="programs" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section id="programs" className="py-20 px-6 relative">
+        <div className="max-w-7xl mx-auto relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -432,17 +618,18 @@ const PeakPerformanceTutoring = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-3">
-              <motion.div
-                whileHover={{ rotate: 15 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-              >
-                <Bookmark className="w-8 h-8 text-blue-600" />
-              </motion.div>
-              Tailored Academic Programs
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="inline-block mb-4"
+            >
+              <Bookmark className="w-10 h-10 text-purple-600" />
+            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Fun Learning Programs
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Specialized curricula designed by subject matter experts from top institutions.
+              Engaging courses designed specifically for primary school students.
             </p>
           </motion.div>
 
@@ -456,10 +643,10 @@ const PeakPerformanceTutoring = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search programs or categories..."
+                placeholder="Search programs by subject or grade..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 border border-gray-200 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition pl-14 text-lg shadow-sm hover:shadow-md"
+                className="w-full px-6 py-4 border border-gray-200 rounded-full focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition pl-14 text-lg shadow-sm hover:shadow-md"
               />
               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
@@ -491,14 +678,23 @@ const PeakPerformanceTutoring = () => {
                     transition={{ duration: 0.5 }}
                     viewport={{ once: true }}
                     whileHover={{ y: -5 }}
-                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100 group"
+                    className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition border border-gray-100 group relative"
                   >
+                    <div className="absolute top-4 right-4 z-10">
+                      <motion.div 
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs px-3 py-1 rounded-full"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        {program.level}
+                      </motion.div>
+                    </div>
+                    
                     <div className="h-48 overflow-hidden relative">
                       {!loadedImages[program.id] && (
                         <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse"></div>
                       )}
                       <img 
-                        src={program.image_url || "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"} 
+                        src={program.image_url} 
                         alt={program.name} 
                         className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${loadedImages[program.id] ? 'opacity-100' : 'opacity-0'}`}
                         onLoad={() => handleImageLoad(program.id)}
@@ -508,28 +704,28 @@ const PeakPerformanceTutoring = () => {
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="text-xl font-bold text-gray-900">{program.name}</h3>
-                        <span className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
+                        <span className="inline-block bg-purple-100 text-purple-600 text-xs px-3 py-1 rounded-full">
                           {program.term || "Term 2"}
                         </span>
                       </div>
                       
-                      <p className="text-gray-600 mb-4">{program.description || "Comprehensive program designed to enhance student performance."}</p>
+                      <p className="text-gray-600 mb-4">{program.description}</p>
                       
                       <div className="grid grid-cols-2 gap-4 my-4">
                         <div className="flex items-center gap-2 text-gray-600">
-                          <ClockIcon className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm">{program.time || "Flexible scheduling"}</span>
+                          <ClockIcon className="w-4 h-4 text-purple-500" />
+                          <span className="text-sm">{program.time || "Flexible"}</span>
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
-                          <Calendar className="w-4 h-4 text-blue-500" />
+                          <Calendar className="w-4 h-4 text-purple-500" />
                           <span className="text-sm">{program.duration}</span>
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
-                          <UserCheck className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm">{program.level || "All Levels"}</span>
+                          <School className="w-4 h-4 text-purple-500" />
+                          <span className="text-sm">{program.venue || "Online"}</span>
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
-                          <UsersIcon className="w-4 h-4 text-blue-500" />
+                          <UsersIcon className="w-4 h-4 text-purple-500" />
                           <span className="text-sm">{program.slots ? `${program.slots} spots left` : "Limited spots"}</span>
                         </div>
                       </div>
@@ -538,7 +734,7 @@ const PeakPerformanceTutoring = () => {
                         <div className="text-xl font-bold text-gray-900">Ksh{program.price?.toFixed(2) || "350"}</div>
                         <motion.button 
                           onClick={() => openModal(program)}
-                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm group"
+                          className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:opacity-90 transition flex items-center gap-2 text-sm group"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -551,7 +747,10 @@ const PeakPerformanceTutoring = () => {
                 ))
               ) : (
                 <div className="col-span-full text-center py-12">
-                  <p className="text-gray-600">No programs found matching your search.</p>
+                  <div className="bg-blue-50 p-8 rounded-xl inline-block">
+                    <Search className="w-10 h-10 text-blue-500 mx-auto mb-4" />
+                    <p className="text-gray-600">No programs found matching your search.</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -560,8 +759,14 @@ const PeakPerformanceTutoring = () => {
       </section>
 
       {/* Method */}
-      <section id="method" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="method" className="py-20 bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-20 h-20 rounded-full bg-blue-300 blur-xl"></div>
+          <div className="absolute top-2/3 right-1/4 w-32 h-32 rounded-full bg-purple-300 blur-xl"></div>
+          <div className="absolute bottom-1/4 right-1/3 w-40 h-40 rounded-full bg-indigo-300 blur-xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <motion.div 
@@ -570,36 +775,40 @@ const PeakPerformanceTutoring = () => {
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
               >
-                <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <span className="text-sm font-semibold text-purple-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                   <Target className="w-4 h-4" /> Our Methodology
                 </span>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">The Peak Performance Difference</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">How We Make Learning Fun</h2>
                 <p className="text-xl text-gray-600 mb-8">
-                  Our proprietary 4-phase approach ensures measurable results and academic transformation.
+                  Our child-friendly approach combines education with engagement for optimal results.
                 </p>
               </motion.div>
 
               <div className="space-y-6">
                 {[
                   {
-                    title: "Diagnostic Assessment",
-                    description: "Comprehensive evaluation to identify strengths and knowledge gaps",
-                    icon: <PieChart className="w-6 h-6 text-blue-600" />
+                    title: "Interactive Diagnostics",
+                    description: "Game-based assessments to understand each child's learning style",
+                    icon: <PieChart className="w-6 h-6 text-blue-600" />,
+                    color: "bg-blue-100"
                   },
                   {
-                    title: "Custom Learning Plan",
-                    description: "Tailored curriculum targeting specific improvement areas",
-                    icon: <FileText className="w-6 h-6 text-blue-600" />
+                    title: "Personalized Learning",
+                    description: "Custom plans that match your child's interests and pace",
+                    icon: <FileText className="w-6 h-6 text-purple-600" />,
+                    color: "bg-purple-100"
                   },
                   {
-                    title: "Expert Instruction",
-                    description: "1:1 sessions with subject specialists using proven techniques",
-                    icon: <UsersIcon className="w-6 h-6 text-blue-600" />
+                    title: "Engaging Instruction",
+                    description: "Tutors trained in making learning fun and interactive",
+                    icon: <UsersIcon className="w-6 h-6 text-indigo-600" />,
+                    color: "bg-indigo-100"
                   },
                   {
-                    title: "Progress Optimization",
-                    description: "Continuous feedback loops to maximize learning efficiency",
-                    icon: <TrendingUp className="w-6 h-6 text-blue-600" />
+                    title: "Progress Through Play",
+                    description: "Educational games and rewards to track improvement",
+                    icon: <TrendingUp className="w-6 h-6 text-pink-600" />,
+                    color: "bg-pink-100"
                   }
                 ].map((item, index) => (
                   <motion.div
@@ -608,11 +817,12 @@ const PeakPerformanceTutoring = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex gap-4 group"
+                    className="flex gap-4 group bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition"
+                    whileHover={{ x: 5 }}
                   >
                     <motion.div 
-                      className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-blue-200 transition-colors"
-                      whileHover={{ scale: 1.1 }}
+                      className={`${item.color} w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-1 group-hover:scale-110 transition`}
+                      whileHover={{ rotate: 15 }}
                     >
                       {item.icon}
                     </motion.div>
@@ -647,11 +857,11 @@ const PeakPerformanceTutoring = () => {
                 transition={{ delay: 0.6 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-indigo-100 p-3 rounded-full">
-                    <Award className="w-6 h-6 text-indigo-600" />
+                  <div className="bg-purple-100 p-3 rounded-full">
+                    <Award className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Proven Results</p>
+                    <p className="text-sm text-gray-500">Parent Rating</p>
                     <p className="text-2xl font-bold text-gray-900">4.9/5</p>
                   </div>
                 </div>
@@ -662,8 +872,13 @@ const PeakPerformanceTutoring = () => {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="testimonials" className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5">
+          <div className="absolute top-1/4 left-1/4 w-40 h-40 rounded-full bg-blue-300 blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-60 h-60 rounded-full bg-purple-300 blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -671,10 +886,14 @@ const PeakPerformanceTutoring = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2 flex items-center justify-center gap-2">
-              <MessageSquare className="w-4 h-4" /> Success Stories
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Transformative Results</h2>
+            <motion.div
+              whileHover={{ rotate: 15 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="inline-block mb-4"
+            >
+              <MessageSquare className="w-10 h-10 text-purple-600" />
+            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Parents & Students Say</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Hear from families who've experienced the Peak Performance difference.
             </p>
@@ -688,13 +907,24 @@ const PeakPerformanceTutoring = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.5 }}
-                className="bg-gray-50 p-8 md:p-12 rounded-2xl shadow-sm"
+                className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 md:p-12 rounded-2xl shadow-sm relative overflow-hidden"
               >
-                <div className="flex flex-col md:flex-row gap-8">
+                {/* Decorative elements */}
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-blue-200/20"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-purple-200/20"></div>
+                
+                <div className="flex flex-col md:flex-row gap-8 relative z-10">
                   <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white text-3xl font-bold">
-                      {testimonials[currentTestimonial].name.charAt(0)}
-                    </div>
+                    <motion.div 
+                      className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <img 
+                        src={testimonials[currentTestimonial].avatar} 
+                        alt={testimonials[currentTestimonial].name} 
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
                   </div>
                   <div>
                     <Quote className="w-8 h-8 text-gray-300 mb-4" />
@@ -728,6 +958,16 @@ const PeakPerformanceTutoring = () => {
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
               </motion.button>
+              <div className="flex items-center gap-2">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTestimonial(index)}
+                    className={`w-2 h-2 rounded-full transition ${currentTestimonial === index ? 'bg-purple-600 w-4' : 'bg-gray-300'}`}
+                    aria-label={`Go to testimonial ${index + 1}`}
+                  />
+                ))}
+              </div>
               <motion.button 
                 onClick={nextTestimonial}
                 className="bg-white p-3 rounded-full shadow-md hover:bg-gray-50 transition"
@@ -742,8 +982,54 @@ const PeakPerformanceTutoring = () => {
         </div>
       </section>
 
+      {/* Testimonial Form Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Share Your Experience</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              We'd love to hear how Peak Performance has helped your child's learning journey.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="bg-white rounded-2xl shadow-xl overflow-hidden"
+          >
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+              <div className="flex items-center gap-3">
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <MessageSquare className="w-8 h-8" />
+                </motion.div>
+                <h3 className="text-xl font-bold">Submit Your Testimonial</h3>
+              </div>
+            </div>
+            
+            <Suspense fallback={
+              <div className="p-8">
+                <div className="h-96 bg-gray-100 rounded-xl animate-pulse"></div>
+              </div>
+            }>
+              <TestimonialForm />
+            </Suspense>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Gallery */}
-      <section id="gallery" className="py-20 bg-gray-50">
+      <section id="gallery" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -752,12 +1038,16 @@ const PeakPerformanceTutoring = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-2 flex items-center justify-center gap-2">
-              <ImageIcon className="w-4 h-4" /> Learning Moments
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Community</h2>
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="inline-block mb-4"
+            >
+              <ImageIcon className="w-10 h-10 text-purple-600" />
+            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Learning Adventures</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Glimpses of our students' journeys to academic excellence.
+              Glimpses of our students' exciting journey to academic success.
             </p>
           </motion.div>
 
@@ -781,9 +1071,12 @@ const PeakPerformanceTutoring = () => {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-6">
                   <div className="translate-y-4 group-hover:translate-y-0 transition">
-                    <div className="bg-white rounded-full w-10 h-10 flex items-center justify-center mb-3">
+                    <motion.div 
+                      className="bg-white rounded-full w-10 h-10 flex items-center justify-center mb-3"
+                      whileHover={{ scale: 1.1 }}
+                    >
                       <ArrowUpRight className="w-5 h-5 text-gray-900" />
-                    </div>
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
@@ -792,33 +1085,39 @@ const PeakPerformanceTutoring = () => {
         </div>
       </section>
 
-      {/* Testimonial Form */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl animate-pulse"></div>}>
-            <TestimonialForm />
-          </Suspense>
-        </div>
-      </section>
-
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-blue-900 to-indigo-900 text-white">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+      <section className="py-20 bg-gradient-to-br from-blue-900 to-purple-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-40 h-40 rounded-full bg-blue-400 blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-60 h-60 rounded-full bg-purple-400 blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Academic Journey?</h2>
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="inline-block mb-6"
+            >
+              <Rocket className="w-12 h-12 text-white" />
+            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your Child's Learning?</h2>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-10">
-              Schedule a consultation with our enrollment team to discuss your goals and create a customized learning plan.
+              Schedule a consultation with our team to discuss your child's needs and create a personalized learning plan.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <motion.button 
                 onClick={openConsultationModal}
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2 group"
-                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-full hover:opacity-90 transition shadow-xl font-medium flex items-center justify-center gap-2 group"
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.5)"
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span>Book Consultation</span>
@@ -827,7 +1126,10 @@ const PeakPerformanceTutoring = () => {
               <motion.button 
                 onClick={openHomeTuitionModal}
                 className="bg-white/10 text-white px-8 py-4 rounded-full hover:bg-white/20 transition border border-white/20 font-medium flex items-center justify-center gap-2 group"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 10px 25px -5px rgba(255, 255, 255, 0.1)"
+                }}
                 whileTap={{ scale: 0.95 }}
               >
                 <span>Home Tuition</span>
@@ -839,24 +1141,29 @@ const PeakPerformanceTutoring = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-950 text-gray-400 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-6">
+      <footer className="bg-gray-950 text-gray-400 pt-16 pb-8 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-1/4 left-1/4 w-60 h-60 rounded-full bg-blue-900 blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-purple-900 blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid md:grid-cols-5 gap-12">
             <div className="md:col-span-2">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
                 <motion.img 
                   src={Logo} 
                   alt="logo" 
-                  className="w-6 h-6 text-indigo-400" 
+                  className="w-8 h-8" 
                   whileHover={{ rotate: 15 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 />
-                <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Peak Performance
                 </span>
               </h3>
               <p className="mb-6">
-                Elite academic tutoring for discerning families seeking transformative educational results.
+                Making learning fun and effective for primary school students.
               </p>
               <div className="flex gap-4">
                 {[
@@ -870,7 +1177,7 @@ const PeakPerformanceTutoring = () => {
                     href="#"
                     className="text-gray-400 hover:text-white transition"
                     aria-label={social.label}
-                    whileHover={{ y: -3 }}
+                    whileHover={{ y: -3, color: "#ffffff" }}
                   >
                     {social.icon}
                   </motion.a>
@@ -917,7 +1224,7 @@ const PeakPerformanceTutoring = () => {
                       transition={{ type: 'spring', stiffness: 300 }}
                     >
                       <a href="#" className="hover:text-white transition flex items-center gap-2">
-                        <span className="text-blue-400">{link.icon}</span>
+                        <span className="text-purple-400 group-hover:text-white">{link.icon}</span>
                         {link.name}
                       </a>
                     </motion.li>
@@ -929,15 +1236,24 @@ const PeakPerformanceTutoring = () => {
             <div>
               <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h4>
               <ul className="space-y-3">
-                <li className="flex items-center gap-2 hover:text-white transition">
-                  <Mail className="w-4 h-4 text-blue-400" /> info@peakperformance.com
-                </li>
-                <li className="flex items-center gap-2 hover:text-white transition">
-                  <Phone className="w-4 h-4 text-blue-400" /> +254798971625
-                </li>
-                <li className="flex items-center gap-2 hover:text-white transition">
-                  <Home className="w-4 h-4 text-blue-400" /> 338-00902 Kikuyu
-                </li>
+                <motion.li 
+                  className="flex items-center gap-2 hover:text-white transition"
+                  whileHover={{ x: 5 }}
+                >
+                  <Mail className="w-4 h-4 text-purple-400" /> info@peakperformance.com
+                </motion.li>
+                <motion.li 
+                  className="flex items-center gap-2 hover:text-white transition"
+                  whileHover={{ x: 5 }}
+                >
+                  <Phone className="w-4 h-4 text-purple-400" /> +254798971625
+                </motion.li>
+                <motion.li 
+                  className="flex items-center gap-2 hover:text-white transition"
+                  whileHover={{ x: 5 }}
+                >
+                  <Home className="w-4 h-4 text-purple-400" /> 338-00902 Kikuyu
+                </motion.li>
               </ul>
             </div>
           </div>
@@ -945,8 +1261,20 @@ const PeakPerformanceTutoring = () => {
           <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p>© {new Date().getFullYear()} Peak Performance Tutoring. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-white transition">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition">Terms of Service</a>
+              <motion.a 
+                href="#" 
+                className="hover:text-white transition"
+                whileHover={{ y: -2 }}
+              >
+                Privacy Policy
+              </motion.a>
+              <motion.a 
+                href="#" 
+                className="hover:text-white transition"
+                whileHover={{ y: -2 }}
+              >
+                Terms of Service
+              </motion.a>
             </div>
           </div>
         </div>
@@ -982,35 +1310,50 @@ const PeakPerformanceTutoring = () => {
                 </div>
                 
                 <div className="mb-6">
-                  <div className="h-48 rounded-lg overflow-hidden mb-4">
+                  <div className="h-48 rounded-lg overflow-hidden mb-4 relative">
                     <img 
-                      src={selectedProgram.image_url || "https://images.unsplash.com/photo-1579248900371-0c9c0a56a9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"} 
+                      src={selectedProgram.image_url} 
                       alt={selectedProgram.name} 
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                      <div className="text-white font-bold">{selectedProgram.level}</div>
+                    </div>
                   </div>
                   
-                  <div className="mb-4">
-                    <p className="text-gray-600 mb-2"><strong>Term:</strong> {selectedProgram.term}</p>
-                    <p className="text-gray-600 mb-2"><strong>Duration:</strong> {selectedProgram.duration}</p>
-                    <p className="text-gray-600 mb-2"><strong>Dates:</strong> {formatDate(selectedProgram.start_date)} to {formatDate(selectedProgram.end_date)}</p>
-                    <p className="text-gray-600 mb-2"><strong>Venue:</strong> {selectedProgram.venue || "Online"}</p>
+                  <div className="mb-4 grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <p className="text-sm text-gray-500">Term</p>
+                      <p className="font-medium">{selectedProgram.term}</p>
+                    </div>
+                    <div className="bg-purple-50 p-3 rounded-lg">
+                      <p className="text-sm text-gray-500">Duration</p>
+                      <p className="font-medium">{selectedProgram.duration}</p>
+                    </div>
+                    <div className="bg-indigo-50 p-3 rounded-lg">
+                      <p className="text-sm text-gray-500">Dates</p>
+                      <p className="font-medium">{formatDate(selectedProgram.start_date)} to {formatDate(selectedProgram.end_date)}</p>
+                    </div>
+                    <div className="bg-pink-50 p-3 rounded-lg">
+                      <p className="text-sm text-gray-500">Venue</p>
+                      <p className="font-medium">{selectedProgram.venue || "Online"}</p>
+                    </div>
                   </div>
                   
                   <p className="text-gray-600 mb-4">{selectedProgram.description}</p>
                   
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Clock className="w-5 h-5 text-blue-500" />
+                  <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-center gap-3 text-gray-600">
+                      <Clock className="w-5 h-5 text-purple-500" />
                       <span>{selectedProgram.time || "Flexible scheduling"}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <DollarSign className="w-5 h-5 text-blue-500" />
+                    <div className="flex items-center gap-3 text-gray-600">
+                      <DollarSign className="w-5 h-5 text-purple-500" />
                       <span className="font-bold">Ksh{selectedProgram.price?.toFixed(2) || "350"}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <UsersIcon className="w-5 h-5 text-blue-500" />
+                    <div className="flex items-center gap-3 text-gray-600">
+                      <UsersIcon className="w-5 h-5 text-purple-500" />
                       <span>{selectedProgram.slots ? `${selectedProgram.slots} spots left` : "Limited spots"}</span>
                     </div>
                   </div>
@@ -1022,10 +1365,10 @@ const PeakPerformanceTutoring = () => {
                   closeModal();
                 }} className="space-y-4">
                   <div>
-                    <label className="block text-gray-700 mb-2">Full Name</label>
+                    <label className="block text-gray-700 mb-2">Parent's Full Name</label>
                     <input 
                       type="text" 
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
                       placeholder="John Doe"
                       required
                     />
@@ -1034,7 +1377,7 @@ const PeakPerformanceTutoring = () => {
                     <label className="block text-gray-700 mb-2">Email</label>
                     <input 
                       type="email" 
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
                       placeholder="john@example.com"
                       required
                     />
@@ -1043,7 +1386,7 @@ const PeakPerformanceTutoring = () => {
                     <label className="block text-gray-700 mb-2">Phone Number</label>
                     <input 
                       type="tel" 
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
                       placeholder="+254798971625"
                       required
                     />
@@ -1051,7 +1394,7 @@ const PeakPerformanceTutoring = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">Student's Grade Level</label>
                     <select 
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
                       required
                     >
                       <option value="">Select grade level</option>
@@ -1060,18 +1403,12 @@ const PeakPerformanceTutoring = () => {
                           <option key={`grade-${i+1}`} value={`Grade ${i+1}`}>Grade {i+1}</option>
                         ))}
                       </optgroup>
-                      <optgroup label="High School">
-                        {[...Array(4)].map((_, i) => (
-                          <option key={`form-${i+1}`} value={`Form ${i+1}`}>Form {i+1}</option>
-                        ))}
-                      </optgroup>
-                      <option value="College">College/University</option>
                     </select>
                   </div>
                   
                   <motion.button 
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium mt-6 flex items-center justify-center gap-2 group"
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:opacity-90 transition font-medium mt-6 flex items-center justify-center gap-2 group"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -1102,7 +1439,11 @@ const PeakPerformanceTutoring = () => {
               className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl"></div>}>
+              <Suspense fallback={
+                <div className="p-8">
+                  <div className="h-96 bg-gray-100 rounded-xl animate-pulse"></div>
+                </div>
+              }>
                 <ConsultationForm onClose={closeModal} />
               </Suspense>
             </motion.div>
@@ -1127,13 +1468,31 @@ const PeakPerformanceTutoring = () => {
               className="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl"></div>}>
+              <Suspense fallback={
+                <div className="p-8">
+                  <div className="h-96 bg-gray-100 rounded-xl animate-pulse"></div>
+                </div>
+              }>
                 <HomeTuitionForm onClose={closeModal} />
               </Suspense>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Back to Top Button */}
+      <motion.button
+        className={`fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-full shadow-lg ${isScrolled ? 'block' : 'hidden'}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        aria-label="Back to top"
+      >
+        <ArrowUpRight className="w-5 h-5 rotate-45" />
+      </motion.button>
     </div>
   );
 };

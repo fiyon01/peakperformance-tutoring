@@ -2,8 +2,10 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../utils/db");
-
+const crypto = require("crypto");
 dotenv.config();
+
+
 
 async function generateRegistrationNumber() {
   try {
@@ -23,6 +25,7 @@ const signupStudents = async (req, res) => {
       email,
       username,
       password,
+      phone,
       gradeLevel,
       schoolName,
       address,
@@ -43,16 +46,17 @@ const signupStudents = async (req, res) => {
 
     const [insertResult] = await db.query(
       `INSERT INTO students 
-        (registration_number, full_name, email, username, password, grade_level, school_name, address,
+        (registration_number, full_name, email, username, password,phone, grade_level, school_name, address,
          mother_name, mother_phone, mother_email,
          father_name, father_phone, father_email)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         registrationNumber,
         fullName,
         email,
         username,
         hashedPassword,
+        phone,
         gradeLevel,
         schoolName,
         address,
@@ -68,8 +72,19 @@ const signupStudents = async (req, res) => {
     if (!insertResult || insertResult.affectedRows === 0) {
       throw new Error("Failed to insert new student");
     }
+    const studentId = insertResult.insertId;
+    const recoveryToken = crypto.randomBytes(16).toString("hex"); 
+    // Set expiration time to 10 minutes from now
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes in ms
 
-    return res.status(201).json({ message: "User registered successfully" });
+    // Save token and expiration to DB
+    await db.query(
+      "UPDATE students SET recovery_token = ?, recovery_token_expires_at = ? WHERE student_id = ?",
+      [recoveryToken, expiresAt, studentId]
+    );
+
+    return res.status(201).json({ token: recoveryToken });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message || "Signup failed" });

@@ -11,7 +11,7 @@ const programsRoute = require("./routes/programsRoute")
 const notificationsRoute = require("./routes/notificationsRoute")
 const ratingsRoute = require("./routes/ratingsRoute")
 const uploadprofileRoute = require("./routes/uploadprofileRoute")
-
+const accountrecoverysetupRoute = require("./routes/accountrecoverysetupRoute")
 dotenv.config();
 const app = express();
 
@@ -46,7 +46,7 @@ app.use("/api", programsRoute);
 app.use("/api", notificationsRoute);
 app.use("/", ratingsRoute);
 app.use("/api", uploadprofileRoute);
-
+app.use("/api", accountrecoverysetupRoute);
 app.get("/test", (req, res) => {
     res.send("Welcome to the Peak Performance Tutoring API!")
 })

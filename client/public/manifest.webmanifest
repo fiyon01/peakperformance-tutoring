@@ -1,0 +1,22 @@
+{
+    "name": "Peak Performance",
+    "short_name": "PPA",
+    "description": "Peak Performance Academy - Your Path to Success",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#1976d2",
+    "icons": [
+      {
+        "src": "/icons8-graduation-cap-30.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons8-graduation-cap-30.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  

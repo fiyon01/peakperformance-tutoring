@@ -36,7 +36,6 @@ const ProtectedRoute = ({ children }) => {
     } catch (err) {
       console.error("Token decode error:", err);
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
       navigate("/auth/students-login");
     }
   }, [navigate]);

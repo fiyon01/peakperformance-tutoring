@@ -1,7 +1,10 @@
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 import { useState, useEffect } from 'react';
 import { Bell, LogOut, HelpCircle, Settings, User, Menu, Search, X } from 'lucide-react';
 
 const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburgerClick }) => {
+  const { user } = useContext(UserContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -19,7 +22,7 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
   }, []);
 
   const isMobile = windowWidth < 768;
-  const getInitial = () => studentName?.charAt(0)?.toUpperCase() || '?';
+  const getInitial = () => user.username?.charAt(0)?.toUpperCase() || '?';
 
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
@@ -105,9 +108,9 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
               className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-full"
               aria-label="User profile"
             >
-              {profilePic ? (
+              {user?.profile_image ? (
                 <img
-                  src={profilePic}
+                  src={`http://localhost:3500${user.profile_image}`}
                   alt="Profile"
                   className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-300"
                 />
@@ -117,7 +120,7 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
                 </div>
               )}
               {!isMobile && (
-                <span className="text-sm font-medium text-gray-700">{studentName}</span>
+                <span className="text-sm font-medium text-gray-700">{user.username}</span>
               )}
             </button>
 

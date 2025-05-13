@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
+
+import { UserContext } from '../context/UserContext';
 import { 
   Calendar, Clock, GraduationCap, Target, CreditCard, 
   Trophy, BookOpen, Users, BarChart2, Flag, Megaphone, CheckCircle,
@@ -18,6 +20,8 @@ import { GiChemicalDrop, GiBrain, GiSoccerBall } from "react-icons/gi";
 import { BsEmojiFrown, BsEmojiSmile, BsEmojiLaughing } from "react-icons/bs";
 
 const DashboardHome = ({ isEnrolled }) => {
+  const { user } = useContext(UserContext);
+
   const [showWelcome, setShowWelcome] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -408,7 +412,7 @@ const DashboardHome = ({ isEnrolled }) => {
               </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-1">
-                  {getGreeting()}, Alex!
+                  {getGreeting()}, {user.username}!
                 </h1>
                 <p className="text-blue-100">Your peak performance journey continues today</p>
               </div>

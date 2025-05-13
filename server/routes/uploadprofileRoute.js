@@ -3,76 +3,86 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
-const path = require("path"); // You need this to resolve file paths
+const path = require("path");
 const dotenv = require("dotenv");
 const db = require("../utils/db");
 
-// Load environmental variables
-dotenv.config()
+dotenv.config();
 
-// Set up storage engine for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Define the directory path
     const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-    
-    // Check if the directory exists
+
     fs.exists(uploadDir, (exists) => {
       if (!exists) {
-        // Create the directory if it doesn't exist
         fs.mkdir(uploadDir, { recursive: true }, (err) => {
           if (err) {
-            return cb(err); // Handle directory creation error
+            console.error("Error creating upload directory:", err);
+            return cb(new Error("Failed to create upload directory"));
           }
-          return cb(null, uploadDir); // Proceed if directory creation is successful
+          return cb(null, uploadDir);
         });
       } else {
-        return cb(null, uploadDir); // If directory exists, use it
+        return cb(null, uploadDir);
       }
     });
   },
   filename: (req, file, cb) => {
-    return cb(null, `${Date.now()}-${file.originalname}`); // Append timestamp to filename
+    return cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
-const upload = multer({ storage: storage });
+// Optional: restrict file types
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|webp/;
+  const isValid = allowedTypes.test(file.mimetype);
+  if (isValid) cb(null, true);
+  else cb(new Error("Only image files (jpeg, jpg, png, webp) are allowed"));
+};
 
-// Route to handle file upload
+const upload = multer({ storage, fileFilter });
+
+// POST /uploadProfile
 router.post('/uploadProfile', verifyToken, upload.single('file'), async (req, res) => {
   try {
-    // Assuming 'decoded' is the user data from the token
-    const studentId = req.userId; // Use 'req.userId' set in your verifyToken middleware
+    const studentId = req.userId;
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
 
-    //check if a profile picture already exists for the user
-    const [existingProfilePic] = await db.query("SELECT profile_image FROM students WHERE student_id = ?", [studentId]);
+    // Check for existing profile image
+    const [existingProfilePic] = await db.query(
+      "SELECT profile_image FROM students WHERE student_id = ?",
+      [studentId]
+    );
+
     if (existingProfilePic.length > 0) {
       const oldProfilePic = existingProfilePic[0].profile_image;
       if (oldProfilePic) {
-        // Delete the old profile picture file
         const oldFilePath = path.join(__dirname, '..', 'public', 'uploads', oldProfilePic);
         fs.unlink(oldFilePath, (err) => {
           if (err) {
-            console.error("Error deleting old profile picture:", err);
+            console.warn("Old profile picture not deleted:", err.message);
           }
         });
       }
     }
-    // 3. Save new image path in DB
-    const newProfilePic = req.file.filename; // Get the new filename from multer
-    await db.query("UPDATE students SET profile_image = ? WHERE student_id = ?", [newProfilePic, studentId]);
 
-    console.log(req.body);
-    console.log(req.file);
+    // Save new profile image in DB
+    const newProfilePic = req.file.filename;
+    await db.query(
+      "UPDATE students SET profile_image = ? WHERE student_id = ?",
+      [newProfilePic, studentId]
+    );
 
-    // Respond with the uploaded file details
-    res.status(200).json({
+    return res.status(200).json({
       message: "Profile picture uploaded successfully",
-      imageUrl: `/uploads/${newProfilePic}`
+      imageUrl: `/uploads/${newProfilePic}`,
     });
-      } catch (error) {
-    console.error("Error uploading profile picture:", error);
-    return res.status(500).json({ error: "Failed to upload profile picture" });
+
+  } catch (error) {
+    console.error("Upload error:", error.message || error);
+    return res.status(500).json({ error: "An error occurred during upload. Please try again." });
   }
 });
 

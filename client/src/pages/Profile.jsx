@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useUserContext } from '../context/UserContext';
 import { 
-  User, Mail, Phone, Home, School, GraduationCap, Lock, CreditCard, 
-  FileText, Bell, Clock, Edit, Save, Camera, ChevronRight, Check, 
-  Loader2, ArrowUp, Shield, Users, FileDown, BookOpen, Hash, Eye, EyeOff, Key,
-  ChevronDown, ChevronUp, Settings, HelpCircle, LogOut, Plus, MoreVertical
+  User, Mail, Phone, Home, School, GraduationCap, Lock, 
+  Edit, Save, Camera, Check, Loader2, Shield, Eye, EyeOff, Key,
+  Settings, LogOut, Award, Calendar, ClipboardCheck, FileSearch,
+  FileDown, BookOpen, Hash, FileSignature, Star, ChevronDown
 } from 'lucide-react';
-import axios from "axios"
+import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
-import {  toast } from "react-toastify"
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+
 // Mock data
 const loginHistory = [
-  { id: 1, date: '2024-05-15', time: '14:30', device: 'iPhone 13', location: 'Boston, MA' },
-  { id: 2, date: '2024-05-14', time: '09:15', device: 'MacBook Pro', location: 'Boston, MA' }
-];
-
-const paymentMethods = [
-  { id: 1, type: 'visa', last4: '4242', expiry: '12/25' }
+  { id: 1, date: '2024-05-15', time: '14:30', device: 'iPhone 13', location: 'Boston, MA', ip: '192.168.1.1', os: 'iOS 16' },
+  { id: 2, date: '2024-05-14', time: '09:15', device: 'MacBook Pro', location: 'Boston, MA', ip: '192.168.1.2', os: 'macOS Ventura' }
 ];
 
 const academicPrograms = [
-  { id: 1, name: 'Summer Intensive 2023', status: 'completed', reportAvailable: true },
-  { id: 2, name: 'Winter Accelerator 2024', status: 'completed', reportAvailable: true },
-  { id: 3, name: 'Year-Round Excellence 2024', status: 'current', reportAvailable: false }
+  { id: 1, name: 'Summer Intensive 2023', status: 'completed', reportAvailable: true, completionDate: '2023-08-20', grade: 'A+' },
+  { id: 2, name: 'Winter Accelerator 2024', status: 'completed', reportAvailable: true, completionDate: '2024-02-15', grade: 'A' },
+  { id: 3, name: 'Year-Round Excellence 2024', status: 'current', reportAvailable: false, startDate: '2024-01-10', progress: 65 }
+];
+
+const testimonials = [
+  { id: 1, content: "This platform helped me improve my grades significantly!", rating: 5, status: 'published' },
+  { id: 2, content: "The teachers are very supportive and knowledgeable.", rating: 4, status: 'published' }
 ];
 
 // Mock API functions
@@ -38,7 +42,9 @@ const fetchUserProfile = async () => {
     phone: '+1 (617) 555-0192',
     address: '450 Education Way, Boston, MA 02108',
     profileImage: null,
-    membership: 'ultimate-premium'
+    membership: 'premium',
+    joinDate: '2023-09-01',
+    achievements: ['Honor Roll', 'Science Fair Winner', 'Math Olympiad Finalist']
   };
 };
 
@@ -46,12 +52,7 @@ const fetchSecurityQuestion = async () => {
   await new Promise(resolve => setTimeout(resolve, 500));
   return {
     question: "What was the name of your first pet?",
-    answer: "Fluffy",
-    fallbackQuestions: [
-      "What city were you born in?",
-      "What's your mother's maiden name?",
-      "What was your first car's model?"
-    ]
+    answer: "Fluffy"
   };
 };
 
@@ -66,8 +67,21 @@ const updateSecurityQuestion = async (question, answer, pin) => {
   return { success: true };
 };
 
+const submitTestimonial = async (content, rating) => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  return {
+    id: Math.floor(Math.random() * 1000),
+    content,
+    rating,
+    status: 'pending'
+  };
+};
+
 const ProfileDashboard = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useUserContext();
+  const fileInputRef = useRef(null);
+
   // State management
   const [userData, setUserData] = useState(null);
   const [securityData, setSecurityData] = useState(null);
@@ -80,18 +94,18 @@ const ProfileDashboard = () => {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState('');
   const [showPin, setShowPin] = useState(false);
-  const [securityAccess, setSecurityAccess] = useState({
-    view: false,
-    edit: false
-  });
+  const [securityAccess, setSecurityAccess] = useState(false);
   const [isLoading, setIsLoading] = useState({
     profile: true,
     security: true,
     action: false
   });
   const [activeTab, setActiveTab] = useState('profile');
-  const [profileImage, setProfileImage] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [newTestimonial, setNewTestimonial] = useState('');
+  const [testimonialRating, setTestimonialRating] = useState(5);
+  const [submittingTestimonial, setSubmittingTestimonial] = useState(false);
+  const [expandedLogin, setExpandedLogin] = useState(null);
 
   // Fetch data on mount
   useEffect(() => {
@@ -104,13 +118,10 @@ const ProfileDashboard = () => {
         
         setUserData(profile);
         setTempData(profile);
-        setSecurityData({
-          ...security,
-          tempQuestion: security.question,
-          tempAnswer: security.answer
-        });
+        setSecurityData(security);
       } catch (error) {
         console.error("Failed to load data:", error);
+        toast.error("Failed to load profile data");
       } finally {
         setIsLoading(prev => ({ ...prev, profile: false, security: false }));
       }
@@ -120,6 +131,10 @@ const ProfileDashboard = () => {
   }, []);
 
   // Handlers
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -133,7 +148,7 @@ const ProfileDashboard = () => {
     if (!token) {
       toast.error('No authentication token found');
       setUploadingImage(false);
-      navigate("/auth/students-login"); // Redirect to login
+      navigate("/auth/students-login");
       return;
     }
   
@@ -142,9 +157,8 @@ const ProfileDashboard = () => {
       if (decoded.exp * 1000 < Date.now()) {
         toast.error('Session expired. Please log in again.');
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
         setUploadingImage(false);
-        navigate("/auth/students-login"); // Redirect on token expiry
+        navigate("/auth/students-login");
         return;
       }
   
@@ -161,7 +175,9 @@ const ProfileDashboard = () => {
   
       if (response.status === 200) {
         toast.success('Profile image uploaded successfully!');
-        setProfileImage(response.data.imageUrl);
+        const updatedUser = { ...user, profile_image: response.data.imageUrl };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));     
       } else {
         toast.error('Failed to upload image. Please try again.');
       }
@@ -172,6 +188,7 @@ const ProfileDashboard = () => {
       setUploadingImage(false);
     }
   };
+
   const toggleEditMode = (section) => {
     setEditMode(prev => ({
       ...prev,
@@ -198,7 +215,7 @@ const ProfileDashboard = () => {
     if (value.length === 4) setPinError('');
   };
 
-  const verifyPinForAction = async (action) => {
+  const verifyPinForAction = async () => {
     if (pinInput.length !== 4) {
       setPinError('Please enter a 4-digit PIN');
       return;
@@ -209,25 +226,24 @@ const ProfileDashboard = () => {
       const isValid = await verifyPin(pinInput);
       
       if (isValid) {
-        if (action === 'view') {
-          setSecurityAccess({ view: true, edit: false });
-        } else if (action === 'edit') {
-          setSecurityAccess({ view: true, edit: true });
-          toggleEditMode('securityQuestion');
-        }
+        setSecurityAccess(true);
+        toast.success("PIN verified successfully!");
+        setPinInput('');
         setPinError('');
+        setShowPin(false);
       } else {
-        setPinError('Incorrect PIN. Please try again.');
+        throw new Error("Invalid PIN");
       }
     } catch (error) {
       setPinError('Verification failed. Please try again.');
+      toast.error("Invalid PIN. Please try again.");
     } finally {
       setIsLoading(prev => ({ ...prev, action: false }));
     }
   };
 
   const saveSecurityQuestion = async () => {
-    if (!securityData.tempQuestion || !securityData.tempAnswer) {
+    if (!securityData.question || !securityData.answer) {
       setPinError('Question and answer are required');
       return;
     }
@@ -235,21 +251,18 @@ const ProfileDashboard = () => {
     try {
       setIsLoading(prev => ({ ...prev, action: true }));
       await updateSecurityQuestion(
-        securityData.tempQuestion,
-        securityData.tempAnswer,
+        securityData.question,
+        securityData.answer,
         pinInput
       );
       
-      setSecurityData(prev => ({
-        ...prev,
-        question: prev.tempQuestion,
-        answer: prev.tempAnswer
-      }));
-      setSecurityAccess({ view: false, edit: false });
+      setSecurityAccess(false);
       setEditMode(prev => ({ ...prev, securityQuestion: false }));
       setPinInput('');
+      toast.success("Security question updated successfully!");
     } catch (error) {
       setPinError(error.message || 'Failed to update. Please try again.');
+      toast.error("Failed to update security question");
     } finally {
       setIsLoading(prev => ({ ...prev, action: false }));
     }
@@ -258,62 +271,112 @@ const ProfileDashboard = () => {
   const saveProfileChanges = (section) => {
     setUserData({ ...tempData });
     setEditMode(prev => ({ ...prev, [section]: false }));
+    toast.success("Profile updated successfully!");
+  };
+
+  const handleTestimonialSubmit = async () => {
+    if (!newTestimonial.trim()) {
+      toast.error("Please write your testimonial before submitting");
+      return;
+    }
+
+    setSubmittingTestimonial(true);
+    try {
+      const result = await submitTestimonial(newTestimonial, testimonialRating);
+      testimonials.unshift(result);
+      setNewTestimonial('');
+      setTestimonialRating(5);
+      toast.success("Thank you for your testimonial! It's pending review.");
+    } catch (error) {
+      toast.error("Failed to submit testimonial. Please try again.");
+    } finally {
+      setSubmittingTestimonial(false);
+    }
   };
 
   // UI Components
   const ProfileHeader = () => (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <motion.div 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
+    >
       <div className="flex items-center">
-        <User className="w-8 h-8 text-indigo-600 mr-3" />
-        <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+        <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 mr-4">
+          <User className="w-8 h-8 text-indigo-600" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+          <p className="text-gray-500">Welcome back, {userData?.name.split(' ')[0]}!</p>
+        </div>
       </div>
       <div className="flex items-center space-x-3">
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-          userData?.membership === 'ultimate-premium' 
-            ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
+        <span className={`px-4 py-2 rounded-xl text-sm font-medium ${
+          userData?.membership === 'premium' 
+            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
             : 'bg-gray-100 text-gray-600'
         }`}>
-          {userData?.membership === 'ultimate-premium' ? 'Ultimate Premium' : 'Standard'}
+          {userData?.membership === 'premium' ? 'Premium Member' : 'Standard Member'}
         </span>
-        <button className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
-          <Settings className="w-5 h-5 text-gray-600" />
-        </button>
       </div>
-    </div>
+    </motion.div>
   );
 
-  const NavigationTabs = () => (
-    <div className="flex border-b border-gray-200 mb-8">
-      {['profile', 'security', 'academics', 'billing'].map((tab) => (
-        <button
-          key={tab}
-          className={`px-4 py-3 text-sm font-medium relative ${
-            activeTab === tab
-              ? 'text-indigo-600 border-b-2 border-indigo-600'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-          onClick={() => setActiveTab(tab)}
-        >
-          {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          {activeTab === tab && (
-            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-indigo-600" />
-          )}
-        </button>
-      ))}
-    </div>
-  );
+  const NavigationTabs = () => {
+    const tabs = [
+      { id: 'profile', label: 'Profile', icon: <User size={18} /> },
+      { id: 'security', label: 'Security', icon: <Shield size={18} /> },
+      { id: 'academics', label: 'Academics', icon: <BookOpen size={18} /> },
+      { id: 'testimonials', label: 'Feedback', icon: <FileSignature size={18} /> }
+    ];
+
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="flex overflow-x-auto pb-2 mb-8 scrollbar-hide"
+      >
+        <div className="flex space-x-1">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`px-4 py-3 text-sm font-medium flex items-center transition-all duration-200 rounded-lg ${
+                activeTab === tab.id
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : 'text-gray-500 hover:bg-gray-100'
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <span className="mr-2">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </motion.div>
+    );
+  };
 
   const ProfileSection = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+    >
       {/* Profile Card */}
-      <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Profile</h2>
+            <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+              <User className="w-5 h-5 text-indigo-600 mr-2" />
+              Profile
+            </h2>
             {!editMode.profile ? (
               <button 
                 onClick={() => toggleEditMode('profile')}
-                className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm"
+                className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm bg-indigo-50 px-3 py-1 rounded-lg"
               >
                 <Edit className="w-4 h-4 mr-1" />
                 Edit
@@ -322,14 +385,14 @@ const ProfileDashboard = () => {
               <div className="flex space-x-2">
                 <button 
                   onClick={() => saveProfileChanges('profile')}
-                  className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700"
+                  className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   <Save className="w-4 h-4 mr-1" />
                   Save
                 </button>
                 <button 
                   onClick={() => toggleEditMode('profile')}
-                  className="text-sm border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-50"
+                  className="text-sm border border-gray-300 px-3 py-1 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -338,13 +401,17 @@ const ProfileDashboard = () => {
           </div>
 
           <div className="flex flex-col items-center">
-            <div className="relative mb-6 group">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center overflow-hidden">
-                {profileImage ? (
-                  <img src={`http://localhost:3500${profileImage}`}  alt="Profile" className="w-full h-full object-cover" />
+            <div className="relative mb-6 group cursor-pointer" onClick={handleImageClick}>
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center overflow-hidden shadow-md">
+                {user?.profile_image ? (
+                  <img
+                    src={`http://localhost:3500/${user.profile_image}`}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="text-5xl font-bold text-indigo-600">
-                    {userData?.name?.split(' ').map(n => n[0]).join('')}
+                    {user?.user?.name?.split(' ').map(n => n[0]).join('')}
                   </div>
                 )}
               </div>
@@ -353,10 +420,19 @@ const ProfileDashboard = () => {
                   <Loader2 className="w-8 h-8 text-white animate-spin" />
                 </div>
               )}
-              <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer hover:bg-indigo-700 transition-all duration-200 transform group-hover:scale-110">
+              <motion.label 
+                whileHover={{ scale: 1.1 }}
+                className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full shadow-lg hover:bg-indigo-700 transition-all"
+              >
                 <Camera className="w-5 h-5" />
-                <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" />
-              </label>
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  className="hidden" 
+                  onChange={handleImageUpload} 
+                  accept="image/*" 
+                />
+              </motion.label>
             </div>
 
             {editMode.profile ? (
@@ -368,7 +444,7 @@ const ProfileDashboard = () => {
                     name="name"
                     value={tempData.name || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
                 <div>
@@ -378,7 +454,7 @@ const ProfileDashboard = () => {
                     name="username"
                     value={tempData.username || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
                 <div>
@@ -388,7 +464,7 @@ const ProfileDashboard = () => {
                     name="school"
                     value={tempData.school || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
               </div>
@@ -400,6 +476,9 @@ const ProfileDashboard = () => {
                   <School className="w-4 h-4 text-indigo-600 mr-2" />
                   {userData?.school}
                 </div>
+                <div className="text-sm text-gray-500 mt-2">
+                  Member since {new Date(userData?.joinDate).toLocaleDateString()}
+                </div>
               </div>
             )}
           </div>
@@ -408,13 +487,16 @@ const ProfileDashboard = () => {
 
       {/* Contact Information */}
       <div className="lg:col-span-2 space-y-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex justify-between items-start mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">Contact Information</h2>
+            <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+              <Mail className="w-5 h-5 text-indigo-600 mr-2" />
+              Contact Information
+            </h2>
             {!editMode.contact ? (
               <button 
                 onClick={() => toggleEditMode('contact')}
-                className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm"
+                className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm bg-indigo-50 px-3 py-1 rounded-lg"
               >
                 <Edit className="w-4 h-4 mr-1" />
                 Edit
@@ -423,14 +505,14 @@ const ProfileDashboard = () => {
               <div className="flex space-x-2">
                 <button 
                   onClick={() => saveProfileChanges('contact')}
-                  className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700"
+                  className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   <Save className="w-4 h-4 mr-1" />
                   Save
                 </button>
                 <button 
                   onClick={() => toggleEditMode('contact')}
-                  className="text-sm border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-50"
+                  className="text-sm border border-gray-300 px-3 py-1 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
@@ -448,7 +530,7 @@ const ProfileDashboard = () => {
                     name="email"
                     value={tempData.email || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
                 <div>
@@ -458,7 +540,7 @@ const ProfileDashboard = () => {
                     name="phone"
                     value={tempData.phone || ''}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -468,7 +550,7 @@ const ProfileDashboard = () => {
                     value={tempData.address || ''}
                     onChange={handleChange}
                     rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   />
                 </div>
               </>
@@ -507,12 +589,15 @@ const ProfileDashboard = () => {
         </div>
 
         {/* Academic Information */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Academic Information</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <GraduationCap className="w-5 h-5 text-indigo-600 mr-2" />
+            Academic Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start">
               <div className="bg-indigo-50 p-3 rounded-lg mr-4">
-                <GraduationCap className="w-5 h-5 text-indigo-600" />
+                <BookOpen className="w-5 h-5 text-indigo-600" />
               </div>
               <div>
                 <div className="text-xs font-medium text-gray-500 mb-1">Class/Grade</div>
@@ -530,20 +615,49 @@ const ProfileDashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Achievements */}
+        {userData?.achievements?.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+              <Award className="w-5 h-5 text-indigo-600 mr-2" />
+              Achievements
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {userData.achievements.map((achievement, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.03 }}
+                  className="px-3 py-1 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-full border border-indigo-100 text-indigo-700 text-sm font-medium"
+                >
+                  {achievement}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 
   const SecuritySection = () => (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="space-y-6"
+    >
       {/* Security Question */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Security Question</h2>
-          {securityAccess.view && !editMode.securityQuestion ? (
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center">
+            <Shield className="w-5 h-5 text-indigo-600 mr-2" />
+            Security Question
+          </h2>
+          {securityAccess && !editMode.securityQuestion ? (
             <button 
-              onClick={() => verifyPinForAction('edit')}
-              className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm"
+              onClick={() => setEditMode(prev => ({ ...prev, securityQuestion: true }))}
+              className="text-indigo-600 hover:text-indigo-800 transition-colors flex items-center text-sm bg-indigo-50 px-3 py-1 rounded-lg"
             >
               <Edit className="w-4 h-4 mr-1" />
               Edit
@@ -553,7 +667,7 @@ const ProfileDashboard = () => {
               <button 
                 onClick={saveSecurityQuestion}
                 disabled={isLoading.action}
-                className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-md hover:bg-indigo-700 disabled:opacity-70"
+                className="flex items-center text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 disabled:opacity-70 transition-colors"
               >
                 {isLoading.action ? (
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />
@@ -565,9 +679,8 @@ const ProfileDashboard = () => {
               <button 
                 onClick={() => {
                   setEditMode(prev => ({ ...prev, securityQuestion: false }));
-                  setSecurityAccess({ view: true, edit: false });
                 }}
-                className="text-sm border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-50"
+                className="text-sm border border-gray-300 px-3 py-1 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
@@ -575,9 +688,13 @@ const ProfileDashboard = () => {
           ) : null}
         </div>
 
-        {!securityAccess.view ? (
-          <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        {!securityAccess ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-4"
+          >
+            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
               <div className="text-sm font-medium text-gray-700 mb-1">Security Question</div>
               <div className="text-lg font-medium text-gray-800 tracking-wider">
                 {securityData?.question.split('').map(() => '•').join('')}
@@ -591,7 +708,7 @@ const ProfileDashboard = () => {
                   value={pinInput}
                   onChange={handlePinChange}
                   placeholder="Enter 4-digit PIN"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   maxLength={4}
                 />
                 <button 
@@ -603,12 +720,18 @@ const ProfileDashboard = () => {
                 </button>
               </div>
               {pinError && (
-                <div className="text-sm text-red-500">{pinError}</div>
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm text-red-500"
+                >
+                  {pinError}
+                </motion.div>
               )}
               <button
-                onClick={() => verifyPinForAction('view')}
+                onClick={verifyPinForAction}
                 disabled={isLoading.action || pinInput.length !== 4}
-                className={`w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium ${
+                className={`w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                   !isLoading.action && pinInput.length === 4 
                     ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
@@ -622,31 +745,31 @@ const ProfileDashboard = () => {
                 Verify PIN to View
               </button>
             </div>
-          </div>
+          </motion.div>
         ) : editMode.securityQuestion ? (
-          <div className="space-y-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-4"
+          >
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">Security Question</label>
-              <select
-                name="tempQuestion"
-                value={securityData?.tempQuestion || ''}
+              <input
+                type="text"
+                name="question"
+                value={securityData?.question || ''}
                 onChange={handleSecurityChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value={securityData?.tempQuestion}>{securityData?.tempQuestion}</option>
-                {securityData?.fallbackQuestions.map((q, i) => (
-                  <option key={i} value={q}>{q}</option>
-                ))}
-              </select>
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              />
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">Answer</label>
               <input
                 type="text"
-                name="tempAnswer"
-                value={securityData?.tempAnswer || ''}
+                name="answer"
+                value={securityData?.answer || ''}
                 onChange={handleSecurityChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
               />
             </div>
             <div className="space-y-2">
@@ -657,7 +780,7 @@ const ProfileDashboard = () => {
                   value={pinInput}
                   onChange={handlePinChange}
                   placeholder="Enter 4-digit PIN"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
                   maxLength={4}
                 />
                 <button 
@@ -669,79 +792,146 @@ const ProfileDashboard = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         ) : (
-          <div className="space-y-4">
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-4"
+          >
+            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
               <div className="text-sm font-medium text-gray-700 mb-1">Security Question</div>
               <div className="text-lg font-medium text-gray-800">{securityData?.question}</div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
               <div className="text-sm font-medium text-gray-700 mb-1">Answer</div>
               <div className="text-lg font-medium text-gray-800 tracking-wider">
                 {securityData?.answer.split('').map(() => '•').join('')}
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
 
       {/* Password & Security */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Password & Security</h2>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <Lock className="w-5 h-5 text-indigo-600 mr-2" />
+          Password & Security
+        </h2>
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
             <div className="flex items-center">
-              <Lock className="w-5 h-5 text-indigo-600 mr-4" />
+              <Key className="w-5 h-5 text-indigo-600 mr-4" />
               <div>
                 <div className="text-sm font-medium text-gray-800">Password</div>
                 <div className="text-xs text-gray-500">Last changed 3 months ago</div>
               </div>
             </div>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
               Change
             </button>
           </div>
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
             <div className="flex items-center">
-              <Bell className="w-5 h-5 text-indigo-600 mr-4" />
+              <Lock className="w-5 h-5 text-indigo-600 mr-4" />
               <div>
-                <div className="text-sm font-medium text-gray-800">Email Notifications</div>
-                <div className="text-xs text-gray-500">Manage your notification preferences</div>
+                <div className="text-sm font-medium text-gray-800">Two-Factor Authentication</div>
+                <div className="text-xs text-gray-500">Add an extra layer of security</div>
               </div>
             </div>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800">
-              Manage
+            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+              Enable
             </button>
           </div>
         </div>
       </div>
 
       {/* Login Activity */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Recent Login Activity</h2>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <Calendar className="w-5 h-5 text-indigo-600 mr-2" />
+          Recent Login Activity
+        </h2>
         <div className="space-y-3">
           {loginHistory.map((login) => (
-            <div key={login.id} className="flex items-center p-3 hover:bg-gray-50 rounded-lg transition-colors">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-800">{login.device}</div>
-                <div className="text-xs text-gray-500">{login.date} at {login.time} • {login.location}</div>
+            <motion.div 
+              key={login.id}
+              whileHover={{ scale: 1.01 }}
+              className={`p-3 rounded-lg border transition-colors cursor-pointer ${
+                expandedLogin === login.id 
+                  ? 'bg-indigo-50 border-indigo-200' 
+                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              }`}
+              onClick={() => setExpandedLogin(expandedLogin === login.id ? null : login.id)}
+            >
+              <div className="flex items-center">
+                <div className={`w-2 h-2 rounded-full mr-3 ${
+                  login.device.includes('iPhone') || login.device.includes('iPad') 
+                    ? 'bg-blue-500' 
+                    : login.device.includes('Mac') 
+                      ? 'bg-purple-500' 
+                      : 'bg-green-500'
+                }`}></div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-gray-800">{login.device}</div>
+                  <div className="text-xs text-gray-500">{login.date} at {login.time} • {login.location}</div>
+                </div>
+                {expandedLogin === login.id ? (
+                  <ChevronDown className="w-5 h-5 text-gray-400 transform rotate-180" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                )}
               </div>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </div>
+              
+              <AnimatePresence>
+                {expandedLogin === login.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="mt-2 overflow-hidden"
+                  >
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <div className="text-gray-500">IP Address</div>
+                        <div className="text-gray-800 font-medium">{login.ip}</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-500">Operating System</div>
+                        <div className="text-gray-800 font-medium">{login.os}</div>
+                      </div>
+                    </div>
+                    <div className="mt-2 flex justify-end">
+                      <button className="text-xs text-red-500 hover:text-red-700">
+                        Report suspicious activity
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const AcademicsSection = () => (
-    <div className="space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="space-y-6"
+    >
       {/* Current Program */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Current Academic Program</h2>
-        <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-100">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <BookOpen className="w-5 h-5 text-indigo-600 mr-2" />
+          Current Academic Program
+        </h2>
+        <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
           <div className="flex items-start justify-between">
             <div>
               <div className="text-lg font-bold text-gray-800 mb-1">Year-Round Excellence 2024</div>
@@ -749,106 +939,195 @@ const ProfileDashboard = () => {
                 <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full mr-2">
                   In Progress
                 </span>
-                <span className="text-xs text-gray-500">Started Jan 15, 2024</span>
+                <span className="text-xs text-gray-500">Started {academicPrograms[2].startDate}</span>
+              </div>
+              <div className="mt-3">
+                <div className="flex justify-between text-sm text-gray-600 mb-1">
+                  <span>Progress</span>
+                  <span>{academicPrograms[2].progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full" 
+                    style={{ width: `${academicPrograms[2].progress}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
-            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
-              View Details <ChevronRight className="w-4 h-4 ml-1" />
+            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center mt-1">
+              View Details
             </button>
           </div>
         </div>
       </div>
 
       {/* Academic Reports */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Academic Reports</h2>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <FileSearch className="w-5 h-5 text-indigo-600 mr-2" />
+          Academic Reports
+        </h2>
         <div className="space-y-3">
           {academicPrograms.filter(p => p.reportAvailable).map((program) => (
-            <div key={program.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <motion.div 
+              key={program.id}
+              whileHover={{ y: -2 }}
+              className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <div>
                 <div className="text-sm font-medium text-gray-800 mb-1">{program.name}</div>
-                <div className="text-xs text-gray-500">Completed on {program.status === 'completed' ? 'Dec 15, 2023' : 'Mar 20, 2024'}</div>
+                <div className="text-xs text-gray-500">
+                  Completed on {program.completionDate} • Grade: {program.grade}
+                </div>
               </div>
-              <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
-                Download Report <FileDown className="w-4 h-4 ml-2" />
-              </button>
-            </div>
+              <div className="flex space-x-2">
+                <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                  <FileSearch className="w-4 h-4 mr-1" /> Preview
+                </button>
+                <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                  <FileDown className="w-4 h-4 mr-1" /> Download
+                </button>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </div>
+
+      {/* Upcoming Assessments */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <Calendar className="w-5 h-5 text-indigo-600 mr-2" />
+          Upcoming Assessments
+        </h2>
+        <div className="space-y-3">
+          <div className="p-3 border border-yellow-200 bg-yellow-50 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium text-gray-800">Mathematics Midterm</div>
+                <div className="text-xs text-gray-500">Due: May 25, 2024</div>
+              </div>
+              <button className="text-sm text-yellow-700 hover:text-yellow-900 flex items-center">
+                <ClipboardCheck className="w-4 h-4 mr-1" /> Prepare
+              </button>
+            </div>
+          </div>
+          <div className="p-3 border border-blue-200 bg-blue-50 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium text-gray-800">Science Project</div>
+                <div className="text-xs text-gray-500">Due: June 5, 2024</div>
+              </div>
+              <button className="text-sm text-blue-700 hover:text-blue-900 flex items-center">
+                <ClipboardCheck className="w-4 h-4 mr-1" /> Prepare
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 
-  const BillingSection = () => (
-    <div className="space-y-6">
-      {/* Payment Methods */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Payment Methods</h2>
-          <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
-            Add Payment Method <Plus className="w-4 h-4 ml-1" />
-          </button>
-        </div>
-        <div className="space-y-3">
-          {paymentMethods.map((method) => (
-            <div key={method.id} className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <div className="w-10 h-6 bg-blue-500 rounded flex items-center justify-center mr-4">
-                <span className="text-white text-xs font-bold">VISA</span>
+  const TestimonialsSection = () => (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="space-y-6"
+    >
+      {/* Existing Testimonials */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <FileSignature className="w-5 h-5 text-indigo-600 mr-2" />
+          Your Feedback
+        </h2>
+        <div className="space-y-4">
+          {testimonials.map((testimonial) => (
+            <motion.div 
+              key={testimonial.id}
+              whileHover={{ y: -2 }}
+              className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-start">
+                <div className="bg-indigo-100 p-2 rounded-lg mr-4 text-indigo-600">
+                  <User className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="text-sm font-medium text-gray-800">
+                      {testimonial.status === 'published' ? 'Published' : 'Pending Review'}
+                    </div>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star 
+                          key={i} 
+                          fill={i < testimonial.rating ? "currentColor" : "none"}
+                          className="w-4 h-4 text-yellow-400" 
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="text-sm text-gray-700">{testimonial.content}</div>
+                </div>
               </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-800">•••• •••• •••• {method.last4}</div>
-                <div className="text-xs text-gray-500">Expires {method.expiry}</div>
-              </div>
-              <button className="text-gray-400 hover:text-gray-600">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
 
-      {/* Billing History */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Billing History</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="relative px-6 py-3"></th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mar 15, 2024</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Year-Round Excellence 2024</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1,200.00</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Paid</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="#" className="text-indigo-600 hover:text-indigo-900">View</a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dec 10, 2023</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Winter Accelerator 2024</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$850.00</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Paid</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="#" className="text-indigo-600 hover:text-indigo-900">View</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      {/* Submit New Testimonial */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <FileSignature className="w-5 h-5 text-indigo-600 mr-2" />
+          Share Your Experience
+        </h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Your Rating</label>
+            <div className="flex space-x-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setTestimonialRating(star)}
+                  className={`p-1 rounded-md ${
+                    star <= testimonialRating 
+                      ? 'text-yellow-400 bg-yellow-50' 
+                      : 'text-gray-300 hover:text-yellow-400'
+                  }`}
+                >
+                  <Star fill={star <= testimonialRating ? "currentColor" : "none"} className="w-6 h-6" />
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Your Testimonial</label>
+            <textarea
+              value={newTestimonial}
+              onChange={(e) => setNewTestimonial(e.target.value)}
+              placeholder="Share your experience with our platform..."
+              rows={4}
+              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+            />
+          </div>
+          <button
+            onClick={handleTestimonialSubmit}
+            disabled={submittingTestimonial || !newTestimonial.trim()}
+            className={`w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+              !submittingTestimonial && newTestimonial.trim()
+                ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {submittingTestimonial ? (
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+            ) : (
+              <FileSignature className="w-5 h-5 mr-2" />
+            )}
+            Submit Testimonial
+          </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   if (isLoading.profile || !userData) {
@@ -865,10 +1144,12 @@ const ProfileDashboard = () => {
         <ProfileHeader />
         <NavigationTabs />
         
-        {activeTab === 'profile' && <ProfileSection />}
-        {activeTab === 'security' && <SecuritySection />}
-        {activeTab === 'academics' && <AcademicsSection />}
-        {activeTab === 'billing' && <BillingSection />}
+        <AnimatePresence mode="wait">
+          {activeTab === 'profile' && <ProfileSection key="profile" />}
+          {activeTab === 'security' && <SecuritySection key="security" />}
+          {activeTab === 'academics' && <AcademicsSection key="academics" />}
+          {activeTab === 'testimonials' && <TestimonialsSection key="testimonials" />}
+        </AnimatePresence>
       </div>
     </div>
   );
