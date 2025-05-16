@@ -4,7 +4,7 @@ import {
   User, Mail, Phone, Home, School, GraduationCap, Lock, 
   Edit, Save, Camera, Check, Loader2, Shield, Eye, EyeOff, Key,
   Settings, LogOut, Award, Calendar, ClipboardCheck, FileSearch,
-  FileDown, BookOpen, Hash, FileSignature, Star, ChevronDown
+  FileDown, BookOpen, Hash, FileSignature, Star, ChevronDown, ChevronRight
 } from 'lucide-react';
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
@@ -42,7 +42,6 @@ const fetchUserProfile = async () => {
     phone: '+1 (617) 555-0192',
     address: '450 Education Way, Boston, MA 02108',
     profileImage: null,
-    membership: 'premium',
     joinDate: '2023-09-01',
     achievements: ['Honor Roll', 'Science Fair Winner', 'Math Olympiad Finalist']
   };
@@ -311,15 +310,12 @@ const ProfileDashboard = () => {
           <p className="text-gray-500">Welcome back, {userData?.name.split(' ')[0]}!</p>
         </div>
       </div>
-      <div className="flex items-center space-x-3">
-        <span className={`px-4 py-2 rounded-xl text-sm font-medium ${
-          userData?.membership === 'premium' 
-            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
-            : 'bg-gray-100 text-gray-600'
-        }`}>
-          {userData?.membership === 'premium' ? 'Premium Member' : 'Standard Member'}
-        </span>
-      </div>
+      <button 
+        className="p-2 rounded-lg bg-white border border-gray-200 hover:bg-gray-50 transition-all shadow-sm"
+        onClick={() => setActiveTab('security')}
+      >
+        <Settings className="w-5 h-5 text-gray-600" />
+      </button>
     </motion.div>
   );
 
@@ -411,7 +407,7 @@ const ProfileDashboard = () => {
                   />
                 ) : (
                   <div className="text-5xl font-bold text-indigo-600">
-                    {user?.user?.name?.split(' ').map(n => n[0]).join('')}
+                    {user.studentname?.split(' ').map(n => n[0]).join('')}
                   </div>
                 )}
               </div>
@@ -445,6 +441,7 @@ const ProfileDashboard = () => {
                     value={tempData.name || ''}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                    autoFocus
                   />
                 </div>
                 <div>
@@ -531,6 +528,7 @@ const ProfileDashboard = () => {
                     value={tempData.email || ''}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                    autoFocus
                   />
                 </div>
                 <div>
@@ -647,12 +645,14 @@ const ProfileDashboard = () => {
       transition={{ delay: 0.3 }}
       className="space-y-6"
     >
-      {/* Security Question */}
+      {/* Security Vault */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-            <Shield className="w-5 h-5 text-indigo-600 mr-2" />
-            Security Question
+            <div className="bg-indigo-100 p-2 rounded-lg mr-3 text-indigo-600">
+              <Lock className="w-5 h-5" />
+            </div>
+            Security Vault
           </h2>
           {securityAccess && !editMode.securityQuestion ? (
             <button 
@@ -692,104 +692,111 @@ const ProfileDashboard = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
-              <div className="text-sm font-medium text-gray-700 mb-1">Security Question</div>
-              <div className="text-lg font-medium text-gray-800 tracking-wider">
-                {securityData?.question.split('').map(() => '•').join('')}
+            <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200 text-center">
+              <div className="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-indigo-600" />
               </div>
-            </div>
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">Enter your PIN to view</label>
-              <div className="relative">
-                <input
-                  type={showPin ? "text" : "password"}
-                  value={pinInput}
-                  onChange={handlePinChange}
-                  placeholder="Enter 4-digit PIN"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  maxLength={4}
-                />
-                <button 
-                  type="button" 
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  onClick={() => setShowPin(!showPin)}
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Security Question Locked</h3>
+              <p className="text-sm text-gray-500 mb-4">Enter your PIN to view and edit your security question</p>
+              
+              <div className="max-w-xs mx-auto space-y-4">
+                <div className="relative">
+                  <input
+                    type={showPin ? "text" : "password"}
+                    value={pinInput}
+                    onChange={handlePinChange}
+                    placeholder="Enter 4-digit PIN"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-center tracking-widest font-mono"
+                    maxLength={4}
+                    autoFocus
+                  />
+                  <button 
+                    type="button" 
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setShowPin(!showPin)}
+                  >
+                    {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {pinError && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-sm text-red-500"
+                  >
+                    {pinError}
+                  </motion.div>
+                )}
+                <button
+                  onClick={verifyPinForAction}
+                  disabled={isLoading.action || pinInput.length !== 4}
+                  className={`w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                    !isLoading.action && pinInput.length === 4 
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md' 
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  }`}
                 >
-                  {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {isLoading.action ? (
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  ) : (
+                    <Key className="w-5 h-5 mr-2" />
+                  )}
+                  Unlock Security Vault
                 </button>
               </div>
-              {pinError && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-red-500"
-                >
-                  {pinError}
-                </motion.div>
-              )}
-              <button
-                onClick={verifyPinForAction}
-                disabled={isLoading.action || pinInput.length !== 4}
-                className={`w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                  !isLoading.action && pinInput.length === 4 
-                    ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                {isLoading.action ? (
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                ) : (
-                  <Key className="w-5 h-5 mr-2" />
-                )}
-                Verify PIN to View
-              </button>
             </div>
           </motion.div>
         ) : editMode.securityQuestion ? (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Security Question</label>
-              <input
-                type="text"
-                name="question"
-                value={securityData?.question || ''}
-                onChange={handleSecurityChange}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Answer</label>
-              <input
-                type="text"
-                name="answer"
-                value={securityData?.answer || ''}
-                onChange={handleSecurityChange}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Confirm your PIN to save changes</label>
-              <div className="relative">
-                <input
-                  type={showPin ? "text" : "password"}
-                  value={pinInput}
-                  onChange={handlePinChange}
-                  placeholder="Enter 4-digit PIN"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                  maxLength={4}
-                />
-                <button 
-                  type="button" 
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  onClick={() => setShowPin(!showPin)}
-                >
-                  {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+            <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Security Question</label>
+                  <input
+                    type="text"
+                    name="question"
+                    value={securityData?.question || ''}
+                    onChange={handleSecurityChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                    autoFocus
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Answer</label>
+                  <input
+                    type="text"
+                    name="answer"
+                    value={securityData?.answer || ''}
+                    onChange={handleSecurityChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Confirm your PIN</label>
+                  <div className="relative">
+                    <input
+                      type={showPin ? "text" : "password"}
+                      value={pinInput}
+                      onChange={handlePinChange}
+                      placeholder="Enter 4-digit PIN"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-center tracking-widest font-mono"
+                      maxLength={4}
+                    />
+                    <button 
+                      type="button" 
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      onClick={() => setShowPin(!showPin)}
+                    >
+                      {showPin ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -797,17 +804,45 @@ const ProfileDashboard = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-4"
+            className="space-y-6"
           >
-            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
-              <div className="text-sm font-medium text-gray-700 mb-1">Security Question</div>
-              <div className="text-lg font-medium text-gray-800">{securityData?.question}</div>
-            </div>
-            <div className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-100">
-              <div className="text-sm font-medium text-gray-700 mb-1">Answer</div>
-              <div className="text-lg font-medium text-gray-800 tracking-wider">
-                {securityData?.answer.split('').map(() => '•').join('')}
+            <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-800">Security Question</h3>
+                <div className="flex items-center text-sm text-indigo-600">
+                  <Lock className="w-4 h-4 mr-1" />
+                  Secured
+                </div>
               </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+                  <div className="text-sm font-medium text-gray-500 mb-1">Question</div>
+                  <div className="text-lg font-medium text-gray-800">{securityData?.question}</div>
+                </div>
+                
+                <div className="p-4 bg-white rounded-lg border border-gray-200 shadow-sm relative">
+                  <div className="text-sm font-medium text-gray-500 mb-1">Answer</div>
+                  <div className="text-lg font-medium text-gray-800 tracking-wider">
+                    {securityData?.answer.split('').map((char, i) => (
+                      <span key={i} className="inline-block w-4 text-center">•</span>
+                    ))}
+                  </div>
+                  <div className="absolute right-4 top-4 text-gray-400">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <button 
+                onClick={() => setSecurityAccess(false)}
+                className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center justify-center mx-auto"
+              >
+                <Lock className="w-4 h-4 mr-1" />
+                Lock Security Vault
+              </button>
             </div>
           </motion.div>
         )}
@@ -816,32 +851,38 @@ const ProfileDashboard = () => {
       {/* Password & Security */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Lock className="w-5 h-5 text-indigo-600 mr-2" />
-          Password & Security
+          <div className="bg-indigo-100 p-2 rounded-lg mr-3 text-indigo-600">
+            <Key className="w-5 h-5" />
+          </div>
+          Account Security
         </h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
             <div className="flex items-center">
-              <Key className="w-5 h-5 text-indigo-600 mr-4" />
+              <div className="bg-indigo-100 p-2 rounded-lg mr-4 text-indigo-600">
+                <Lock className="w-5 h-5" />
+              </div>
               <div>
                 <div className="text-sm font-medium text-gray-800">Password</div>
                 <div className="text-xs text-gray-500">Last changed 3 months ago</div>
               </div>
             </div>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
-              Change
+            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors flex items-center">
+              Change <ChevronRight className="w-4 h-4 ml-1" />
             </button>
           </div>
           <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
             <div className="flex items-center">
-              <Lock className="w-5 h-5 text-indigo-600 mr-4" />
+              <div className="bg-indigo-100 p-2 rounded-lg mr-4 text-indigo-600">
+                <Shield className="w-5 h-5" />
+              </div>
               <div>
                 <div className="text-sm font-medium text-gray-800">Two-Factor Authentication</div>
                 <div className="text-xs text-gray-500">Add an extra layer of security</div>
               </div>
             </div>
-            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
-              Enable
+            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors flex items-center">
+              Enable <ChevronRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
@@ -850,7 +891,9 @@ const ProfileDashboard = () => {
       {/* Login Activity */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Calendar className="w-5 h-5 text-indigo-600 mr-2" />
+          <div className="bg-indigo-100 p-2 rounded-lg mr-3 text-indigo-600">
+            <Calendar className="w-5 h-5" />
+          </div>
           Recent Login Activity
         </h2>
         <div className="space-y-3">
@@ -1107,6 +1150,7 @@ const ProfileDashboard = () => {
               placeholder="Share your experience with our platform..."
               rows={4}
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              autoFocus
             />
           </div>
           <button

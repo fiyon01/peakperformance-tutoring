@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../utils/db");
+const getFullImagePath = require ("../utils/getFullImagePath")
 dotenv.config();
 
 const loginStudents = async (req, res) => {
@@ -51,7 +52,7 @@ const loginStudents = async (req, res) => {
         phone: user.phone,
         address: user.address,
         grade: user.grade_level,
-        profile_image :user.profile_image // return full image path
+        profile_image :getFullImagePath(user.profile_image) // return full image path
       }
     });
 

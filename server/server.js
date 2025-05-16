@@ -10,6 +10,8 @@ const loginRoute = require("./routes/loginRoute")
 const programsRoute = require("./routes/programsRoute")
 const notificationsRoute = require("./routes/notificationsRoute")
 const ratingsRoute = require("./routes/ratingsRoute")
+const fetchUserProfileRoute = require("./routes/fetchUserProfileRoute")
+
 const uploadprofileRoute = require("./routes/uploadprofileRoute")
 const accountrecoverysetupRoute = require("./routes/accountrecoverysetupRoute")
 dotenv.config();
@@ -45,6 +47,7 @@ app.use("/api", loginRoute);
 app.use("/api", programsRoute);
 app.use("/api", notificationsRoute);
 app.use("/", ratingsRoute);
+app.use("/api", fetchUserProfileRoute);
 app.use("/api", uploadprofileRoute);
 app.use("/api", accountrecoverysetupRoute);
 app.get("/test", (req, res) => {

@@ -11,7 +11,9 @@ import {
 } from 'lucide-react';
 import { Link } from "react-router-dom";
 import Logo from "../assets/icons8-graduation-cap-30.png";
-
+import heroBg from "../assets/backgroundimage (1).jpg"
+import methodsImage from "../assets/methodsImages (1).jpg"
+import { testimonials, galleryImages } from "../data/displayData";
 // Lazy-loaded components
 const TestimonialForm = lazy(() => import('./TestimonialForm'));
 const ConsultationForm = lazy(() => import('./ConsultationForm'));
@@ -201,42 +203,7 @@ const PeakPerformanceTutoring = () => {
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  // Sample testimonials data
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      role: "Parent of Grade 3 Student",
-      text: "My daughter used to hate math, but now she can't wait for her tutoring sessions! Her grades improved from Cs to As after just two months.",
-      rating: 5,
-      avatar: "https://randomuser.me/api/portraits/women/44.jpg"
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      role: "Parent of Grade 5 Student",
-      text: "The personalized approach helped my son develop a love for reading. He's now reading books above his grade level!",
-      rating: 5,
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
-    },
-    {
-      id: 3,
-      name: "Grace Mwangi",
-      role: "Grade 7 Student",
-      text: "Science is now my favorite subject! The experiments are so cool and I understand everything much better.",
-      rating: 5,
-      avatar: "https://randomuser.me/api/portraits/women/63.jpg"
-    }
-  ];
-
-  const galleryImages = [
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475879454_1184209423370917_7326451790253706885_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Ue3hYsF5Q1gQ7kNvwEfUn0r&_nc_oc=AdmYHFvAF6UYQGEJDH1DJSJKhgz2xchAeL4XNI8IN7Igyp_5d0OZJx7NDSMLT28o4H0&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=RItWCXsm_LPin5xswPXg6A&oh=00_AfHwhdv0z7akEJn9dB6FAzLIMTpFY--jw1Xs4-D_IKAg_A&oe=681B9B1E",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490582004_1235073248284534_6947471108058900747_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Nru45LgHYqkQ7kNvwFUtsSP&_nc_oc=AdmKFECrw-sIBY7qTGDSGAp9LSLTm4pAQcAkIKiVGQTC2tTlr67YZV7RIaa9LHA4904&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=vbE23qMXgBXxtkV7AiiwLQ&oh=00_AfHVxej-83_olkToC0UvczjN-4Tmx6xLCcB4Ip6QJB9Sbg&oe=681BAD8B",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=nTHFQfnKVy4Q7kNvwFGaX91&_nc_oc=AdkJodbg2j2oK86Z02C4fZ1qwH35iA21PYsJ_rqdOwPJwqgc0cXebJQb6sLBf9owHLE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=-FcFAzUJjLAa-CvhjBbQxg&oh=00_AfGViwGbcMOmvOyJ_c4rMC_YEUXQTI-Adgd7Sp9usQk4vw&oe=681B7E22",
-    "https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
-  ];
+ 
 
   const filteredPrograms = programs
   .filter(program =>
@@ -507,7 +474,7 @@ const PeakPerformanceTutoring = () => {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-video">
               <img 
-                src="https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475776239_1184209490037577_6189773692748365533_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=u_QIscXupp0Q7kNvwFdUD6K&_nc_oc=Adm4nTnlINZdBagRS8fHMUfyHU8fY5hB-_Z5viZyKnUITCyzdAH8uwNuDueHlPhJ01s&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=G96zAa1gMKzKIyQkhVluMw&oh=00_AfF_-E46XI72xCip2h8_HWGFDnZtkiCprdkaIgZ0Cv6fpw&oe=681B95DB" 
+                src={heroBg} 
                 alt="Tutoring session" 
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -555,7 +522,7 @@ const PeakPerformanceTutoring = () => {
                 <div>
                   <p className="text-sm text-gray-500">Happy Students</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    <AnimatedCounter value="200" />+
+                    <AnimatedCounter value="200" />
                   </p>
                 </div>
               </div>
@@ -844,7 +811,7 @@ const PeakPerformanceTutoring = () => {
             >
               <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-square">
                 <img 
-                  src="https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=XdZ5QbYG-tAQ7kNvwGGrVWL&_nc_oc=AdlquswI7hL0UNhZGPQWkHrjAW8YQgI5lFHYgvPRgp8hJ1G7e7Ex9FVki9lsfbYz1jk&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=INpWg3u8zZjpSY_KDooMRQ&oh=00_AfEhuKQnB_27wMfa-tWXilXqDdoiY23s67ImczvbroRmmw&oe=681BB21B" 
+                  src={methodsImage} 
                   alt="Tutoring method" 
                   className="w-full h-full object-cover"
                   loading="lazy"

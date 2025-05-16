@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import DashboardPage from './components/DashboardPage';
 import DashboardHome from './components/DashboardHome';
-import GoalsVisionBoard from './pages/Goals';
+import WeeklyReflection from './pages/Goals';
 import AttendancePage from './pages/Attendance';
 import TimetablePage from './pages/Timetable';
 import ProgrammesPage from './pages/Programmes';
@@ -19,7 +19,7 @@ import PeakPerformanceTutoring from "./pages/LandingPage";
 import SecurityQuestionDisplay from "./pages/test";
 import LearningResources from "./pages/Resources";
 import AboutUs from "./pages/AboutUs";
-import PaymentsDashboard from "./pages/Payments";
+import GoalsPage from "./pages/GoalsPage";
 import TutoringPolicies from "./pages/Policies"
 import SecurityDetailsPage from "./pages/accountRecovery/SecurityDetailsPage";
 import AccountRecoverySetup from "./pages/accountRecovery/AccountRecoverySetup";
@@ -41,14 +41,14 @@ function App() {
           >
             <Route path="dashboard-home" element={<DashboardHome />} />
             <Route path="my-timetable" element={<TimetablePage />} />
-            <Route path="vision-board-/-my-goals" element={<GoalsVisionBoard />} />
+            <Route path="focused-sessions" element={<WeeklyReflection />} />
             <Route path="personal-timetable" element={<PersonalTimetable />} />
             <Route path="upcoming-programmes" element={<ProgrammesPage />} />
             <Route path="programme-communication" element={<div>Programme Communication</div>} />
             <Route path="support" element={<HelpCenterPage />} />
             <Route path="attendance" element={<AttendancePage />} />
             <Route path="my-account" element={<ProfilePage />} />
-            <Route path="payments" element={<PaymentsDashboard />} />
+            <Route path="goals" element={<GoalsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="learning-resources" element={<LearningResources />} />
           </Route>
