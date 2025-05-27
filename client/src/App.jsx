@@ -56,7 +56,7 @@ function App() {
           {/* Public routes */}
           <Route path="/auth/students-signup" element={<RegistrationPage />} />
           <Route path="/auth/students-login" element={<LoginPage />} />
-          <Route path="/landingpage" element={<PeakPerformanceTutoring />} />
+          <Route path="/" element={<PeakPerformanceTutoring />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/policies" element={<TutoringPolicies />} />
           <Route path="/account-recovery" element={<SecurityDetailsPage />} />
