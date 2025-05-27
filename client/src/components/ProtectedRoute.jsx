@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }) => {
   
     // Step 1: If no user, redirect to landing page
     if (!user) {
-      navigate("/landingpage");
+      navigate("/");
       return;
     }
   
