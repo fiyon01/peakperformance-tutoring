@@ -56,7 +56,7 @@ const LoginPage = () => {
         toast.success('Login successful! Redirecting...');
       
         setTimeout(() => {
-          navigate("/");
+          navigate("/home");
         }, 2000);
       } else {
         setError("Unexpected response from server.");
