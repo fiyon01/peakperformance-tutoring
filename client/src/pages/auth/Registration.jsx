@@ -416,7 +416,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <User className="w-5 h-5 text-blue-500" />
+                          
                         </motion.div>
                       )}
                     </div>
@@ -455,7 +455,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <Mail className="w-5 h-5 text-blue-500" />
+                          
                         </motion.div>
                       )}
                     </div>
@@ -494,7 +494,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <Smartphone className="w-5 h-5 text-blue-500" />
+                          
                         </motion.div>
                       )}
                     </div>
@@ -533,7 +533,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <User className="w-5 h-5 text-blue-500" />
+                         
                         </motion.div>
                       )}
                     </div>
@@ -572,7 +572,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <Lock className="w-5 h-5 text-blue-500" />
+                         
                         </motion.div>
                       )}
                       <button
@@ -626,7 +626,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <Lock className="w-5 h-5 text-blue-500" />
+                          
                         </motion.div>
                       )}
                       <button
@@ -677,7 +677,7 @@ const RegistrationPage = () => {
                         <ChevronDown className="w-5 h-5 text-gray-500" />
                       </div>
                       <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                        <School className="w-5 h-5 text-blue-500" />
+                    
                       </div>
                     </div>
                     {errors.gradeLevel && (
@@ -715,7 +715,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <School className="w-5 h-5 text-blue-500" />
+                         
                         </motion.div>
                       )}
                     </div>
@@ -756,7 +756,7 @@ const RegistrationPage = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           className="absolute left-3 top-1/2 transform -translate-y-1/2"
                         >
-                          <Home className="w-5 h-5 text-blue-500" />
+                          
                         </motion.div>
                       )}
                     </div>
@@ -832,7 +832,7 @@ const RegistrationPage = () => {
                             <ChevronDown className="w-5 h-5 text-gray-500" />
                           </div>
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <Users className="w-5 h-5 text-blue-500" />
+                            
                           </div>
                         </div>
                       </div>
@@ -873,7 +873,7 @@ const RegistrationPage = () => {
                             placeholder={`${parent.relationship}'s phone number`}
                           />
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <Phone className="w-5 h-5 text-blue-500" />
+                            
                           </div>
                         </div>
                         {errors[`parentPhone${index}`] && (
@@ -898,7 +898,7 @@ const RegistrationPage = () => {
                             placeholder={`${parent.relationship}'s email`}
                           />
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                            <Mail className="w-5 h-5 text-blue-500" />
+                           
                           </div>
                         </div>
                         {errors[`parentEmail${index}`] && (
