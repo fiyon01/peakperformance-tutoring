@@ -887,10 +887,20 @@ const PeakPerformanceTutoring = () => {
                       whileHover={{ scale: 1.05 }}
                     >
                       <img 
-                        src={testimonials[currentTestimonial].avatar} 
-                        alt={testimonials[currentTestimonial].name} 
+                        src={
+                          testimonials[currentTestimonial].avatar ||
+                          `https://ui-avatars.com/api/?name=${
+                            testimonials[currentTestimonial].name
+                              .split(' ')
+                              .map(word => word[0])
+                              .slice(0, 2)
+                              .join('')
+                          }&background=ccc&color=555&size=128`
+                        }
+                        alt={testimonials[currentTestimonial].name}
                         className="w-full h-full object-cover"
                       />
+
                     </motion.div>
                   </div>
                   <div>
