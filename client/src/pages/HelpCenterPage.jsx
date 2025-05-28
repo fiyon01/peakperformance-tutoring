@@ -567,10 +567,10 @@ const HelpCenterPage = () => {
                 </div>
                 
                 <a
-                  href="tel:+18005551234"
+                  href="tel:+254798971625"
                   className="block w-full py-2 px-4 border border-gray-300 rounded-lg text-center hover:bg-gray-50 transition-colors"
                 >
-                  +1 (800) 555-1234
+                  +254798971625
                 </a>
               </div>
               

@@ -50,7 +50,7 @@ const Sidebar = ({ isEnrolled, hasVenue, mobileOpen, setMobileOpen, isOpen, togg
     setActiveItem(itemName);
     setCurrentPage(itemName.toLowerCase().replace(/\s+/g, '-'));
     if (isMobile) setMobileOpen(false);
-    navigate(`/${itemName.toLowerCase().replace(/\s+/g, '-')}`);
+    navigate(`/dashboard/${itemName.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
   const renderLogo = () => (

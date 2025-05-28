@@ -32,7 +32,7 @@ function App() {
         <Routes>
           {/* Protected Dashboard with nested routes */}
           <Route
-            path="/home"
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <DashboardPage />

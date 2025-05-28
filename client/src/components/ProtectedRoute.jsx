@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children }) => {
         navigate("/auth/students-login");
       } else {
         // Optional: stay on current route or navigate home
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (err) {
       console.error("Token decode error:", err);

@@ -7,7 +7,7 @@ import {
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -40,11 +40,9 @@ const NotificationsPage = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        // Debug: Log the API response
-        console.log('API Response:', response.data.notifications);
 
         // Handle different response structures
-                let notificationsData = [];
+        let notificationsData = [];
         if (Array.isArray(response.data)) {
           notificationsData = response.data;
         } else if (Array.isArray(response.data?.notifications?.[0])) {
@@ -54,7 +52,6 @@ const NotificationsPage = () => {
         } else if (response.data?.data) {
           notificationsData = Array.isArray(response.data.data) ? response.data.data : [];
         }
-
 
         // Ensure all notifications have required fields
         const processedNotifications = notificationsData.map(notification => ({
@@ -72,8 +69,7 @@ const NotificationsPage = () => {
             onClick: notification.action_onClick
           } : null
         }));
-// Debug: Log the processed notifications
-console.log('Processed Notifications:', processedNotifications);
+
         setNotifications(processedNotifications);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -176,7 +172,7 @@ console.log('Processed Notifications:', processedNotifications);
     try {
       if (!dateString) return 'Recently';
       
-      const date = new Date(dateString);
+      let date = new Date(dateString);
       if (isNaN(date.getTime())) {
         // Try parsing as timestamp if ISO string fails
         const timestamp = parseInt(dateString);

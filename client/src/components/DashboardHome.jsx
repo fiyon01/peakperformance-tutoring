@@ -50,18 +50,18 @@ const DashboardHome = ({ isEnrolled }) => {
     id: 1,
     name: 'Peak Performance Combined Programme',
     duration: '12 Weeks',
-    startDate: '2024-09-01',
-    endDate: '2024-11-30',
+    startDate: '2025-09-01',
+    endDate: '2025-11-30',
     currentWeek: 'Week 5',
     subjects: [
       { id: 1, name: 'Advanced Mathematics', tutor: 'Dr. Wanjiku', schedule: 'Mon/Wed 10:00-11:30', type: 'online' },
       { id: 2, name: 'Physics Mastery', tutor: 'Prof. Omondi', schedule: 'Tue/Thu 14:00-15:30', type: 'in-person' },
       { id: 3, name: 'Chemistry Intensive', tutor: 'Dr. Kamau', schedule: 'Fri 9:00-12:00', type: 'online' }
     ],
-    balance: 25000,
-    totalFee: 120000,
-    progress: 42,
-    nextPaymentDue: '2024-10-15'
+    balance: 0,
+    totalFee: 0,
+    progress: 0,
+    nextPaymentDue: ''
   });
 
   // Dashboard data
@@ -70,22 +70,12 @@ const DashboardHome = ({ isEnrolled }) => {
       {
         id: 1,
         subject: 'Advanced Mathematics',
-        date: '2024-10-15',
-        time: '10:00 AM - 11:30 AM',
+        date: '2025-10-15',
+        time: '18:00 PM - 20:00 PM',
         location: 'Zoom Room 203',
-        tutor: 'Dr. Wanjiku',
+        tutor: 'Tr. Wanjiku',
         type: 'online',
         materials: ['Calculator', 'Graph paper', 'Textbook Chapter 5']
-      },
-      {
-        id: 2,
-        subject: 'Physics Mastery',
-        date: '2024-10-16',
-        time: '2:00 PM - 3:30 PM',
-        location: 'Science Lab 101',
-        tutor: 'Prof. Omondi',
-        type: 'in-person',
-        materials: ['Lab notebook', 'Scientific calculator', 'Protractor']
       }
     ],
     activeGoals: [
@@ -94,7 +84,7 @@ const DashboardHome = ({ isEnrolled }) => {
         title: 'Complete Math Problem Set', 
         description: 'Finish all problems in Chapter 5',
         progress: 65, 
-        dueDate: '2024-10-20', 
+        dueDate: '2025-10-20', 
         priority: 'high',
         subject: 'Advanced Mathematics'
       },
@@ -103,7 +93,7 @@ const DashboardHome = ({ isEnrolled }) => {
         title: 'Read Physics Chapter 4', 
         description: 'Take notes on key concepts',
         progress: 30, 
-        dueDate: '2024-10-18', 
+        dueDate: '2025-10-18', 
         priority: 'medium',
         subject: 'Physics Mastery'
       }
@@ -123,10 +113,10 @@ const DashboardHome = ({ isEnrolled }) => {
       }
     ],
     performanceStats: {
-      attendance: 98,
-      averageScore: 87,
-      assignmentsCompleted: 18,
-      upcomingTests: 3
+      attendance: 0,
+      averageScore: 0,
+      assignmentsCompleted: 0,
+      upcomingTests: 0
     },
     resources: [
       { id: 1, name: 'Math Formula Sheet', type: 'PDF', subject: 'Advanced Mathematics' },
