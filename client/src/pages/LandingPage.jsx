@@ -157,8 +157,8 @@ const PeakPerformanceTutoring = () => {
           { 
             id: 3, 
             name: "Home Tuition", 
-            year: 2023,
-            term: "Term 5",
+            year: 2025,
+            term: "Term 2",
             status: "upcoming",
             is_active: true,
             image_url: "https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
