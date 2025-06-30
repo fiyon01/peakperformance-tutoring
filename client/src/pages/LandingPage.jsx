@@ -497,7 +497,7 @@ const PeakPerformanceTutoring = () => {
                 <div>
                   <p className="text-sm text-gray-500">Success Rate</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    <AnimatedCounter value="95" />%
+                    <AnimatedCounter value="90" />%
                   </p>
                 </div>
               </div>
@@ -543,7 +543,7 @@ const PeakPerformanceTutoring = () => {
               { name: "Certified Tutors", value: "10+", icon: <GraduationCap className="w-8 h-8 text-blue-600" />, color: "bg-blue-100" },
               { name: "Years Experience", value: "2+", icon: <Clock className="w-8 h-8 text-purple-600" />, color: "bg-purple-100" },
               { name: "Student Satisfaction", value: "90%", icon: <Smile className="w-8 h-8 text-indigo-600" />, color: "bg-indigo-100" },
-              { name: "Success Rate", value: "85%", icon: <Award className="w-8 h-8 text-pink-600" />, color: "bg-pink-100" }
+              { name: "Success Rate", value: "90%", icon: <Award className="w-8 h-8 text-pink-600" />, color: "bg-pink-100" }
             ].map((item, index) => (
               <motion.div 
                 key={index}
