@@ -1,5 +1,5 @@
 // src/data/testimonialData.js
-import methodsImage from "../assets/methodsImages (1).jpg"
+
 export const testimonials = [
     {
       id: 1,
@@ -43,8 +43,8 @@ export const testimonials = [
       "https://scontent.fnuu2-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=b_OXvRZimt8Q7kNvwFLB1SQ&_nc_oc=AdkD-Tc9py53wYlC3DFGo0HC6TOFHFmHvQGJOZbkhcZxwbmN3TiGd9RSf7aABlzmSPo&_nc_zt=23&_nc_ht=scontent.fnuu2-1.fna&_nc_gid=Fz_FVemXI-26EsLt0Ln9kg&oh=00_AfNJZs7BAepg0LRzKzbsEDzCxJ5wwSG40aCkESkUI1_R-A&oe=6868D1DB",
     "https://scontent.fnuu2-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=WQ-h4crFb8AQ7kNvwGHHYj-&_nc_oc=AdnTNEWCiW1Kf3L15QQrKxSiX3hS9qehh7SD3EX9IRiFRjr2GEXIBz8H-ye-yJ0P4-g&_nc_zt=23&_nc_ht=scontent.fnuu2-1.fna&_nc_gid=P9zVF-iM4T0auL3STIdvnQ&oh=00_AfNeuiYKxNg7SM7lJGBKpaeVCujvnHCE7GDkFMv0u47xtA&oe=6868D622",
       "/images/Screenshot_1-7-2025_03657_www.tiktok.com.jpeg",
-      "/images/Screenshot_1-7-2025_03620_www.tiktok.com.jpeg",
-      methodsImage
+      "/images/Screenshot_1-7-2025_03620_www.tiktok.com.jpeg"
+     
   ];
    // Sample testimonials data
    
