@@ -413,7 +413,7 @@ const PeakPerformanceTutoring = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl text-gray-600 mb-10 max-w-lg"
             >
-              95% of our students show improved grades and confidence. Engaging lessons designed for young learners.
+              85% of our students show improved grades and confidence. Engaging lessons designed for young learners.
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -520,7 +520,7 @@ const PeakPerformanceTutoring = () => {
                 <div>
                   <p className="text-sm text-gray-500">Happy Students</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    <AnimatedCounter value="200" />
+                    <AnimatedCounter value="300" />
                   </p>
                 </div>
               </div>
