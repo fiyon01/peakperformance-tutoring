@@ -39,7 +39,7 @@ export const testimonials = [
   
   export const galleryImages = [
    '/images/Screenshot_1-7-2025_03238_www.tiktok.com.jpeg',
-    "/images/Screenshot_1-7-2025_03550_www.tiktok.com.jpeg",
+    "/images/Screenshot_1-7-2025_03657_www.tiktok.com.jpeg",
       "/images/Screenshot_1-7-2025_03620_www.tiktok.com.jpeg",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475776239_1184209490037577_6189773692748365533_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=lJb7Lb4vh18Q7kNvwGqb2K4&_nc_oc=Adnq2WlrkBSfpAhGsAoQN-fAzipDicE5HZSm6PeDUowRlGyFGZglpFRKljhMeUn43OE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=K315as9-FskZ9xF-Lbpamg&oh=00_AfPx8DlHi_wxXgwrA7tyPPuAj0M3nx5H31NwLAux-CI1KA&oe=684A631B",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=yDVl3ieqcvkQ7kNvwGDOgXD&_nc_oc=AdmNppfYkcD5zVRI3o-Ijyhnu2Mcrp0uosWCRMKho8jvffCjNFq6Ad2yE3d-zXEneyw&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=XbotpP4250hQ2vbprQX7RA&oh=00_AfOdABd8rlx-duW_T8oXPCAo3ffW2SW3Wy5KvUF9G2hFjw&oe=684A4B62",
