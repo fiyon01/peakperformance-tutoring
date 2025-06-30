@@ -40,7 +40,7 @@ export const testimonials = [
   
   export const galleryImages = [
      TikTokScreenshot,
-      TikTokScreenshot1
+      TikTokScreenshot1,
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475776239_1184209490037577_6189773692748365533_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=lJb7Lb4vh18Q7kNvwGqb2K4&_nc_oc=Adnq2WlrkBSfpAhGsAoQN-fAzipDicE5HZSm6PeDUowRlGyFGZglpFRKljhMeUn43OE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=K315as9-FskZ9xF-Lbpamg&oh=00_AfPx8DlHi_wxXgwrA7tyPPuAj0M3nx5H31NwLAux-CI1KA&oe=684A631B",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=yDVl3ieqcvkQ7kNvwGDOgXD&_nc_oc=AdmNppfYkcD5zVRI3o-Ijyhnu2Mcrp0uosWCRMKho8jvffCjNFq6Ad2yE3d-zXEneyw&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=XbotpP4250hQ2vbprQX7RA&oh=00_AfOdABd8rlx-duW_T8oXPCAo3ffW2SW3Wy5KvUF9G2hFjw&oe=684A4B62",
     "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=E50r3H5FsD0Q7kNvwEuCp4k&_nc_oc=AdnF7L4b2V6ieej1vv6F0id6UGxLFCcVN9ODWuzKzq6tgFfKziQj3GvBNarfJoeZ0q4&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=u0eKUHjp3VakfLVTYx9WVw&oh=00_AfOU8yX3FIQdvH_DiDnmKyjW9SDcwYNtRsFtm726oxCQgg&oe=684A471B",
