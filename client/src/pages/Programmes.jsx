@@ -99,8 +99,8 @@ const ProgrammesPage = () => {
 
   const openRegistrationModal = (programme) => {
     setSelectedProgramme(programme);
-    setRegistrationStep(1);
     setIsModalOpen(true);
+    setRegistrationStep(1);
   };
 
   const closeModal = () => {
@@ -357,9 +357,9 @@ const ProgrammesPage = () => {
       </div>
       
       {/* Registration Modal */}
-      {isModalOpen && selectedProgramme && (
+      {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
             <div 
               className="fixed inset-0 transition-opacity" 
@@ -376,7 +376,7 @@ const ProgrammesPage = () => {
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                     <div className="flex justify-between items-center">
                       <h3 className="text-2xl leading-6 font-bold text-gray-900">
-                        Register for {selectedProgramme.name}
+                        Register for {selectedProgramme?.name}
                       </h3>
                       <button
                         type="button"
@@ -545,19 +545,19 @@ const ProgrammesPage = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex items-center">
                               <Calendar className="mr-2 text-indigo-600" size={18} />
-                              <span>{selectedProgramme.date}</span>
+                              <span>{selectedProgramme?.date}</span>
                             </div>
                             <div className="flex items-center">
                               <Clock className="mr-2 text-indigo-600" size={18} />
-                              <span>{selectedProgramme.time}</span>
+                              <span>{selectedProgramme?.time}</span>
                             </div>
                             <div className="flex items-center">
                               <MapPin className="mr-2 text-indigo-600" size={18} />
-                              <span>{selectedProgramme.location}</span>
+                              <span>{selectedProgramme?.location}</span>
                             </div>
                             <div className="flex items-center">
                               <DollarSign className="mr-2 text-indigo-600" size={18} />
-                              <span className="font-bold">{selectedProgramme.price}</span>
+                              <span className="font-bold">{selectedProgramme?.price}</span>
                             </div>
                           </div>
                         </div>
@@ -653,76 +653,50 @@ const sampleProgrammes = [
     id: 1,
     name: "Math Mastery Intensive",
     subject: "Mathematics",
-    description: "A comprehensive programme covering all key math concepts for your grade level.",
-    date: "Dec 10-20, 2023",
+    description: "A comprehensive programme covering advanced mathematical concepts and problem-solving techniques.",
+    date: "Dec 5-9, 2023",
     time: "9:00 AM - 12:00 PM",
-    duration: "2 Weeks",
-    location: "Central Campus",
+    duration: "1 Week",
+    location: "Main Campus",
     locationType: "On-site",
-    price: "$499",
+    price: "$299",
     image: null
   },
   {
     id: 2,
     name: "Science Explorers",
     subject: "Science",
-    description: "Hands-on experiments and theory to master scientific concepts and methods.",
-    date: "Dec 15-22, 2023",
+    description: "Hands-on experiments and interactive learning for young scientists.",
+    date: "Dec 12-16, 2023",
     time: "1:00 PM - 4:00 PM",
     duration: "1 Week",
     location: "Online",
     locationType: "Online",
-    price: "$399",
+    price: "$249",
     image: null
   },
   {
     id: 3,
     name: "English Excellence",
     subject: "English",
-    description: "Improve reading comprehension, writing skills, and critical analysis.",
-    date: "Jan 5-16, 2024",
+    description: "Improve reading comprehension, writing skills, and vocabulary development.",
+    date: "Dec 5-16, 2023",
     time: "10:00 AM - 1:00 PM",
     duration: "2 Weeks",
-    location: "East Campus",
+    location: "North Campus",
     locationType: "On-site",
-    price: "$449",
+    price: "$399",
     image: null
   },
   {
     id: 4,
-    name: "Young Coders Bootcamp",
+    name: "Coding Bootcamp",
     subject: "Coding",
-    description: "Introduction to programming with Python and computational thinking.",
-    date: "Dec 18-29, 2023",
-    time: "2:00 PM - 5:00 PM",
-    duration: "2 Weeks",
-    location: "Central Campus",
-    locationType: "On-site",
-    price: "$549",
-    image: null
-  },
-  {
-    id: 5,
-    name: "Advanced Math Olympiad Prep",
-    subject: "Mathematics",
-    description: "For students preparing for math competitions and olympiads.",
-    date: "Jan 8-19, 2024",
-    time: "9:00 AM - 12:00 PM",
-    duration: "2 Weeks",
-    location: "Online",
-    locationType: "Online",
-    price: "$599",
-    image: null
-  },
-  {
-    id: 6,
-    name: "Creative Writing Workshop",
-    subject: "English",
-    description: "Develop storytelling skills and creative expression through writing.",
-    date: "Dec 12-15, 2023",
-    time: "10:00 AM - 1:00 PM",
+    description: "Introduction to programming concepts using Python and JavaScript.",
+    date: "Dec 19-23, 2023",
+    time: "9:00 AM - 3:00 PM",
     duration: "1 Week",
-    location: "West Campus",
+    location: "Tech Hub",
     locationType: "On-site",
     price: "$349",
     image: null

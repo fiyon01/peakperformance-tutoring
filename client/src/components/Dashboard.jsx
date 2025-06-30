@@ -12,6 +12,7 @@ import HelpCenterPage from "../pages/HelpCenterPage";
 import PersonalTimetable from "../pages/PersonalTimetable";
 import LearningResources from "../pages/Resources";
 import GoalsPage from "../pages/GoalsPage"
+import AssignmentsHub from "../pages/AssignmentsHub"
 const DashboardLayout = () => {
   const [isEnrolled, setIsEnrolled] = useState(true); 
   const [currentPage, setCurrentPage] = useState('dashboard-home');
@@ -48,6 +49,7 @@ const DashboardLayout = () => {
 
         <main className={`transition-all duration-300 pt-8 px-4 h-screen ${isSidebarOpen ? 'md:pl-64' : 'md:pl-20'}`}>
           {currentPage === 'dashboard-home' && <DashboardHome isEnrolled={isEnrolled} />}
+           {currentPage === 'assignments-hub' && <AssignmentsHub />}
           {currentPage === 'my-timetable' && <TimetablePage />}
           {currentPage === 'focused-sessions' && <WeeklyReflection />}
           {currentPage === 'upcoming-programmes' && <ProgrammesPage />}

@@ -20,11 +20,11 @@ const AttendancePage = () => {
       const mockPrograms = [
         {
           id: 1,
-          name: 'Summer Intensive 2023',
-          startDate: '2023-07-10',
-          endDate: '2023-08-18',
+          name: 'April Tuition 2023',
+          startDate: '2024-04-7',
+          endDate: '2024-04-18',
           current: true,
-          weeks: 6
+          weeks: 2
         },
         {
           id: 2,
@@ -47,11 +47,11 @@ const AttendancePage = () => {
       const mockAttendance = {
         1: {
           1: [
-            { date: '2023-07-10', time: '09:00-11:00', subject: 'Mathematics', tutor: 'Dr. Smith', status: 'present' },
-            { date: '2023-07-11', time: '09:00-11:00', subject: 'English', tutor: 'Ms. Johnson', status: 'present' },
-            { date: '2023-07-12', time: '09:00-11:00', subject: 'Science', tutor: 'Dr. Lee', status: 'late' },
-            { date: '2023-07-13', time: '09:00-11:00', subject: 'Mathematics', tutor: 'Dr. Smith', status: 'absent' },
-            { date: '2023-07-14', time: '09:00-11:00', subject: 'History', tutor: 'Mr. Brown', status: 'present' }
+            { date: '2025-04-7', time: '09:00-11:00', subject: 'Mathematics', tutor: 'Mr. Justus', status: 'present' },
+            { date: '2025-04-8', time: '09:00-11:00', subject: 'Biology', tutor: 'Mr. Faruck', status: 'present' },
+            { date: '2025-04-9', time: '09:00-11:00', subject: 'Chemistry', tutor: 'Mad. Lilian', status: 'late' },
+            { date: '2025-04-10', time: '09:00-11:00', subject: 'Mathematics', tutor: 'Mr. Justus', status: 'absent' },
+            { date: '2025-04-11', time: '09:00-11:00', subject: 'Physics', tutor: 'Mr. Wesala', status: 'present' }
           ],
           2: [
             // Week 2 data...

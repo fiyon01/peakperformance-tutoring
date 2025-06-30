@@ -23,6 +23,7 @@ import GoalsPage from "./pages/GoalsPage";
 import TutoringPolicies from "./pages/Policies"
 import SecurityDetailsPage from "./pages/accountRecovery/SecurityDetailsPage";
 import AccountRecoverySetup from "./pages/accountRecovery/AccountRecoverySetup";
+import AssignmentsHub from "./pages/AssignmentsHub"
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             }
           >
             <Route path="dashboard-home" element={<DashboardHome />} />
+             <Route path="assignments-hub" element={<AssignmentsHub />} />
             <Route path="my-timetable" element={<TimetablePage />} />
             <Route path="focused-sessions" element={<WeeklyReflection />} />
             <Route path="personal-timetable" element={<PersonalTimetable />} />

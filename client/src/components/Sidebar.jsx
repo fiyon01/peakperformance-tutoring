@@ -119,7 +119,7 @@ const Sidebar = ({ isEnrolled, hasVenue, mobileOpen, setMobileOpen, isOpen, togg
         {mobileOpen && (
           <div className="fixed inset-0 z-40 md:hidden">
             <div 
-              className="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity" 
+              className="fixed inset-0 bg-gray-600/75 transition-opacity" 
               onClick={() => setMobileOpen(false)}
             ></div>
             <div className="fixed inset-y-0 left-0 flex max-w-xs w-full">

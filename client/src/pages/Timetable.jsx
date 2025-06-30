@@ -385,7 +385,7 @@ const TimetablePage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center p-6 bg-gray-50 rounded-lg max-w-md">
-          <h2 className="text-xl font-bold text-gray-700 mb-2">No Programs Available</h2>
+          <h2 className="text-xl font-bold text-gray-700 mb-2">No Timetables Available</h2>
           <p className="text-gray-600">There are currently no active programs to display.</p>
         </div>
       </div>

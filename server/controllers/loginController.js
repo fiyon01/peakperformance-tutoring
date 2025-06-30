@@ -29,7 +29,7 @@ const loginStudents = async (req, res) => {
     const token = jwt.sign(
       { id: user.student_id, username: user.username, isUser: true },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "7d" }
     );
 
     const ipAddress = req.headers["x-forwarded-for"] || req.socket.remoteAddress;

@@ -2,12 +2,14 @@ import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { useState, useEffect } from 'react';
 import { Bell, LogOut, HelpCircle, Settings, User, Menu, Search, X } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburgerClick }) => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,8 +26,41 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
   const isMobile = windowWidth < 768;
   const getInitial = () => user.username?.charAt(0)?.toUpperCase() || '?';
 
+  const handleLogout = () => {
+    setShowLogoutModal(false);
+    logout();
+    toast.success('Logged out successfully!', {
+      position: 'top-center',
+      duration: 2000,
+    });
+  };
+
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 ">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Confirm Logout</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to log out?</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowLogoutModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Search Overlay */}
       {isMobile && showMobileSearch && (
         <div className="absolute inset-0 bg-white z-20 flex items-center px-4 py-3">
@@ -58,7 +93,6 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
           >
             <Menu className="w-5 h-5 text-gray-700" />
           </button>
-          
         </div>
 
         {/* Middle Section - Search (Desktop) */}
@@ -94,11 +128,7 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
             aria-label="Notifications"
           >
             <Bell className="w-5 h-5 text-gray-600" />
-            {notificationCount > 0 && (
-              <span className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-xs font-bold text-white bg-red-500 rounded-full transform translate-x-1 -translate-y-1">
-                {Math.min(notificationCount, 9)}
-              </span>
-            )}
+            
           </button>
 
           {/* Profile */}
@@ -144,10 +174,16 @@ const Navbar = ({ studentName = '', profilePic, notificationCount = 0, onHamburg
                   </a>
                 </div>
                 <div className="py-1">
-                  <a href="#" className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                  <button 
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      setShowLogoutModal(true);
+                    }}
+                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
                     <LogOut className="w-4 h-4 mr-3 text-red-400" /> 
                     Logout
-                  </a>
+                  </button>
                 </div>
               </div>
             )}
