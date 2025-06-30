@@ -47,15 +47,15 @@ const AboutUs = () => {
   const tutors = [
     {
       name: "Githinji Kamau",
-      qualification: "BSc in Analytical Chemistry, Kenyatta University",
+      qualification: "Software Engineering ,PLP",
       subjects: ["Chemistry", "Mathematics"],
       isFounder: true,
       avatarColor: "from-indigo-500 to-indigo-700",
       image: "/images/tutors/githinji.jpg",
-      bio: "Specializing in analytical chemistry and advanced mathematics with 8 years of teaching experience. Passionate about making complex concepts accessible to all students.",
+      bio: " 4 years of teaching experience. Passionate about making complex concepts accessible to all students.",
       contact: {
-        email: "githinji@peakperformance.com",
-        phone: "+254 722 123456"
+        email: "jonathangithinji63@gmail.com",
+        phone: "+254 798 971625"
       }
     },
     {
@@ -67,7 +67,7 @@ const AboutUs = () => {
       bio: "Physics specialist with a talent for breaking down complex problems into understandable steps. 5 years of tutoring experience.",
       contact: {
         email: "justus@peakperformance.com",
-        phone: "+254 733 234567"
+        phone: "+254 792 479571"
       }
     },
     {
@@ -79,16 +79,16 @@ const AboutUs = () => {
       bio: "Biology expert with a focus on practical applications. Makes learning interactive and engaging for students.",
       contact: {
         email: "anthony@peakperformance.com",
-        phone: "+254 711 345678"
+        phone: "+254 755 950879"
       }
     },
     {
-      name: "Vincent Wesalla",
-      qualification: "Bachelor of Education Math and Chemistry, Karatina University",
+      name: "Ezekiel Mwanga",
+      qualification: "Bachelor of Education Math and Business, Machakos University",
       subjects: ["Mathematics", "Chemistry"],
       avatarColor: "from-purple-500 to-purple-700",
       // No image - will use avatar
-      bio: "Chemistry tutor with a passion for experimental learning. Helps students connect theory with real-world applications.",
+      bio: " Helps students connect theory with real-world applications.",
       contact: {
         email: "vincent@peakperformance.com",
         phone: "+254 700 456789"
