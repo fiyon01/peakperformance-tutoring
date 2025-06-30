@@ -236,7 +236,7 @@ const AboutUs = () => {
             Peak Performance
           </h1>
           <span className="ml-2 bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-            Since August 12, 2024
+            Since 2023
           </span>
         </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
