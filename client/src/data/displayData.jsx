@@ -1,6 +1,6 @@
 // src/data/testimonialData.js
-import TikTokScreenshot from '../assets/Screenshot_1-7-2025_03238_www.tiktok.com.jpeg';
-import TikTokScreenshot1 from '../assets/Screenshot_1-7-2025_03350_www.tiktok.com.jpeg';
+import TikTokScreenshot from '/Screenshot_1-7-2025_03238_www.tiktok.com.jpeg';
+import TikTokScreenshot1 from '/Screenshot_1-7-2025_03350_www.tiktok.com.jpeg';
 export const testimonials = [
     {
       id: 1,
