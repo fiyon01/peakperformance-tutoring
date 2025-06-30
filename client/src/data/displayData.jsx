@@ -1,6 +1,5 @@
 // src/data/testimonialData.js
-import TikTokScreenshot from '/Screenshot_1-7-2025_03238_www.tiktok.com.jpeg';
-import TikTokScreenshot1 from '/Screenshot_1-7-2025_03350_www.tiktok.com.jpeg';
+
 export const testimonials = [
     {
       id: 1,
@@ -39,12 +38,13 @@ export const testimonials = [
   
   
   export const galleryImages = [
-     TikTokScreenshot,
-      TikTokScreenshot1,
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475776239_1184209490037577_6189773692748365533_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=lJb7Lb4vh18Q7kNvwGqb2K4&_nc_oc=Adnq2WlrkBSfpAhGsAoQN-fAzipDicE5HZSm6PeDUowRlGyFGZglpFRKljhMeUn43OE&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=K315as9-FskZ9xF-Lbpamg&oh=00_AfPx8DlHi_wxXgwrA7tyPPuAj0M3nx5H31NwLAux-CI1KA&oe=684A631B",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=yDVl3ieqcvkQ7kNvwGDOgXD&_nc_oc=AdmNppfYkcD5zVRI3o-Ijyhnu2Mcrp0uosWCRMKho8jvffCjNFq6Ad2yE3d-zXEneyw&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=XbotpP4250hQ2vbprQX7RA&oh=00_AfOdABd8rlx-duW_T8oXPCAo3ffW2SW3Wy5KvUF9G2hFjw&oe=684A4B62",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=E50r3H5FsD0Q7kNvwEuCp4k&_nc_oc=AdnF7L4b2V6ieej1vv6F0id6UGxLFCcVN9ODWuzKzq6tgFfKziQj3GvBNarfJoeZ0q4&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=u0eKUHjp3VakfLVTYx9WVw&oh=00_AfOU8yX3FIQdvH_DiDnmKyjW9SDcwYNtRsFtm726oxCQgg&oe=684A471B",
-    "https://scontent.fnbo16-1.fna.fbcdn.net/v/t39.30808-6/490537957_1235932054865320_4959166800137820039_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=Jx-kUw7prKgQ7kNvwHbz93c&_nc_oc=AdnlGoB4fFb1d4b9bNkUC_JXKRhZBe6Re9qAJm8bOkNPi4XJC5l68cQ0RwmLDYW6z5s&_nc_zt=23&_nc_ht=scontent.fnbo16-1.fna&_nc_gid=s4DtNBw9x8VcywltzzLC1w&oh=00_AfP4mG3I6iRrbIYYg8W7B9K7PBrO9WbUGoC00gG7-pSDIw&oe=684A3A6F"
+       "https://scontent.fnuu2-1.fna.fbcdn.net/v/t39.30808-6/490582004_1235073248284534_6947471108058900747_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=tZOrPdGcwNUQ7kNvwFGUo-9&_nc_oc=AdntdzXtUYfZLT_3QSmdjwNTsKYFR_8rF-cXrqPiGJpe7jhN-n1DzVHfYrYdobKOSBk&_nc_zt=23&_nc_ht=scontent.fnuu2-1.fna&_nc_gid=QTG9L4hIAdxk5AyF__PwvA&oh=00_AfPfCh2FlFA94seQsCsw9EDd4KwnGqyQ_SJ0KshuaTSK_w&oe=6868CD4B",
+     '/images/Screenshot_1-7-2025_03238_www.tiktok.com.jpeg',
+      "https://scontent.fnuu2-1.fna.fbcdn.net/v/t39.30808-6/491011600_1235931784865347_4377647374567062304_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=b_OXvRZimt8Q7kNvwFLB1SQ&_nc_oc=AdkD-Tc9py53wYlC3DFGo0HC6TOFHFmHvQGJOZbkhcZxwbmN3TiGd9RSf7aABlzmSPo&_nc_zt=23&_nc_ht=scontent.fnuu2-1.fna&_nc_gid=Fz_FVemXI-26EsLt0Ln9kg&oh=00_AfNJZs7BAepg0LRzKzbsEDzCxJ5wwSG40aCkESkUI1_R-A&oe=6868D1DB",
+    "https://scontent.fnuu2-1.fna.fbcdn.net/v/t39.30808-6/475539602_1184209480037578_3269351206353649665_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=WQ-h4crFb8AQ7kNvwGHHYj-&_nc_oc=AdnTNEWCiW1Kf3L15QQrKxSiX3hS9qehh7SD3EX9IRiFRjr2GEXIBz8H-ye-yJ0P4-g&_nc_zt=23&_nc_ht=scontent.fnuu2-1.fna&_nc_gid=P9zVF-iM4T0auL3STIdvnQ&oh=00_AfNeuiYKxNg7SM7lJGBKpaeVCujvnHCE7GDkFMv0u47xtA&oe=6868D622",
+      "/images/Screenshot_1-7-2025_03657_www.tiktok.com.jpeg",
+      "/images/Screenshot_1-7-2025_03620_www.tiktok.com.jpeg"
+     
   ];
    // Sample testimonials data
    
