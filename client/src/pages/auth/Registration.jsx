@@ -281,7 +281,7 @@ const RegistrationPage = () => {
               transition={{ delay: 0.3 }}
             >
               <Link
-                to="/landingpage"
+                to="/"
                 className="text-sm font-medium text-gray-600 hover:text-purple-600 transition flex items-center group"
               >
                 <span className="group-hover:-translate-x-1 transition-transform">Back to Home</span>
